@@ -1,0 +1,30 @@
+# AI assistant directories
+.claude
+.codebuddy
+
+# OpenSpec (specification management, not tracked in main repo)
+openspec
+
+# Compiled Lua files
+*.luac
+
+# Coverage reports
+luacov.*
+*.lcov
+
+# LuaRocks build artifacts
+*.rock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log

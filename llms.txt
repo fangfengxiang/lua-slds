@@ -1,0 +1,80 @@
+# lua-slds
+
+> Short Link Domain Specification (SLDS) — a pure Lua domain library defining short link identity, lifecycle, and resolution semantics.
+
+## What is SLDS?
+
+SLDS defines what a short link **is** (identity), how it **behaves** (lifecycle), and what it **means** to resolve one (resolution semantics), independent of transport, storage, caching, and security policy.
+
+- Core layer: zero external dependencies, pure Lua 5.1 / 5.3 / LuaJIT
+- Architecture: hexagonal (ports and adapters)
+- Specification: 10 iron rules + conformance test suite (L0-L3)
+
+## Installation
+
+```
+luarocks install lua-slds
+```
+
+## Quick Start
+
+```lua
+local slds = require("slds")
+local service = slds.new({
+    repository = require("slds.adapters.inmemory.repository").new(),
+    generator  = require("slds.adapters.sequential.generator").new(),
+    encoder    = require("slds.adapters.base62.encoder").new(),
+})
+local link = service:create({}, { target = "https://example.com" })
+local result = service:resolve({}, slds.Identity.new("default", link.code))
+print(result.target, result.status)
+```
+
+## Core Concepts
+
+- Identity = { namespace, code } — immutable value object
+- ShortLink = { namespace, code, target, status, expires_at } — domain entity
+- Lifecycle = ACTIVE <-> DISABLED -> DELETED (terminal); EXPIRED is derived at resolution time
+- Resolution = first-class domain operation, returns ResolutionResult (not ShortLink)
+- Ports = Repository, Generator, Encoder (interface contracts, hexagonal)
+- Hooks = extension mechanism (Logger/Metrics/Tracer), isolated via pcall
+
+## 10 Iron Rules
+
+1. Core MUST NOT depend on HTTP
+2. Core MUST NOT depend on a specific database
+3. Core MUST NOT fetch Target URLs
+4. Code MUST be immutable after creation
+5. Code uniqueness MUST be enforced atomically by persistence layer
+6. Deleted Codes MUST NOT be reused by default
+7. Resolve MUST NOT require external event system
+8. Analytics MUST NOT be in resolution critical path
+9. Authorization MUST be outside Core Domain
+10. Any implementation MUST pass Conformance Test Suite
+
+## API
+
+- slds.new({ repository, generator, encoder, clock?, hooks? }) -> Service
+- service:create(ctx, input) -> ShortLink, err
+- service:resolve(ctx, identity) -> ResolutionResult
+- service:update(ctx, identity, patch) -> ShortLink, err
+- service:delete(ctx, identity) -> boolean, err
+- service:use(hook) -> Service (chainable)
+- slds.Identity.new(namespace, code) -> Identity
+
+## Key Files
+
+- src/slds/init.lua — module entry, public API
+- src/slds/domain/ — Identity, ShortLink, Lifecycle, Resolution, Errors
+- src/slds/ports/ — Repository, Generator, Encoder port interfaces
+- src/slds/service.lua — Application Service
+- src/slds/hooks.lua — Hooks mechanism
+- adapters/ — InMemory Repository, Sequential Generator, Base62 Encoder
+- spec/ — busted BDD tests + conformance L0-L3
+- docs/rfc/RFC-0001.md — full specification
+
+## Links
+
+- Repository: https://github.com/fangfengxiang/lua-slds
+- Documentation: https://fangfengxiang.github.io/lua-slds/
+- License: Apache-2.0

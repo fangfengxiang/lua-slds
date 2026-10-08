@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    name: Lint (luacheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: "luajit"
+      - uses: leafo/gh-actions-luarocks@v6
+      - name: Install luacheck
+        run: luarocks install luacheck
+      - name: Run luacheck
+        run: luacheck src/ adapters/ spec/
+
+  test:
+    name: Test (Lua ${{ matrix.lua }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lua: ["5.1", "5.3", "luajit-2.1"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: ${{ matrix.lua }}
+      - uses: leafo/gh-actions-luarocks@v6
+      - name: Install dependencies
+        run: |
+          luarocks install busted
+          luarocks install luacov
+      - name: Run tests with coverage
+        run: busted --coverage --pattern=spec
+      - name: Generate coverage report
+        run: luacov
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./luacov.report.out
+          flags: lua-${{ matrix.lua }}
+          name: lua-slds-${{ matrix.lua }}
