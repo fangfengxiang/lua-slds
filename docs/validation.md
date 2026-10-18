@@ -57,6 +57,8 @@ Domain/Repository、HookPoint/Hooks、CodeGenerator 和 Interactor 的新行为�
 - 通过 rockspec 安装到独立临时树后，在仓库外执行完整 CRUD 与 Composed 生成流程，通过；新生产模块均登记打包。
 - 独立实现审查未发现可操作的运行时缺陷；修正 Repository Port 中遗留的旧返回码说明。
 - README 与教程的 Lua 代码块在安装后的包、仓库外目录串接执行，通过。
+- actionlint 检查全部工作流通过，版本 check/sync 在仓库外运行且重复同步无变化。
+- 从实际暂存文件导出的干净目录完成联网 MkDocs 严格构建，Mermaid CDN 探测正常；构建未包含用户 report.md 或忽略的 openspec/。
 - 合规指南的完整 fixture factory 原样提取为 Busted 入口运行，50 项合规测试通过；未使用覆盖率参数，不影响完整矩阵统计。
 
 持续门禁命令：
@@ -74,7 +76,11 @@ scripts/test.sh 从脚本位置定位仓库，清除旧统计、执行 Busted、
 
 GitHub Actions 在 Lua 5.1、Lua 5.3、LuaJIT 上独立测试并上传同份 LuaCov 报告，逐文件 >=95% 且上传失败视为失败；Codecov project/patch 目标至少 95%、零容差。文档工作流在 PR 上严格构建，在 PR 中不部署站点。发布说明同步两个 Core 端口。
 
-本记录写入时，本轮远端 GitHub Actions 和 Codecov 尚待推送后确认。不得将旧主分支的成功或本地覆盖率当作新提交的远端结果。交付通过独立 codex/ 分支及 Draft PR，不直接合并 main。
+实现提交 `8bc015607850f3952aee438eb840f7204f368602` 已通过 [CI 三解释器与 lint](https://github.com/fangfengxiang/lua-slds/actions/runs/39118250350) 和 [Docs 严格构建](https://github.com/fangfengxiang/lua-slds/actions/runs/39118250497)。三个远端测试作业各 253 项通过，17 个生产文件分别均为 100%。
+
+[Codecov 对应提交](https://app.codecov.io/gh/fangfengxiang/lua-slds/commit/8bc015607850f3952aee438eb840f7204f368602) 的公开报告状态为 complete，包含三个上传会话；562/562 行覆盖、0 miss，17/17 文件逐文件 100%，差异覆盖率 100%。已核对报告文件集合与全部 src/adapters Lua 文件完全一致。
+
+交付为 [Draft PR #7](https://github.com/fangfengxiang/lua-slds/pull/7)，不合并 main。此处固定提交证据用于审计；后续文档证据提交的最新检查以 PR checks 为准，不能拿旧提交替代。
 
 ## 证据边界
 
