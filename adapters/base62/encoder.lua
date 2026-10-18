@@ -8,6 +8,7 @@ _M.__index = _M
 -- Base62 字符表：0-9, A-Z, a-z（62 个字符）
 local BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 local BASE = 62
+local MAX_INTEGER = 9007199254740991
 
 --- Create a new Base62 encoder.
 function _M.new()
@@ -19,8 +20,8 @@ end
 -- @param id number positive integer
 -- @return string Base62 encoded short code
 function _M:encode(id)
-    if type(id) ~= "number" or id < 0 then
-        error("encoder:encode — id must be a non-negative number", 2)
+    if type(id) ~= "number" or id < 0 or id > MAX_INTEGER then
+        error("encoder:encode — id must be a number in [0, 2^53-1]", 2)
     end
     -- 拒绝浮点数，防止精度问题，Reject non-integer to prevent precision issues
     if id ~= math.floor(id) then

@@ -32,12 +32,15 @@ print(result.target, result.status)
 
 ## Core Concepts
 
-- Identity = { namespace, code } — immutable value object
+- Identity = { namespace, code } — logically immutable ordinary Lua table; callers must not rewrite fields
 - ShortLink = { namespace, code, target, status, expires_at } — domain entity
 - Lifecycle = ACTIVE <-> DISABLED -> DELETED (terminal); EXPIRED is derived at resolution time
 - Resolution = first-class domain operation, returns ResolutionResult (not ShortLink)
 - Ports = Repository, Generator, Encoder (interface contracts, hexagonal)
-- Hooks = extension mechanism (Logger/Metrics/Tracer), isolated via pcall
+- Hooks = synchronous observers with per-callback domain snapshots and pcall exception isolation; ctx stays shared
+- Metadata = opaque raw-table snapshots; no business schema, metadata patch or deep merge
+- Repository update = atomic sparse patch against latest state; DELETED cannot be revived
+- Sequential/Base62 = bundled adapters with integer domain [0, 2^53-1]; generic ports remain representation-agnostic
 
 ## 10 Iron Rules
 
@@ -56,11 +59,18 @@ print(result.target, result.status)
 
 - slds.new({ repository, generator, encoder, clock?, hooks? }) -> Service
 - service:create(ctx, input) -> ShortLink, err
-- service:resolve(ctx, identity) -> ResolutionResult
+- service:resolve(ctx, identity) -> ResolutionResult | nil, err
 - service:update(ctx, identity, patch) -> ShortLink, err
 - service:delete(ctx, identity) -> boolean, err
 - service:use(hook) -> Service (chainable)
 - slds.Identity.new(namespace, code) -> Identity
+
+## Verification
+
+- sh scripts/test.sh — fresh LuaCov statistics, >=95% line coverage for every src/ and adapters/ Lua file
+- luacheck src/ adapters/ spec/ scripts/check-coverage.lua
+- Reference conformance uses real adapters and deterministic interleavings; external concurrency and optional cache/tenant behavior require separate evidence
+- docs/validation.md — runtime matrix, per-file results and migration notes
 
 ## Key Files
 

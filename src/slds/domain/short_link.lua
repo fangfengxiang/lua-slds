@@ -4,6 +4,7 @@
 
 local errors = require("slds.domain.errors")
 local lifecycle = require("slds.domain.lifecycle")
+local snapshot = require("slds.internal.snapshot")
 
 local _M = {}
 _M.__index = _M
@@ -17,6 +18,10 @@ local DANGEROUS_SCHEMES = {
 
 -- 前向声明，Forward declaration for status validation
 local transitions_valid
+
+local function is_finite(value)
+    return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
+end
 
 --- Validate a target URL scheme.
 -- 验证目标 URL 协议安全性。
@@ -56,8 +61,14 @@ function _M.new(opts)
         return nil, errors.INVALID .. ": " .. err
     end
 
-    if opts.status and not transitions_valid(opts.status) then
+    if opts.status ~= nil and not transitions_valid(opts.status) then
         return nil, errors.INVALID .. ": invalid status '" .. tostring(opts.status) .. "'"
+    end
+    if opts.expires_at ~= nil and not is_finite(opts.expires_at) then
+        return nil, errors.INVALID .. ": expires_at must be a finite number"
+    end
+    if opts.metadata ~= nil and type(opts.metadata) ~= "table" then
+        return nil, errors.INVALID .. ": metadata must be a table"
     end
 
     return setmetatable({
@@ -66,7 +77,7 @@ function _M.new(opts)
         target     = opts.target,
         status     = opts.status or lifecycle.ACTIVE,
         expires_at = opts.expires_at,
-        metadata   = opts.metadata,
+        metadata   = snapshot(opts.metadata),
     }, _M)
 end
 
@@ -75,6 +86,9 @@ end
 -- @param now number current timestamp
 -- @return boolean
 function _M:is_expired(now)
+    if not is_finite(now) then
+        error("short_link: now must be a finite number", 2)
+    end
     return self.expires_at ~= nil and self.expires_at < now
 end
 
@@ -105,29 +119,32 @@ function _M:with_patch(patch)
         error("short_link: namespace and code are immutable", 2)
     end
 
-    local new_target = patch.target ~= nil and patch.target or self.target
-    local new_status = patch.status ~= nil and patch.status or self.status
-    local new_expires = patch.expires_at ~= nil and patch.expires_at or self.expires_at
+    local fields = {
+        namespace = self.namespace,
+        code = self.code,
+        target = self.target,
+        status = self.status,
+        expires_at = self.expires_at,
+        metadata = self.metadata,
+    }
+    for _, field in ipairs({ "target", "status", "expires_at" }) do
+        if patch[field] ~= nil then
+            fields[field] = patch[field]
+        end
+    end
+
+    -- Validate field values before checking transitions; false is not omission.
+    local updated, err = _M.new(fields)
+    if not updated then
+        return nil, err
+    end
 
     -- 验证状态转换
     if patch.status ~= nil and patch.status ~= self.status then
         lifecycle.validate_transition(self.status, patch.status)
     end
 
-    -- 验证新 target
-    local ok, err = validate_target(new_target)
-    if not ok then
-        return nil, errors.INVALID .. ": " .. err
-    end
-
-    return _M.new({
-        namespace  = self.namespace,
-        code       = self.code,
-        target     = new_target,
-        status     = new_status,
-        expires_at = new_expires,
-        metadata   = self.metadata,
-    })
+    return updated
 end
 
 --- Convert to a plain table (for repository storage).
@@ -139,7 +156,7 @@ function _M:to_table()
         target     = self.target,
         status     = self.status,
         expires_at = self.expires_at,
-        metadata   = self.metadata,
+        metadata   = snapshot(self.metadata),
     }
 end
 

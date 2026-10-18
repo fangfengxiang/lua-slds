@@ -8,9 +8,17 @@ local Resolution     = require("slds.domain.resolution")
 local Errors         = require("slds.domain.errors")
 local Hooks          = require("slds.hooks")
 local Identity       = require("slds.domain.identity")
+local snapshot       = require("slds.internal.snapshot")
 
 local _M = {}
 _M.__index = _M
+
+local function capture_identity(identity)
+    if type(identity) ~= "table" or identity.code == nil then
+        error("slds: identity must contain namespace and code", 3)
+    end
+    return Identity.new(identity.namespace, identity.code)
+end
 
 --- Create a new SLDS service instance.
 -- 创建 SLDS 服务实例。
@@ -33,6 +41,9 @@ function _M.new(opts)
     end
     if type(opts.encoder) ~= "table" then
         error("slds: encoder is required", 2)
+    end
+    if opts.clock ~= nil and type(opts.clock) ~= "function" then
+        error("slds: clock must be a function", 2)
     end
 
     return setmetatable({
@@ -60,8 +71,13 @@ function _M:create(ctx, input)
     if type(input.target) ~= "string" or #input.target == 0 then
         error("slds:create: target is required", 2)
     end
+    input = snapshot(input)
+    if input.code ~= nil and type(input.code) ~= "string" then
+        error("slds:create: code must be a string", 2)
+    end
 
-    local namespace = input.namespace or Identity.DEFAULT_NAMESPACE
+    local namespace = input.namespace
+    if namespace == nil then namespace = Identity.DEFAULT_NAMESPACE end
     local code = input.code
 
     -- 如果没有提供 code，通过 Generator + Encoder 生成
@@ -71,7 +87,7 @@ function _M:create(ctx, input)
             return nil, "generator: " .. tostring(err)
         end
         code = self.encoder:encode(id)
-        if not code or #code == 0 then
+        if type(code) ~= "string" or #code == 0 then
             return nil, "encoder: produced empty code"
         end
     end
@@ -116,6 +132,7 @@ function _M:resolve(ctx, identity)
     if type(identity) ~= "table" then
         error("slds:resolve: identity must be an Identity", 2)
     end
+    identity = capture_identity(identity)
 
     -- 触发 before_resolve 钩子
     self.hooks:fire_before("resolve", ctx, identity)
@@ -135,6 +152,9 @@ function _M:resolve(ctx, identity)
 
     -- 应用领域解析逻辑（状态、过期检查）
     local now = self.clock()
+    if type(now) ~= "number" or now ~= now or now == math.huge or now == -math.huge then
+        error("slds: clock must return a finite number", 2)
+    end
     local result = Resolution.resolve(link, identity, now)
 
     -- 触发 after_resolve 钩子
@@ -164,6 +184,8 @@ function _M:update(ctx, identity, patch)
     if patch.namespace ~= nil or patch.code ~= nil then
         error("slds:update: namespace and code are immutable", 2)
     end
+    identity = capture_identity(identity)
+    patch = snapshot(patch)
 
     -- 获取现有链接
     local link, err = self.repository:get(ctx, identity)
@@ -183,9 +205,9 @@ function _M:update(ctx, identity, patch)
 
     -- 写入仓库
     local saved, repo_err = self.repository:update(ctx, identity, {
-        target     = updated.target,
-        status     = updated.status,
-        expires_at = updated.expires_at,
+        target     = patch.target,
+        status     = patch.status,
+        expires_at = patch.expires_at,
     })
     if not saved then
         return nil, repo_err
@@ -210,6 +232,7 @@ function _M:delete(ctx, identity)
     if type(identity) ~= "table" then
         error("slds:delete: identity must be an Identity", 2)
     end
+    identity = capture_identity(identity)
 
     -- 获取现有链接，验证可删除
     local link, err = self.repository:get(ctx, identity)

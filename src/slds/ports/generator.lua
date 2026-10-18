@@ -12,7 +12,8 @@ function _M.new()
 end
 
 --- Generate a unique internal identifier.
--- MUST produce a different value on each call.
+-- Successful calls MUST produce different values within the declared uniqueness scope.
+-- The host selects a compatible Encoder; the port imposes no numeric domain.
 -- @param ctx table context (may be used for namespace-specific seeding)
 -- @return any unique ID value (e.g., number, string)
 -- @return nil, err on failure

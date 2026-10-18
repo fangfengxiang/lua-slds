@@ -1,3 +1,4 @@
+rockspec_format = "3.0"
 package = "lua-slds"
 version = "scm-1"
 
@@ -41,6 +42,7 @@ build = {
       ["slds"]                           = "src/slds/init.lua",
       ["slds.service"]                   = "src/slds/service.lua",
       ["slds.hooks"]                     = "src/slds/hooks.lua",
+      ["slds.internal.snapshot"]         = "src/slds/internal/snapshot.lua",
       ["slds.domain.identity"]           = "src/slds/domain/identity.lua",
       ["slds.domain.short_link"]         = "src/slds/domain/short_link.lua",
       ["slds.domain.lifecycle"]          = "src/slds/domain/lifecycle.lua",

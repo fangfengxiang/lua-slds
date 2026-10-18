@@ -30,13 +30,15 @@ luarocks install luacheck
 busted --pattern=spec
 
 # Run linter
-luacheck src/ adapters/ spec/
+luacheck src/ adapters/ spec/ scripts/check-coverage.lua
 
 # Generate coverage report
-busted --coverage --pattern=spec && luacov
+sh scripts/test.sh
 ```
 
 If all three pass, your environment is ready.
+
+Every production Lua file under `src/` and `adapters/` must independently reach **95% line coverage**. The gate checks raw hit/miss counts, discovers all production files, and fails for missing coverage. Do not exclude production code or reuse previous statistics. The test script resets statistics before each run. Project rules are in [AGENTS.md](AGENTS.md); runtime evidence and migration notes are in [docs/validation.md](docs/validation.md).
 
 ## Code Style
 
@@ -76,7 +78,7 @@ Three categories, never mixed:
 |----------|---------|------|
 | Runtime errors | `return nil, err` | Repository failures, not found, conflicts |
 | Programming errors | `error(msg, 2)` | Invalid arguments, invariant violations |
-| Third-party isolation | `pcall(fn, ...)` | User hooks, injected port implementations |
+| Third-party isolation | `pcall(fn, ...)` | User hook callbacks; expected port failures return nil,err |
 
 ### Comments
 
@@ -151,7 +153,7 @@ end)
 
 ### Conformance Tests
 
-Conformance tests use the InMemory adapter as the reference implementation. If you implement a custom adapter, replace the adapter in `spec/helpers.lua` and run the conformance suite to verify compatibility.
+Conformance tests use the real bundled adapters. For a custom adapter, register the reusable suites with a fresh fixture factory as shown in the [conformance guide](docs/rfc/conformance-tests.md). Declare the evidence scope; deterministic interleavings do not prove external database concurrency.
 
 ## Pull Request Process
 
@@ -160,8 +162,8 @@ Conformance tests use the InMemory adapter as the reference implementation. If y
 3. **Write tests**: Add or update tests in `spec/`
 4. **Verify locally**:
    ```bash
-   luacheck src/ adapters/ spec/
-   busted --coverage --pattern=spec
+   luacheck src/ adapters/ spec/ scripts/check-coverage.lua
+   sh scripts/test.sh
    ```
    Both must pass with zero warnings/errors.
 5. **Commit**: Use clear commit messages

@@ -63,15 +63,17 @@ service:update({}, slds.Identity.new("default", link.code), {
 service:delete({}, slds.Identity.new("default", link.code))
 ```
 
+Identity 是普通 Lua table，调用者须遵守逻辑不可变约定；持久更新不可改名。metadata 按原始 table 数据复制，Hook 不承担领域参数转换。具体快照和错误边界见 [API 契约](docs/api.md)。
+
 ## 核心特性
 
-- **Identity** 值对象 `{ namespace, code }` — 不可变，值相等
+- **Identity** 值对象 `{ namespace, code }` — 逻辑不可变，值相等
 - **ShortLink** 域对象，含生命周期状态和可选过期时间
 - **Lifecycle** 状态机：`ACTIVE` <-> `DISABLED` -> `DELETED`（终端态）
 - **Resolution** 一级领域操作 — 非简单的 `Repository.get()` 别名
 - **Ports**（六边形）：Repository、Generator、Encoder — 自由替换实现
-- **Hooks** 扩展机制 — 通过 `pcall` 隔离，永不阻断关键路径
-- **Conformance Tests** L0-L3 — 任何声称 SLDS 兼容的实现必须通过
+- **Hooks** 扩展机制 — 同步观察者，领域参数快照及 `pcall` 异常隔离
+- **Conformance Tests** L0-L3 — 声称兼容的实现须通过适用场景并声明证据范围
 
 ## 10 条铁律
 
@@ -94,17 +96,21 @@ service:delete({}, slds.Identity.new("default", link.code))
 
 ```bash
 # 安装测试依赖
-luarocks install busted luacov luacheck
+luarocks install busted
+luarocks install luacov
+luarocks install luacheck
 
-# 运行测试（含覆盖率）
-busted --coverage --pattern=spec
+# 从全新统计运行测试，逐个生产文件要求覆盖率 >=95%
+sh scripts/test.sh
 
 # 静态检查
-luacheck src/ adapters/ spec/
+luacheck src/ adapters/ spec/ scripts/check-coverage.lua
 
-# 生成覆盖率报告
-luacov
+# 查看上传 Codecov 的同一份报告
+cat luacov.report.out
 ```
+
+覆盖率包含 `src/`、`adapters/` 的所有 Lua 文件，包括入口、端口、内部辅助模块和未加载文件。CI 在 Lua 5.1、Lua 5.3、LuaJIT 下分别强制逐文件门禁；Codecov project/patch 目标为 95%，容差 0。详见[验证及迁移说明](docs/validation.md)。
 
 ## 文档
 

@@ -18,71 +18,69 @@ function _M.new()
     }, _M)
 end
 
-local function key(namespace, code)
-    return namespace .. "\0" .. code
-end
-
 --- Create a new short link. Enforces uniqueness atomically (RULE-005).
 -- 创建短链，原子保证唯一性。
 function _M:create(ctx, link)
-    local k = key(link.namespace, link.code)
-    if self.data[k] then
+    local bucket = self.data[link.namespace]
+    if bucket and bucket[link.code] then
         return nil, Errors.CONFLICT
     end
-    -- 存储副本，防止外部修改
-    self.data[k] = link:to_table()
+    bucket = bucket or {}
+    bucket[link.code] = link:to_table()
+    self.data[link.namespace] = bucket
     return link
 end
 
 --- Get a short link by identity.
 -- 按身份获取短链。
 function _M:get(ctx, identity)
-    local k = key(identity.namespace, identity.code)
-    local stored = self.data[k]
+    local bucket = self.data[identity.namespace]
+    local stored = bucket and bucket[identity.code]
     if not stored then
         return nil, Errors.NOT_FOUND
     end
     -- 重建 ShortLink 对象返回
-    local link = ShortLink.new(stored)
-    if not link then
-        return nil, "invalid stored link"
-    end
-    return link
+    return ShortLink.new(stored)
 end
 
 --- Update a short link by identity with a patch.
 -- 更新短链。
 function _M:update(ctx, identity, patch)
-    local k = key(identity.namespace, identity.code)
-    local stored = self.data[k]
+    if type(patch) ~= "table" then
+        error("repository:update: patch must be a table", 2)
+    end
+    if patch.namespace ~= nil or patch.code ~= nil then
+        error("repository:update: namespace and code are immutable", 2)
+    end
+    local bucket = self.data[identity.namespace]
+    local stored = bucket and bucket[identity.code]
     if not stored then
         return nil, Errors.NOT_FOUND
     end
 
-    -- 应用 patch
-    local updated = {}
-    for field, val in pairs(stored) do
-        updated[field] = val
-    end
-    if patch.target then updated.target = patch.target end
-    if patch.status then updated.status = patch.status end
-    if patch.expires_at ~= nil then updated.expires_at = patch.expires_at end
-
-    -- 验证构造
-    local link = ShortLink.new(updated)
-    if not link then
-        return nil, "invalid updated link"
+    if stored.status == Lifecycle.DELETED then
+        return nil, Errors.DELETED
     end
 
-    self.data[k] = updated
-    return link
+    -- No yield: validate and commit against the latest record in this Lua VM.
+    local current, err = ShortLink.new(stored)
+    if not current then
+        return nil, err
+    end
+    local updated
+    updated, err = current:with_patch(patch)
+    if not updated then
+        return nil, err
+    end
+    bucket[identity.code] = updated:to_table()
+    return updated
 end
 
 --- Logically delete a short link (status → DELETED). Deleted codes MUST NOT be reused (RULE-006).
 -- 逻辑删除，已删除的 code 不可复用。
 function _M:delete(ctx, identity)
-    local k = key(identity.namespace, identity.code)
-    local stored = self.data[k]
+    local bucket = self.data[identity.namespace]
+    local stored = bucket and bucket[identity.code]
     if not stored then
         return nil, Errors.NOT_FOUND
     end

@@ -24,8 +24,9 @@ function _M:get(ctx, identity)
 end
 
 function _M:update(ctx, identity, patch)
-    -- Apply patch to existing record
-    -- Return: updated ShortLink | nil, Errors.NOT_FOUND
+    -- Atomically validate and apply supplied fields to the latest record
+    -- Preserve unspecified fields; reject DELETED; never partially commit
+    -- Return: updated ShortLink | nil, err
 end
 
 function _M:delete(ctx, identity)
@@ -36,37 +37,11 @@ end
 return _M
 ```
 
-### Redis Example (Conceptual)
+### Redis Integration Considerations
 
-```lua
-local resty_redis = require("resty.redis")
-local Errors = require("slds.domain.errors")
+SLDS does not ship a Redis adapter. A host implementation needs an unambiguous encoding of the namespace/code tuple, a serializer for its supported metadata values, connection/error handling, and atomic write operations. Concatenating arbitrary identity fields with a delimiter can collide. A Lua table cannot be passed directly as a Redis value, and a `SETNX` result of `0` means conflict even though `0` is truthy in Lua.
 
-local _M = {}
-_M.__index = _M
-
-function _M.new(opts)
-    return setmetatable({
-        prefix = opts and opts.prefix or "slds:",
-    }, _M)
-end
-
-function _M:create(ctx, link)
-    local red = resty_redis:new()
-    red:connect("127.0.0.1", 6379)
-    local key = self.prefix .. link.namespace .. ":" .. link.code
-    -- SETNX ensures atomic uniqueness (RULE-005)
-    local ok = red:setnx(key, link:to_table())
-    if not ok then
-        return nil, Errors.CONFLICT
-    end
-    return link
-end
-
--- ... implement get/update/delete similarly
-
-return _M
-```
+Use transactions or an equivalent server-side commit mechanism for sparse updates against the latest record. Do not implement an update as an unprotected get/modify/set sequence. Retain a tombstone after deletion so the identity remains reserved; expiring the uniqueness key would violate RULE-006.
 
 **Key rules for adapter implementations:**
 
@@ -74,6 +49,8 @@ return _M
 2. Delete is logical (set status = DELETED), not physical removal
 3. Deleted codes MUST NOT be reusable (keep the record, reject re-creation)
 4. Repository MAY use `ctx` for tenant-aware queries
+5. Updates validate domain transitions and values atomically against the latest record; failures leave it unchanged
+6. Input, returned and exported metadata table snapshots must not alias stored state
 
 ## Writing a Custom Generator
 
@@ -98,20 +75,20 @@ end
 return _M
 ```
 
-The Generator produces an **internal ID**, not the short code. The Encoder transforms the ID into a short code string.
+The Generator produces an **internal ID**, not the short code. Declare its uniqueness scope and pair it with an Encoder that accepts its ID representation and range. The bundled Base62 accepts only integers in [0, 2^53-1]; a 64-bit or string Snowflake implementation needs a compatible encoder and must not coerce IDs to inexact Lua numbers.
 
 ## Writing a Custom Encoder
 
 ```lua
--- Hash-based encoder
-local md5 = require("md5")  -- or your preferred hash lib
-
+-- Pass through IDs from a generator that already emits unique URL-safe strings.
 local _M = {}
 _M.__index = _M
 
 function _M:encode(id)
-    local hash = md5.sumhexa(tostring(id))
-    return hash:sub(1, 6)  -- first 6 chars of MD5
+    if type(id) ~= "string" or not id:match("^[A-Za-z0-9_-]+$") then
+        error("encoder: expected a non-empty URL-safe string ID", 2)
+    end
+    return id
 end
 
 return _M
@@ -122,6 +99,9 @@ The Encoder MUST be a pure transformation:
 - No I/O (no database, no network, no `ngx`)
 - No side effects
 - Deterministic (same input always produces same output)
+- A non-empty URL-safe string output for the supported ID domain
+
+If an encoder can map different IDs to the same code, Repository still enforces uniqueness and returns CONFLICT. The host decides whether to retry; a truncated hash does not guarantee a collision-free mapping.
 
 ## Multi-Namespace Usage
 
@@ -178,12 +158,8 @@ service:use(LoggerHook("[APP]"))
 ```lua
 local function MetricsHook(metrics)
     return {
-        before_resolve = function(ctx, identity)
-            ctx._resolve_start = os.clock()
-        end,
         after_resolve = function(ctx, result)
-            local elapsed = (os.clock() - (ctx._resolve_start or 0)) * 1000
-            metrics:timing("slds.resolve", elapsed, {
+            metrics:increment("slds.resolve", {
                 found = tostring(result.found),
                 status = result.status,
             })
@@ -192,7 +168,7 @@ local function MetricsHook(metrics)
 end
 ```
 
-**Critical rule:** Hooks MUST NOT block the resolution critical path. If a hook fails, the operation MUST still succeed. SLDS enforces this via `pcall` isolation (RULE-007, RULE-008).
+Hooks are synchronous observers. SLDS isolates callback exceptions with `pcall`, while slow callbacks still add latency. Treat ctx as read-only and use the host's non-blocking telemetry path when needed. Measure complete operation latency in the host wrapper so repository errors are measured too; successful after_resolve callbacks do not run on infrastructure failure.
 
 ## Error Handling Patterns
 
@@ -218,7 +194,8 @@ end
 
 ```lua
 local function resolve_or_fallback(service, identity, fallback_url)
-    local result = service:resolve({}, identity)
+    local result, err = service:resolve({}, identity)
+    if not result then return nil, err end
     if result.found and result.status == "ACTIVE" then
         return result.target
     end
@@ -265,12 +242,15 @@ SLDS Core has zero `ngx` dependency. Integration happens in the host layer:
 location /s/:code {
     content_by_lua_block {
         local slds = require("slds")
-        local service = ngx.shared.slds_service  -- pre-initialized
+        local service = require("app.slds_service")  -- host module returns a configured worker-local instance
 
         local identity = slds.Identity.new("default", ngx.var.code)
-        local result = service:resolve({}, identity)
+        local result, err = service:resolve({}, identity)
 
-        if result.found and result.status == "ACTIVE" then
+        if not result then
+            ngx.log(ngx.ERR, "SLDS resolve failed: ", err)
+            ngx.exit(503)
+        elseif result.found and result.status == "ACTIVE" then
             ngx.redirect(result.target, 302)
         else
             ngx.exit(404)
@@ -279,16 +259,10 @@ location /s/:code {
 }
 ```
 
-The service instance should be initialized in `init_by_lua` and shared across workers. Repository adapters using `resty.redis` or `ngx.shared.dict` are appropriate for OpenResty deployment.
+The host's `app.slds_service` module configures a worker-local Service with suitable adapters. Lua service objects cannot be stored in `ngx.shared`; cross-worker persistence and uniqueness belong to the repository/generator implementation. Network connections must be acquired in a phase supported by the chosen client.
 
 ## Conformance Testing
 
 If you are implementing a custom adapter and want to claim SLDS compatibility, run the Conformance Test Suite against your implementation:
 
-```bash
-# Replace InMemory adapter with your implementation in spec/helpers.lua
-# Then run the full suite
-busted --pattern=spec/conformance
-```
-
-See [Conformance Tests](rfc/conformance-tests.md) for the L0-L3 test matrix (RULE-010).
+Register the reusable suites from a Busted spec using a fresh fixture factory. The [Conformance Tests guide](rfc/conformance-tests.md) provides a complete factory example, the L0-L3 matrix, and the additional evidence required for real concurrency or optional host extensions (RULE-010).

@@ -1,0 +1,18 @@
+local helpers = require("spec.helpers")
+
+describe("Conformance fixture contract", function()
+    it("uses fresh real adapters and accepts fault-injection overrides", function()
+        local svc, repo, gen, enc = helpers.fixture()
+        assert.equal(require("slds.adapters.inmemory.repository"), getmetatable(repo))
+        assert.equal(require("slds.adapters.sequential.generator"), getmetatable(gen))
+        assert.equal(require("slds.adapters.base62.encoder"), getmetatable(enc))
+        local another, other_repo, other_gen = helpers.fixture()
+        assert.is_false(rawequal(repo, other_repo))
+        assert.is_false(rawequal(gen, other_gen))
+        assert(svc:create({}, { code = "same", target = "https://a.com" }))
+        assert(another:create({}, { code = "same", target = "https://b.com" }))
+        local failing_repo = { get = function() return nil, "offline" end }
+        local override = helpers.fixture({ repository = failing_repo })
+        assert.is_true(rawequal(failing_repo, override.repository))
+    end)
+end)

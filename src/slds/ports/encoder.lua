@@ -13,8 +13,9 @@ end
 
 --- Encode an internal ID to a short code string.
 -- MUST be deterministic — same ID always produces the same code.
+-- The host selects compatible representations; no bundled numeric range is imposed.
 -- @param id any internal unique identifier
--- @return string URL-safe short code
+-- @return string non-empty URL-safe short code
 function _M:encode(id)
     error("encoder:encode — not implemented (port interface)", 2)
 end

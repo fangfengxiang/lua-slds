@@ -146,7 +146,7 @@ end
 
 ## 7. Add Hooks
 
-Hooks extend SLDS for observability without coupling to the Core. They are isolated via `pcall` — a failing hook never blocks the operation.
+Hooks extend SLDS for observability without coupling to the Core. They run synchronously with independent domain payload snapshots; `pcall` isolates callback exceptions. Callback time adds latency, and ctx remains shared and should be treated as read-only.
 
 ```lua
 local logger = {

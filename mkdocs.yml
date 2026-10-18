@@ -65,6 +65,7 @@ nav:
     - API Reference: api.md
     - RFC-0001: rfc/RFC-0001.md
     - Conformance Tests: rfc/conformance-tests.md
+    - Validation & Migration: validation.md
   - Explanation:
     - Design Rationale: design/design-rationale.md
     - Domain Layer: design/domain-layer.md

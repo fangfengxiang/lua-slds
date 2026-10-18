@@ -12,8 +12,8 @@ The main entry point, exported by `require("slds")`.
 | `slds.ACTIVE` | `"ACTIVE"` | Lifecycle status |
 | `slds.DISABLED` | `"DISABLED"` | Lifecycle status |
 | `slds.DELETED` | `"DELETED"` | Lifecycle status (terminal) |
-| `slds.NOT_FOUND` | `"NOT_FOUND"` | Error code |
-| `slds.EXPIRED` | `"EXPIRED"` | Error code |
+| `slds.Errors.NOT_FOUND` | `"NOT_FOUND"` | Error code |
+| `slds.Errors.EXPIRED` | `"EXPIRED"` | Error code |
 | `slds.CONFLICT` | `"CONFLICT"` | Error code |
 | `slds.INVALID` | `"INVALID"` | Error code |
 
@@ -44,7 +44,7 @@ Static factory (dot notation). Creates a new SLDS service instance.
 
 **Returns:** `Service`
 
-**Errors:** `error(msg, 2)` if any required port is missing or wrong type (programming error).
+**Errors:** `error(msg, 2)` if any required port is missing/wrong type or clock is not a function. The clock must return a finite number. Expected port failures return nil,err; unexpected port programming errors propagate. Resolve returns a not-found result for NOT_FOUND (and legacy nil,nil absence), but propagates other repository errors without firing successful after_resolve.
 
 ---
 
@@ -52,7 +52,7 @@ Static factory (dot notation). Creates a new SLDS service instance.
 
 ### `Identity.new(namespace, code) -> Identity`
 
-Creates an immutable Identity value object.
+Creates a logically immutable Identity value object using an ordinary Lua table. Callers must not assign namespace/code directly; operations capture identity values and never rewrite the caller object. Update APIs reject identity changes.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -64,7 +64,7 @@ Creates an immutable Identity value object.
 ### Metamethods
 
 - `__eq` — value equality: two identities are equal if `namespace` and `code` match.
-- `__tostring` — `"namespace/code"` format.
+- `__tostring` — `"namespace:code"` format.
 
 ---
 
@@ -80,10 +80,10 @@ Creates a ShortLink domain entity.
 | `opts.code` | string | yes | Short code |
 | `opts.target` | string | yes | Destination URL (must be safe scheme) |
 | `opts.status` | string | no | Lifecycle status (default: `ACTIVE`) |
-| `opts.expires_at` | number | no | Expiry Unix timestamp |
-| `opts.metadata` | table | no | Opaque metadata (Core MUST NOT interpret) |
+| `opts.expires_at` | number | no | Finite Unix timestamp; equality with now is not expired |
+| `opts.metadata` | table | no | Opaque raw-table snapshot (Core MUST NOT interpret) |
 
-**Returns:** `ShortLink` or `nil, err` (runtime error if target has dangerous scheme).
+**Returns:** `ShortLink` or `nil, err` with an INVALID-prefixed error for invalid target/status/expires_at/metadata. Metadata must be nil or a table; expiration must be nil or a finite number.
 
 **Errors:** `error(msg, 2)` for programming errors (wrong types, missing required fields).
 
@@ -97,7 +97,7 @@ Returns `true` if status is `ACTIVE` and not expired.
 
 ### `ShortLink:with_patch(patch) -> ShortLink | nil, err`
 
-Creates a new ShortLink with updated fields (immutable copy).
+Creates a new ShortLink with independent metadata table contents. Only non-nil target/status/expires_at fields are patched. Unsupported fields, including metadata, are ignored; nil expiration retains the previous value, and false is invalid rather than a clearing marker.
 
 | Patch Field | Allowed |
 |-------------|---------|
@@ -109,7 +109,7 @@ Creates a new ShortLink with updated fields (immutable copy).
 
 ### `ShortLink:to_table() -> table`
 
-Returns a plain table representation for repository storage.
+Returns a plain table representation with independent nested metadata tables. Construction, patching and export copy raw table graphs, including cycles and table keys; metadata metatables are omitted without invoking them. Non-table leaves retain their values; internal mutable state of functions/userdata/threads remains host-owned.
 
 ---
 
@@ -218,7 +218,7 @@ Hook table callbacks (all optional):
 }
 ```
 
-Hooks are isolated via `pcall`. A failing hook triggers `on_error` callbacks but never blocks the operation (RULE-007, RULE-008).
+Hooks run synchronously in registration order. Each callback receives an independent domain payload snapshot retaining domain methods; mutations cannot affect the operation, stored data, caller objects or subsequent callbacks. ctx retains its original reference and must be treated as read-only. Exceptions trigger isolated on_error callbacks without failing the operation (RULE-007/008); elapsed callback time still adds latency. This is not a timeout, execution sandbox or durable event mechanism.
 
 ---
 
@@ -236,7 +236,7 @@ Retrieve a short link by identity.
 
 ### `repository:update(ctx, identity, patch) -> link, err`
 
-Apply a patch to an existing short link.
+Atomically apply supplied non-nil target/status/expires_at fields to the latest stored record, using domain validation before commit. Unspecified fields remain unchanged. Different-field updates preserve both changes; same-field updates follow commit order. A record DELETED at commit returns nil,"DELETED" unchanged. Validation failure must not partially write. Identity patches raise a programming error. A service pre-read alone does not satisfy this contract.
 
 ### `repository:delete(ctx, identity) -> boolean, err`
 
@@ -256,7 +256,7 @@ Produce an internal unique identifier. This is **not** the short code — the En
 
 ### `encoder:encode(id) -> code`
 
-Pure transformation from internal ID to short code string. No I/O, no side effects, deterministic.
+Pure transformation from internal ID to non-empty URL-safe code. No I/O, no side effects, deterministic. The host selects a compatible Generator/Encoder pair; Core imposes no numeric ID domain, alphabet or maximum length.
 
 ---
 
@@ -264,7 +264,7 @@ Pure transformation from internal ID to short code string. No I/O, no side effec
 
 ### `slds.adapters.inmemory.repository`
 
-In-memory Repository for development and testing.
+In-memory Repository for development and testing. Stores data as data[namespace][code], preserving all valid identity tuples, including embedded NULs. Methods do not yield and are atomic within one Lua VM; this is not cross-process concurrency support. Input/returned metadata tables do not alias stored data.
 
 ```lua
 local repo = require("slds.adapters.inmemory.repository").new()
@@ -272,7 +272,7 @@ local repo = require("slds.adapters.inmemory.repository").new()
 
 ### `slds.adapters.sequential.generator`
 
-Sequential counter generator.
+Sequential counter generator. Accepts integer start in [0, 9007199254740991], defaults to 1 only for nil, and guarantees increasing values only within one instance. The maximum is returned once, followed by persistent nil,"generator exhausted". Invalid starts raise a programming error.
 
 ```lua
 local gen = require("slds.adapters.sequential.generator").new(1)  -- start at 1
@@ -280,9 +280,9 @@ local gen = require("slds.adapters.sequential.generator").new(1)  -- start at 1
 
 ### `slds.adapters.base62.encoder`
 
-Base62 encoder (0-9, A-Z, a-z).
+Base62 encoder (0-9, A-Z, a-z). Accepts only finite integers in [0, 9007199254740991]; invalid IDs raise a programming error. This range belongs to this reference adapter, not the generic port.
 
 ```lua
 local enc = require("slds.adapters.base62.encoder").new()
-print(enc:encode(12345))  -- "3d7"
+print(enc:encode(12345))  -- "3D7"
 ```

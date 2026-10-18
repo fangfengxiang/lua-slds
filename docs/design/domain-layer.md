@@ -32,17 +32,17 @@ The SLDS domain layer is the heart of the system. It defines *what a short link 
 
 ### Identity — Value Object
 
-An Identity is the **immutable** answer to *"Who is this short link?"*
+An Identity is the **logically immutable** answer to *"Who is this short link?"*
 
 ```
 Identity = { namespace: string, code: string }
 ```
 
-- Created once, never modified
+- Ordinary Lua table; callers must not modify fields directly, and public update APIs reject persistent identity changes
 - Equality by value: two Identity objects with the same `namespace` and `code` are equal (`__eq`)
-- String representation: `"namespace/code"` (`__tostring`)
+- String representation: `"namespace:code"` (`__tostring`)
 
-**Why a value object, not a plain table?** Type safety and semantic clarity. An Identity is never accidentally confused with a ShortLink or a ResolutionResult. The `__eq` metamethod ensures consistent comparison.
+The shared class metatable supplies domain methods and value equality. The representation remains an ordinary Lua table; it does not provide a language-enforced type or read-only barrier.
 
 ### ShortLink — Domain Entity
 
@@ -126,7 +126,7 @@ This is verified by the dependency graph — all `require()` calls within `src/s
 | Programming errors | `error(msg, 2)` | `Identity.new` for missing namespace |
 | Third-party isolation | `pcall` | Not used in domain layer (no third-party calls) |
 
-The domain layer is pure logic — it has no third-party calls to isolate. `pcall` isolation is used in the service and hooks layers.
+The domain layer is pure logic — it has no third-party calls to isolate. `pcall` exception isolation is used by hook dispatch; unexpected port programming errors propagate.
 
 ### 3. OOP Pattern
 

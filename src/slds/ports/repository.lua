@@ -33,11 +33,15 @@ function _M:get(ctx, identity)
 end
 
 --- Update a short link identified by identity with a patch.
+-- Atomically validate and apply supplied fields against the latest record.
+-- Preserve unspecified fields; reject a DELETED record with nil, "DELETED".
+-- Invalid patches MUST leave storage unchanged; use the domain lifecycle rules.
 -- @param ctx table context
 -- @param identity Identity
 -- @param patch table { target?, status?, expires_at? }
 -- @return ShortLink updated link
 -- @return nil, "NOT_FOUND" if not found
+-- @return nil, err on validation or infrastructure failure
 function _M:update(ctx, identity, patch)
     error("repository:update — not implemented (port interface)", 2)
 end

@@ -10,7 +10,7 @@ Most short link systems couple domain logic (what a short link *is*) with infras
 
 - **Core** = Identity + Lifecycle + Resolution (pure Lua, no I/O)
 - **Ports** = Repository, Generator, Encoder (interface contracts)
-- **Adapters** = InMemory, Redis, MySQL, Base62, Sequential (infrastructure)
+- **Bundled adapters** = InMemory, Base62, Sequential; hosts supply Redis/MySQL adapters when needed
 
 This means you can swap the storage layer without touching domain logic, run the same Core in OpenResty or a plain Lua VM, and test domain rules without any external dependencies.
 
@@ -22,7 +22,7 @@ This means you can swap the storage layer without touching domain logic, run the
 luarocks install lua-slds
 ```
 
-Or use directly by adding `src/` to your `package.path`.
+For source development, use `luarocks make lua-slds-scm-1.rockspec` to install both Core and the bundled adapters.
 
 ### Minimal Example
 
@@ -73,13 +73,15 @@ local link = service:create({}, {
 
 ## Features
 
-- **Identity** value object `{ namespace, code }` — immutable, equality by value
+- **Identity** value object `{ namespace, code }` — logically immutable, equality by value
 - **ShortLink** domain entity with lifecycle status and optional expiry
 - **Lifecycle** state machine: `ACTIVE` ↔ `DISABLED` → `DELETED` (terminal)
 - **Resolution** as a first-class domain operation — not just `Repository.get()` with extra steps
 - **Ports** (hexagonal): Repository, Generator, Encoder — swap implementations freely
-- **Hooks** extension mechanism for Logger/Metrics/Tracer — isolated via `pcall`, never blocks the critical path
-- **Conformance Tests** L0–L3: any implementation claiming SLDS compatibility must pass
+- **Hooks** for Logger/Metrics/Tracer — synchronous observers with independent payload snapshots and `pcall` exception isolation
+- **Conformance Tests** L0–L3: compatible implementations pass applicable scenarios and declare their evidence scope
+
+Identity uses ordinary Lua tables: callers must not rewrite fields directly. Metadata table graphs are copied at domain/storage boundaries. Hooks cannot transform domain payloads; callback latency and ctx remain the host's responsibility. See the [API contract](api.md).
 
 ## Architecture
 
@@ -115,22 +117,26 @@ local link = service:create({}, {
 
 ```bash
 # Install test dependencies
-luarocks install busted luacov luacheck
+luarocks install busted
+luarocks install luacov
+luarocks install luacheck
 
-# Run tests with coverage
-busted --coverage --pattern=spec
+# Fresh coverage data; require >=95% in every production Lua file
+sh scripts/test.sh
 
 # Lint
-luacheck src/ adapters/ spec/
+luacheck src/ adapters/ spec/ scripts/check-coverage.lua
 
 # Coverage report
-luacov
+cat luacov.report.out
 ```
+
+CI runs the per-file gate independently on Lua 5.1, Lua 5.3 and LuaJIT. See [validation and migration notes](validation.md) for measured results and evidence boundaries.
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](https://github.com/fangfengxiang/lua-slds/blob/main/LICENSE).
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/fangfengxiang/lua-slds/blob/main/CONTRIBUTING.md).

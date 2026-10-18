@@ -54,7 +54,7 @@ repository:delete(ctx, identity) -> boolean, err
 |--------|---------|-------------|
 | `create` | Enforce code uniqueness atomically (RULE-005) | Generate the code (that is Generator's job) |
 | `get` | Return raw persisted data | Apply resolution semantics (that is Resolution's job) |
-| `update` | Apply patch to existing record | Validate state transitions (that is Lifecycle's job) |
+| `update` | Atomically apply sparse patches to the latest record using domain validation | Define different lifecycle rules or revive DELETED |
 | `delete` | Logical delete (status = DELETED) | Physically remove the record (RULE-006 requires retention) |
 
 **Key principle:** The repository is a **persistence boundary**, not a domain authority. It stores and retrieves data. It does not decide whether a link is resolvable.
@@ -72,7 +72,7 @@ Produces an **internal unique identifier** — a number or string that is not ye
 - The Generator manages uniqueness and ordering (infrastructure concern)
 - The Encoder manages human readability and URL safety (presentation concern)
 
-You can swap the Generator (sequential → snowflake → UUID) without changing the Encoder, and vice versa (Base62 → Base64 → hash-based).
+The host can replace either implementation when the pair agrees on the ID representation and range. A string/UUID generator is not automatically compatible with the bundled numeric Base62 encoder. The generic ports impose no bundled numeric range or maximum code length.
 
 ### Encoder Port
 
@@ -102,20 +102,20 @@ Adapters are **implementations** of ports. SLDS bundles three reference adapters
 
 ### InMemory Repository
 
-Stores data in a Lua table keyed by `namespace\0code` (NUL-separated to avoid collisions). Enforces uniqueness via table key existence. Logical delete sets `status = DELETED` without removing the record.
+Stores data as `data[namespace][code]`, distinguishing even identity tuples containing NUL. Metadata tables are snapshotted on input and output. Create/update/delete do not yield; update validates and commits against the latest record within one Lua VM. Logical deletion retains the record and its uniqueness reservation. This is not a cross-process locking mechanism.
 
 ### Sequential Generator
 
-A simple incrementing counter starting at 1. Thread-safe in Lua's cooperative concurrency model (no preemptive scheduling). Not suitable for distributed deployment — use Snowflake or UUID in production.
+A simple counter starting at 1 by default, with an explicit integer domain [0, 9007199254740991]. Uniqueness is per instance, not distributed. The maximum is returned once; subsequent generation returns nil,"generator exhausted". Host-selected production generators must be paired with a compatible encoder.
 
 ### Base62 Encoder
 
-Converts a numeric ID to a Base62 string:
+Converts a finite integer in [0, 9007199254740991] to a Base62 string; this is an adapter-specific range:
 
 ```
 0  -> "0"
 1  -> "1"
-10 -> "a"
+10 -> "A"
 61 -> "z"
 62 -> "10"
 ```
@@ -150,10 +150,10 @@ The hexagonal architecture enables comprehensive testing at each layer:
 | Test Layer | What is Tested | Adapters Used |
 |------------|----------------|---------------|
 | Domain unit tests | Domain logic (Identity, ShortLink, Lifecycle, Resolution) | None (pure logic) |
-| Service tests | Orchestration, hooks, error mapping | Mock adapters |
+| Service tests | Orchestration, hooks, error mapping | Real reference adapters; targeted fault injection |
 | Conformance L0-L1 | Core operations and lifecycle semantics | InMemory adapters |
-| Conformance L2 | Reliability (idempotency, concurrency) | InMemory + mock |
-| Conformance L3 | Extensions (metadata, hooks, multi-tenant) | InMemory + mock |
-| E2E tests | Full stack with real adapters | InMemory (or Redis in CI) |
+| Conformance L2 | Sequential reliability and deterministic update/delete interleavings | InMemory; real concurrency requires external adapter evidence |
+| Conformance L3 | Metadata, observer hooks, context propagation and visibility | InMemory; tenant/cache extensions are not applicable |
+| External integration tests | Real infrastructure concurrency, optional cache/tenant behavior | Supplied by adapter authors, not claimed by the reference suite |
 
 The Conformance Test Suite (L0-L3) is the **specification enforcement mechanism** (RULE-010). Any implementation claiming SLDS compatibility MUST pass it.

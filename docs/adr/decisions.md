@@ -16,6 +16,7 @@ This document indexes key architectural decisions made during SLDS development.
 | ADR-008 | Generator/Encoder Separation | Accepted | 2026-10-08 |
 | ADR-009 | Error Handling Three-Class System | Accepted | 2026-10-08 |
 | ADR-010 | Conformance Test Suite as Specification | Accepted | 2026-10-08 |
+| ADR-011 | Contract hardening and evidence boundaries | Accepted | 2026-10-18 |
 
 ---
 
@@ -119,13 +120,13 @@ Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no ba
 
 **Context:** Hooks (Logger, Metrics, Tracer) are user-provided extensions. If a hook fails, should the operation fail?
 
-**Decision:** Hooks are isolated via `pcall`. A failing hook triggers `on_error` callbacks but **never** blocks the operation.
+**Decision:** Hooks are isolated via `pcall`. A failing hook triggers `on_error` callbacks without failing the operation. Callbacks remain synchronous and add latency; see ADR-011 for observer snapshots and guarantee boundaries.
 
 **Rationale:** Hooks are observability extensions, not domain logic (RULE-007, RULE-008). A broken logger should not prevent a successful resolution. The `pcall` isolation is applied to each hook callback independently, and `on_error` itself is also isolated (double isolation).
 
 **Consequences:**
-- (+) Observability failures never impact business operations
-- (+) Hooks can be added/removed without risk
+- (+) Hook exceptions do not abort operations; callback latency remains a host concern
+- (+) Hook exceptions are isolated; host code remains responsible for callback latency and side effects
 - (-) Silent failures (mitigated by on_error callback)
 
 ---
@@ -178,14 +179,14 @@ Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no ba
 
 1. **Runtime errors** → `return nil, err` (repository failures, not found, conflicts)
 2. **Programming errors** → `error(msg, 2)` (invalid arguments, immutable field violation)
-3. **Third-party isolation** → `pcall` (user hooks, injected port implementations)
+3. **Hook exception isolation** → `pcall` (user hook callbacks); expected port failures return nil,err and unexpected port programming errors propagate.
 
 **Rationale:** This follows the Lua ecosystem convention (lua-resty-redis, lua-resty-http, dkjson). Runtime errors are expected conditions the caller should handle. Programming errors are bugs that should fail fast. Third-party code is isolated to prevent crashes.
 
 **Consequences:**
 - (+) Callers can distinguish "expected failures" from "bugs"
 - (+) Fail-fast for programming errors prevents silent corruption
-- (+) Third-party failures never crash the service
+- (+) Hook exceptions do not fail operations; port programming errors remain visible
 - (-) Slightly more cognitive load (three patterns instead of one)
 
 ---
@@ -204,11 +205,24 @@ Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no ba
 |-------|-------|
 | L0 | Core: create/resolve/update/delete |
 | L1 | Lifecycle: expiration, disabled, terminal delete, code reuse |
-| L2 | Reliability: idempotency, concurrency, atomicity |
-| L3 | Extensions: events/cache/metadata/multi-tenant |
+| L2 | Duplicate rejection, commit order, deterministic interleavings and atomicity; external concurrency requires adapter evidence |
+| L3 | Metadata, hooks, context propagation and visibility; cache/tenant extensions require host integration evidence |
 
 **Consequences:**
 - (+) Objective compatibility verification
 - (+) Tests serve as executable specification
-- (+) New implementations can self-verify
+- (+) New implementations can self-verify applicable scenarios and identify outstanding evidence
 - (-) Test suite must be maintained alongside the spec
+
+
+## ADR-011: Contract hardening and evidence boundaries
+
+**Status:** Accepted for the current reference implementation (2026-10-18).
+
+- Preserve ordinary Lua tables and logical identity immutability; update APIs and stored snapshots protect persistent identity, not arbitrary direct assignments.
+- Apply sparse patches atomically against the latest record using domain rules. Reject updates to DELETED at commit with nil,DELETED; different fields survive, the same field follows commit order. This does not provide application read-modify-write conflict detection.
+- Copy raw metadata table graphs on domain/storage boundaries, omit metadata metatables, and retain non-table leaves. Metadata updates and deep merge remain unsupported.
+- Hooks are synchronous observers with per-callback domain snapshots. Exception isolation is not latency isolation, sandboxing or durable delivery; ctx stays host-owned.
+- Sequential/Base62 numeric limits belong only to the bundled adapters. Generic ports remain representation-agnostic; the host selects compatible pairs.
+- Factory-driven conformance runs real reference adapters and labels sequential/interleaving evidence honestly. No real database concurrency, cache invalidation or tenant isolation claim follows from this run.
+- Every production Lua file must reach 95% line coverage independently in each supported CI interpreter. No file exclusions or stale statistics may hide a gap.

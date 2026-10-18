@@ -36,6 +36,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/.."
 
 # --- 参数检查 ---
 if [ $# -lt 1 ]; then

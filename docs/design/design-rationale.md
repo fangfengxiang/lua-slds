@@ -144,7 +144,7 @@ SLDS uses a simple boundary test:
 | Click analytics | Yes | Yes | ❌ No |
 | Metadata storage | Yes | Partially (but metadata is a passthrough) | ✅ Yes (as passthrough) |
 | Hooks | Yes | Yes (hooks are optional) | ✅ Yes (as extension point) |
-| Clock | Yes | Expiration can't be tested | ✅ Yes (as port) |
+| Clock injection | Yes | Deterministic expiration checks need a time input | ✅ Yes (constructor function, no additional port) |
 
 ---
 

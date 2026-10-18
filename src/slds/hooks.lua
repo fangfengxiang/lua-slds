@@ -5,6 +5,21 @@
 local _M = {}
 _M.__index = _M
 
+local snapshot = require("slds.internal.snapshot")
+local Identity = require("slds.domain.identity")
+local ShortLink = require("slds.domain.short_link")
+local Resolution = require("slds.domain.resolution")
+local unpack_args = unpack or rawget(table, "unpack")
+
+local function copy_argument(value)
+    local copied = snapshot(value)
+    local class = getmetatable(value)
+    if class == Identity or class == ShortLink or class == Resolution then
+        setmetatable(copied, class)
+    end
+    return copied
+end
+
 --- Create a new hooks registry.
 -- 创建钩子注册表。
 -- @return Hooks
@@ -50,7 +65,12 @@ function _M:_fire(callback_name, ctx, ...)
     for _, hook in ipairs(self.hooks) do
         local fn = hook[callback_name]
         if type(fn) == "function" then
-            local ok, err = pcall(fn, ctx, ...)
+            local args = {}
+            local count = select("#", ...)
+            for index = 1, count do
+                args[index] = copy_argument(select(index, ...))
+            end
+            local ok, err = pcall(fn, ctx, unpack_args(args, 1, count))
             if not ok then
                 -- 尝试触发 on_error 回调（本身也隔离）
                 self:_fire_error(ctx, err, callback_name)

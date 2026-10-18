@@ -63,15 +63,17 @@ service:update({}, slds.Identity.new("default", link.code), {
 service:delete({}, slds.Identity.new("default", link.code))
 ```
 
+Identity tables are logically immutable: callers must not rewrite their fields. Persistent updates cannot rename identities. Metadata is copied as raw table data; hooks cannot transform domain payloads. See the [API contract](docs/api.md) for snapshot and error boundaries.
+
 ## Features
 
-- **Identity** value object `{ namespace, code }` — immutable, value equality
+- **Identity** value object `{ namespace, code }` — logically immutable, value equality
 - **ShortLink** domain entity with lifecycle and optional expiry
 - **Lifecycle** state machine: `ACTIVE` <-> `DISABLED` -> `DELETED` (terminal)
 - **Resolution** as a first-class domain operation — not just `Repository.get()`
 - **Ports** (hexagonal): Repository, Generator, Encoder — swap implementations freely
-- **Hooks** extension mechanism — isolated via `pcall`, never blocks the critical path
-- **Conformance Tests** L0-L3 — any implementation claiming SLDS compatibility must pass
+- **Hooks** extension mechanism — synchronous observers with payload snapshots and `pcall` exception isolation
+- **Conformance Tests** L0-L3 — implementations claiming SLDS compatibility must pass applicable scenarios and declare their evidence scope
 
 ## 10 Iron Rules
 
@@ -117,17 +119,21 @@ See [RFC-0001](docs/rfc/RFC-0001.md) for the full specification.
 
 ```bash
 # Install test dependencies
-luarocks install busted luacov luacheck
+luarocks install busted
+luarocks install luacov
+luarocks install luacheck
 
-# Run tests with coverage
-busted --coverage --pattern=spec
+# Run tests from fresh coverage data; require >=95% for EVERY production file
+sh scripts/test.sh
 
 # Lint
-luacheck src/ adapters/ spec/
+luacheck src/ adapters/ spec/ scripts/check-coverage.lua
 
-# Coverage report
-luacov
+# Inspect the same LuaCov report uploaded to Codecov
+cat luacov.report.out
 ```
+
+Coverage includes every Lua file in `src/` and `adapters/`, including the public entry, ports, internal helpers, and untested files. CI enforces the per-file gate independently on Lua 5.1, Lua 5.3, and LuaJIT; Codecov project/patch targets are 95% with zero tolerance. See [validation and migration notes](docs/validation.md).
 
 ## Documentation
 
