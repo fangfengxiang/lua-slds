@@ -34,7 +34,7 @@ describe("Reference adapter boundaries", function()
         repo.data.default.abc.target = "javascript:bad"
         local result, err = repo:update({}, Identity.new("abc"), { target = "https://new.com" })
         assert.is_nil(result)
-        assert.matches("^INVALID", err)
+        assert.equal(Errors.INVALID, err)
         assert.equal("javascript:bad", repo.data.default.abc.target)
     end)
 

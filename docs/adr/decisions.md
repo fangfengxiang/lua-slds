@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-This document indexes key architectural decisions made during SLDS development.
+This document indexes architectural decisions. ADR-012 defines the current v0.2 changes; historical portions of ADR-008/011 are explicitly superseded. See [RFC-0002](../rfc/RFC-0002.md).
 
 ## Decision Index
 
@@ -13,10 +13,11 @@ This document indexes key architectural decisions made during SLDS development.
 | ADR-005 | Logical Delete (No Physical Removal) | Accepted | 2026-10-08 |
 | ADR-006 | Hooks Isolation via pcall | Accepted | 2026-10-08 |
 | ADR-007 | Zero Core Dependencies (Pure Lua) | Accepted | 2026-10-08 |
-| ADR-008 | Generator/Encoder Separation | Accepted | 2026-10-08 |
+| ADR-008 | Generator/Encoder Separation | Superseded at Core boundary by ADR-012 | 2026-10-08 |
 | ADR-009 | Error Handling Three-Class System | Accepted | 2026-10-08 |
 | ADR-010 | Conformance Test Suite as Specification | Accepted | 2026-10-08 |
-| ADR-011 | Contract hardening and evidence boundaries | Accepted | 2026-10-18 |
+| ADR-011 | Contract hardening and evidence boundaries | Partly superseded by ADR-012 | 2026-10-18 |
+| ADR-012 | v0.2 minimal API and authoritative writes | Accepted | 2026-10-18 |
 
 ---
 
@@ -26,7 +27,7 @@ This document indexes key architectural decisions made during SLDS development.
 
 **Context:** SLDS needs to support multiple storage backends (Redis, MySQL, in-memory) and runtime environments (plain Lua, OpenResty). The domain logic must remain stable regardless of infrastructure choices.
 
-**Decision:** Use hexagonal architecture. The domain core depends on port interfaces (Repository, Generator, Encoder). Adapters implement these ports. The domain never imports an adapter directly.
+**Decision:** Use hexagonal architecture. The domain core depends on port interfaces (Repository and optional CodeGenerator in v0.2). Adapters implement these ports. The domain never imports an adapter directly.
 
 **Consequences:**
 - (+) Domain logic is infrastructure-agnostic
@@ -49,7 +50,7 @@ This document indexes key architectural decisions made during SLDS development.
 - A scheduler dependency in the domain (violates RULE-001/RULE-002)
 - Race conditions between the scanner and concurrent resolution
 
-Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no background process, and is always accurate.
+Deriving EXPIRED at resolution time (`expires_at <= now` in v0.2) is O(1), requires no background process, and is always accurate.
 
 **Consequences:**
 - (+) No background process needed
@@ -108,9 +109,9 @@ Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no ba
 - Terminal state: DELETED has no outgoing transitions in the state machine
 
 **Consequences:**
-- (+) Full audit history
+- (+) Retained identity/tombstone; full audit history remains a host concern
 - (+) No accidental code reuse
-- (-) Repository grows over time (needs TTL/archival policy at infrastructure level)
+- (-) Reserved identities consume storage; archival must retain uniqueness reservations
 
 ---
 
@@ -151,7 +152,7 @@ Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no ba
 
 ## ADR-008: Generator/Encoder Separation
 
-**Status:** Accepted
+**Status:** Historical Core-port decision, superseded by ADR-012. Components remain separate inside adapters.
 
 **Context:** Short code generation involves two concerns: uniqueness (ensuring no two links share a code) and encoding (producing a URL-safe string). Should these be combined into one port or separated?
 
@@ -217,7 +218,7 @@ Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no ba
 
 ## ADR-011: Contract hardening and evidence boundaries
 
-**Status:** Accepted for the current reference implementation (2026-10-18).
+**Status:** Historical v0.1 hardening (2026-10-18). ADR-012 supersedes terminal error codes and the public API; snapshot and evidence principles remain accepted.
 
 - Preserve ordinary Lua tables and logical identity immutability; update APIs and stored snapshots protect persistent identity, not arbitrary direct assignments.
 - Apply sparse patches atomically against the latest record using domain rules. Reject updates to DELETED at commit with nil,DELETED; different fields survive, the same field follows commit order. This does not provide application read-modify-write conflict detection.
@@ -226,3 +227,22 @@ Deriving EXPIRED at resolution time (`expires_at < now`) is O(1), requires no ba
 - Sequential/Base62 numeric limits belong only to the bundled adapters. Generic ports remain representation-agnostic; the host selects compatible pairs.
 - Factory-driven conformance runs real reference adapters and labels sequential/interleaving evidence honestly. No real database concurrency, cache invalidation or tenant isolation claim follows from this run.
 - Every production Lua file must reach 95% line coverage independently in each supported CI interpreter. No file exclusions or stale statistics may hide a gap.
+
+
+## ADR-012: v0.2 minimal API and authoritative writes
+
+**Status:** Accepted (2026-10-18).
+
+**Context:** Issue #6 and its later architecture supplement seek a coherent public API without expanding SLDS beyond Identity/Lifecycle/Resolution. Core only needs final Code, and a Core pre-read cannot validate the state present at atomic commit time.
+
+**Decision:**
+
+- Rename the sole four-operation orchestrator to Interactor. Export named modules rather than flat aliases. Do not add operation containers or managers.
+- Expose Repository and optional CodeGenerator as the only Core ports. Keep Generator/Encoder as adapter components, with a small Composed reference adapter; retain their existing numeric limits only in those components.
+- Let authoritative Repository validate/commit latest-state sparse writes, with no Interactor update/delete pre-read. Full candidate validation precedes optional can_update. Delete checks target validity and transition. Rule/terminal rejection returns INVALID; genuine conditional-commit conflicts remain CONFLICT.
+- Normalize partial Lifecycle functions at construction through one small internal helper. Hard identity, known-status and terminal constraints remain protected.
+- Add ResolutionResult.resolvable and expire at expires_at <= now. Keep EXPIRED derived and outside Errors. Errors is exactly NOT_FOUND/CONFLICT/INVALID.
+- Reject unknown Patch fields, including metadata. Keep nil expiration unchanged; defer clearing instead of inventing a sentinel contrary to the latest supplement.
+- Use point-indexed ordered Hook callbacks with v0.2 signatures. Keep Interactor:use(hook) as a convenience into the same registry. BEFORE covers complete valid use cases and AFTER observes every normal outcome.
+
+**Consequences:** The upgrade is intentionally breaking and has explicit [migration notes](../migration-v0.2.md). No compatibility dispatcher, new runtime dependency, cache/CAS implementation or generic policy/pipeline framework is introduced. Existing table snapshots, pure Lua conventions and per-file coverage/evidence gates remain. [Validation](../validation.md) reports actual checks independently of this decision.

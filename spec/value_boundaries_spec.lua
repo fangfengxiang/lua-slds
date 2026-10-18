@@ -19,7 +19,7 @@ describe("ShortLink value boundaries", function()
         for _, fields in ipairs({ { target = "" }, { target = false }, { status = "EXPIRED" }, { status = false } }) do
             local link, err = link_with(fields)
             assert.is_nil(link)
-            assert.matches("^INVALID", err)
+            assert.equal("INVALID", err)
         end
     end)
 
@@ -27,22 +27,22 @@ describe("ShortLink value boundaries", function()
         for _, value in ipairs({ false, "100", 0/0, math.huge, -math.huge }) do
             local link, err = link_with({ expires_at = value })
             assert.is_nil(link)
-            assert.matches("^INVALID", err)
+            assert.equal("INVALID", err)
             local original = link_with({ expires_at = 100 })
             local updated, update_err = original:with_patch({ target = "https://new.com", expires_at = value })
             assert.is_nil(updated)
-            assert.matches("^INVALID", update_err)
+            assert.equal("INVALID", update_err)
             assert.equal("https://old.com", original.target)
             assert.equal(100, original.expires_at)
         end
     end)
 
-    it("allows finite fractional past timestamps and retains the equal boundary", function()
+    it("allows finite fractional past timestamps and expires at the equal boundary", function()
         local link = link_with({ expires_at = -0.5 })
-        assert.is_false(link:is_expired(-0.5))
+        assert.is_true(link:is_expired(-0.5))
         assert.is_true(link:is_expired(0))
         local changed = assert(link:with_patch({ expires_at = 0.25 }))
-        assert.is_false(changed:is_expired(0.25))
+        assert.is_true(changed:is_expired(0.25))
         assert.equal(0.25, changed:with_patch({}).expires_at)
     end)
 
@@ -58,20 +58,22 @@ describe("ShortLink value boundaries", function()
         for _, patch in ipairs({ { target = false }, { status = false } }) do
             local updated, err = link:with_patch(patch)
             assert.is_nil(updated)
-            assert.matches("^INVALID", err)
+            assert.equal("INVALID", err)
         end
         assert.has_error(function() link:with_patch(false) end)
     end)
 
-    it("preserves metadata without interpreting an unsupported metadata patch", function()
+    it("rejects metadata patches while preserving existing metadata", function()
         local link = link_with({ metadata = { nested = { owner = "old" } } })
-        local updated = assert(link:with_patch({ metadata = { owner = "new" } }))
-        assert.equal("old", updated.metadata.nested.owner)
-        updated.metadata.nested.owner = "changed"
+        local updated, update_err = link:with_patch({ metadata = { owner = "new" } })
+        assert.is_nil(updated)
+        assert.equal("INVALID", update_err)
+        local copied = assert(link:with_patch({ target = "https://new.com" }))
+        copied.metadata.nested.owner = "changed"
         assert.equal("old", link.metadata.nested.owner)
         local invalid, err = link_with({ metadata = false })
         assert.is_nil(invalid)
-        assert.matches("^INVALID", err)
+        assert.equal("INVALID", err)
     end)
 
     it("copies cyclic table graphs and table keys without executing metatables", function()

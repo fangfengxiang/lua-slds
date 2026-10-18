@@ -53,17 +53,27 @@ end
 -- 默认合规测试运行真实适配器，避免复制存储实现。
 function _M.fixture(opts)
     opts = opts or {}
-    local Service = require("slds.service")
-    local repo = opts.repository or require("slds.adapters.inmemory.repository").new()
+    local Interactor = require("slds.interactor")
+    local repo = opts.repository or require("slds.adapters.inmemory.repository").new({
+        lifecycle = opts.lifecycle, can_update = opts.can_update,
+    })
     local gen = opts.generator or require("slds.adapters.sequential.generator").new()
     local enc = opts.encoder or require("slds.adapters.base62.encoder").new()
-    local clock = opts.clock or _M.fake_clock(1000000)
-    return Service.new({
+    local code_generator = opts.code_generator
+    if code_generator == nil then
+        code_generator = require("slds.adapters.composed.code_generator").new({
+            generator = gen, encoders = { enc },
+        })
+    end
+    local clock = opts.clock
+    if clock == nil then clock = _M.fake_clock(1000000) end
+    return Interactor.new({
         repository = repo,
-        generator  = gen,
-        encoder    = enc,
+        code_generator = code_generator,
+        lifecycle = opts.lifecycle,
         clock      = clock,
-    }), repo, gen, enc
+        hooks = opts.hooks,
+    }), repo, code_generator, enc, gen
 end
 
 return _M

@@ -141,7 +141,7 @@ jobs:
             ## 主要特性
 
             - Identity / ShortLink / Lifecycle / Resolution 领域模型
-            - 六边形架构端口：Repository / Generator / Encoder
+            - 六边形架构端口：Repository / 可选 CodeGenerator
             - Hooks 扩展机制（pcall 隔离）
             - Conformance Test Suite L0-L3
             - 零外部依赖（纯 Lua 5.1/5.3/LuaJIT）

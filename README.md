@@ -1,190 +1,109 @@
 # lua-slds
 
-> **Short Link Domain Specification** — a pure Lua domain library for short link identity, lifecycle, and resolution semantics.
+> Short Link Domain Specification: a pure Lua library for short link identity, lifecycle and resolution semantics.
 
 [![Lua](https://img.shields.io/badge/Lua-%3E%3D5.1-blue.svg)](https://www.lua.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![LuaRocks](https://img.shields.io/luarocks/v/fangfengxiang/lua-slds)](https://luarocks.org/modules/fangfengxiang/lua-slds)
 [![Test](https://github.com/fangfengxiang/lua-slds/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/fangfengxiang/lua-slds/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/fangfengxiang/lua-slds/branch/main/graph/badge.svg)](https://codecov.io/gh/fangfengxiang/lua-slds)
-[![Release](https://img.shields.io/github/v/release/fangfengxiang/lua-slds)](https://github.com/fangfengxiang/lua-slds/releases)
+[![LuaRocks](https://img.shields.io/luarocks/v/fangfengxiang/lua-slds)](https://luarocks.org/modules/fangfengxiang/lua-slds)
 
-SLDS defines the **identity**, **lifecycle**, and **resolution semantics** of short links, independent of transport, storage, caching, and security policy. The Core layer has zero external dependencies — pure Lua 5.1 / 5.3 / LuaJIT only. Infrastructure adapters (Redis, MySQL, OpenResty) are pluggable via hexagonal ports.
+**SLDS = Identity + Lifecycle + Resolution Semantics.** Core has zero runtime dependencies and supports Lua 5.1, Lua 5.3 and LuaJIT. The host provides HTTP, authorization, storage connections, caching and telemetry delivery.
 
-> **SLDS = Short Link Identity + Lifecycle + Resolution Semantics**
+## Quick start · v0.2
 
-## Why?
+The examples describe the v0.2 source API. Install this checkout, including the bundled adapters:
 
-Most short link systems couple domain logic (what a short link *is*) with infrastructure (HTTP, Redis, databases). SLDS separates them:
-
-- **Core** = Identity + Lifecycle + Resolution (pure Lua, no I/O)
-- **Ports** = Repository, Generator, Encoder (interface contracts)
-- **Adapters** = InMemory, Sequential, Base62 (infrastructure implementations)
-
-This means you can swap the storage layer without touching domain logic, run the same Core in OpenResty or a plain Lua VM, and test domain rules without any external dependencies.
-
-## Quick Start
-
-```bash
-luarocks install lua-slds
+```sh
+luarocks make lua-slds-scm-1.rockspec
 ```
+
+Explicit codes need only a Repository:
 
 ```lua
 local slds = require("slds")
-
-local service = slds.new({
+local interactor = slds.new({
     repository = require("slds.adapters.inmemory.repository").new(),
-    generator  = require("slds.adapters.sequential.generator").new(),
-    encoder    = require("slds.adapters.base62.encoder").new(),
 })
-
--- Create
-local link = assert(service:create({}, {
-    target = "https://example.com/very/long/path",
+local ctx = {}
+local link = assert(interactor:create(ctx, {
+    code = "hello",
+    target = "https://example.com/long/path",
 }))
-print("Code:", link.code)
+local identity = slds.Identity.new(link.namespace, link.code)
+local result = assert(interactor:resolve(ctx, identity))
+if result.resolvable then print(result.target) end
 
--- Resolve
-local result = service:resolve({}, slds.Identity.new("default", link.code))
-print("Target:", result.target)
-print("Status:", result.status)
-
--- Update
-service:update({}, slds.Identity.new("default", link.code), {
-    target = "https://example.com/new",
-})
-
--- Disable
-service:update({}, slds.Identity.new("default", link.code), {
-    status = slds.DISABLED,
-})
-
--- Delete (terminal)
-service:delete({}, slds.Identity.new("default", link.code))
+assert(interactor:update(ctx, identity, { status = slds.Lifecycle.DISABLED }))
+assert(interactor:delete(ctx, identity)) -- terminal; identity stays reserved
 ```
 
-Identity tables are logically immutable: callers must not rewrite their fields. Persistent updates cannot rename identities. Metadata is copied as raw table data; hooks cannot transform domain payloads. See the [API contract](docs/api.md) for snapshot and error boundaries.
+Automatic codes add one optional CodeGenerator:
 
-## Features
+```lua
+local code_generator = require("slds.adapters.composed.code_generator").new({
+    generator = require("slds.adapters.sequential.generator").new(),
+    encoders = { require("slds.adapters.base62.encoder").new() },
+})
+local automatic = slds.new({
+    repository = require("slds.adapters.inmemory.repository").new(),
+    code_generator = code_generator,
+})
+local generated = assert(automatic:create({}, { target = "https://example.com" }))
+print(generated.code)
+```
 
-- **Identity** value object `{ namespace, code }` — logically immutable, value equality
-- **ShortLink** domain entity with lifecycle and optional expiry
-- **Lifecycle** state machine: `ACTIVE` <-> `DISABLED` -> `DELETED` (terminal)
-- **Resolution** as a first-class domain operation — not just `Repository.get()`
-- **Ports** (hexagonal): Repository, Generator, Encoder — swap implementations freely
-- **Hooks** extension mechanism — synchronous observers with payload snapshots and `pcall` exception isolation
-- **Conformance Tests** L0-L3 — implementations claiming SLDS compatibility must pass applicable scenarios and declare their evidence scope
+## Contracts
 
-## 10 Iron Rules
+- Four operations: `create`, `resolve`, `update`, `delete`, orchestrated by `Interactor`.
+- Two Core ports: **Repository** and optional **CodeGenerator**. Generator/Encoder are components inside adapters.
+- Identity is the `{ namespace, code }` tuple. Ordinary Lua tables are logically immutable; callers must not rewrite identity fields.
+- Persistent statuses are `ACTIVE`, `DISABLED`, `DELETED`. Deletion is terminal. Expiration is derived when `expires_at <= now`.
+- Resolve returns `found` and `resolvable`; infrastructure failures remain `nil, err`.
+- Repository applies sparse patches atomically against the latest record. Unknown fields and metadata patches return `INVALID`; identity changes are programming errors.
+- Partial Lifecycle overrides can restrict valid statuses/transitions or customize resolvability; hard identity and deletion constraints remain enforced.
+- Hooks are synchronous observers with ordered point registrations, independent payload snapshots and `pcall` exception isolation. ctx remains shared and should be read-only.
+- Errors are exactly `NOT_FOUND`, `CONFLICT`, `INVALID`. Infrastructure errors pass through unchanged; programming errors propagate.
 
-| Rule | Statement |
-|------|-----------|
-| RULE-001 | Core MUST NOT depend on HTTP |
-| RULE-002 | Core MUST NOT depend on a specific database |
-| RULE-003 | Core MUST NOT fetch Target URLs |
-| RULE-004 | Code MUST be immutable after creation |
-| RULE-005 | Code uniqueness MUST be enforced atomically by the persistence layer |
-| RULE-006 | Deleted Codes MUST NOT be reused by default |
-| RULE-007 | Resolve MUST NOT require an external event system to succeed |
-| RULE-008 | Analytics MUST NOT be part of the resolution critical path |
-| RULE-009 | Authorization MUST be implemented outside the Core Domain |
-| RULE-010 | Any implementation claiming SLDS compatibility MUST pass the Conformance Test Suite |
+## 项目定位与迁移
 
-See [RFC-0001](docs/rfc/RFC-0001.md) for the full specification.
+SLDS 只解决短链的身份、生命周期与解析语义。v0.2 让 Core 索取最终 Code，把 Generator/Encoder 留在 Adapter 内组合；更新和删除直接交由权威 Repository 校验并提交。没有新增运行时依赖、缓存实现、规则引擎或通用执行框架。
+
+这是破坏性 API 升级：`Service` 改为 `Interactor`，状态从 `slds.Lifecycle` 访问，Hooks 使用 `HookPoint` 和新回调签名。`expires_at == now` 已过期；未知补丁返回 `INVALID`；所有正常成功/失败返回都触发 AFTER。`nil` 过期时间仍表示不修改，本轮不增加清除哨兵。请先阅读[迁移说明](docs/migration-v0.2.md)。
 
 ## Architecture
 
+```text
+Host constructs Interactor
+  ├─ Domain: Identity / ShortLink / Lifecycle / Resolution / Errors
+  ├─ Hooks + HookPoint
+  ├─ Repository ← InMemory or an external adapter
+  └─ CodeGenerator? ← Composed(Generator → Encoder array)
 ```
-+--------------------------------------------------+
-|                   SLDS Core                       |
-|                                                   |
-|  Identity --- ShortLink --- Lifecycle --- Resolution |
-|                                                   |
-|  Operations: create / resolve / update / delete   |
-|  Extensions: Hooks (Logger / Metrics / Tracer)     |
-|                                                   |
-|  Ports: Repository    Generator    Encoder         |
-+-------------------+-------------------+-----------+
-                    |                   |
-        +-----------+-----------+       |
-        |           |           |       |
-        v           v           v       v
-  +---------+ +-----------+ +---------+
-  | InMemory| | Sequential| | Base62  |
-  | Repo    | | Generator | | Encoder |
-  +---------+ +-----------+ +---------+
-```
+
+Core never imports an adapter. InMemory, Sequential, Base62 and Composed are bundled reference adapters; Redis/Postgres/OpenResty integration belongs to the host. Sequential/Base62's `[0, 2^53-1]` domain is an adapter limitation, not a Core restriction.
+
+The ten iron rules remain: no HTTP/database dependency or target fetching in Core; immutable identities; atomic uniqueness; reserved deleted identities; resolution independent of external telemetry success; host authorization; applicable conformance evidence. See [RFC-0002](docs/rfc/RFC-0002.md).
 
 ## Testing
 
-```bash
-# Install test dependencies
+```sh
 luarocks install busted
 luarocks install luacov
 luarocks install luacheck
-
-# Run tests from fresh coverage data; require >=95% for EVERY production file
 sh scripts/test.sh
-
-# Lint
 luacheck src/ adapters/ spec/ scripts/check-coverage.lua
-
-# Inspect the same LuaCov report uploaded to Codecov
-cat luacov.report.out
 ```
 
-Coverage includes every Lua file in `src/` and `adapters/`, including the public entry, ports, internal helpers, and untested files. CI enforces the per-file gate independently on Lua 5.1, Lua 5.3, and LuaJIT; Codecov project/patch targets are 95% with zero tolerance. See [validation and migration notes](docs/validation.md).
+Each Lua file in `src/` and `adapters/` must independently reach **95% line coverage**, including unloaded files, ports and internal helpers. CI measures fresh coverage separately on Lua 5.1, Lua 5.3 and LuaJIT. Codecov project/patch targets are 95%, with zero tolerance. [Validation records](docs/validation.md) distinguish local measurements from remote CI and external concurrency evidence.
 
 ## Documentation
 
-- [Quick Start Tutorial](docs/tutorial.md)
-- [Operations Guide](docs/how-to.md)
-- [API Reference](docs/api.md)
-- [RFC-0001: SLDS v0.1](docs/rfc/RFC-0001.md)
-- [Conformance Tests](docs/rfc/conformance-tests.md)
-- [Design Rationale](docs/design/design-rationale.md)
+- [Tutorial](docs/tutorial.md) · [Operations guide](docs/how-to.md) · [API reference](docs/api.md)
+- [v0.2 specification](docs/rfc/RFC-0002.md) · [Migration](docs/migration-v0.2.md) · [Conformance](docs/rfc/conformance-tests.md)
+- [Domain architecture](docs/design/domain-layer.md) · [Ports and adapters](docs/design/port-adapter.md) · [Decisions](docs/adr/decisions.md)
+- [v0.1 historical specification](docs/rfc/RFC-0001.md)
 
-## Project Structure
+## Contributing and license
 
-```
-lua-slds/
-|-- src/slds/                  # Core domain (pure Lua)
-|   |-- init.lua               #   Module entry, public API
-|   |-- domain/                #   Domain objects
-|   |   |-- identity.lua       #     Identity value object
-|   |   |-- short_link.lua     #     ShortLink entity
-|   |   |-- lifecycle.lua      #     State machine
-|   |   |-- resolution.lua     #     Resolution logic
-|   |   `-- errors.lua          #     Error codes
-|   |-- ports/                 #   Port interfaces
-|   |   |-- repository.lua
-|   |   |-- generator.lua
-|   |   `-- encoder.lua
-|   |-- service.lua            #   Application Service
-|   `-- hooks.lua               #   Hooks mechanism
-|-- adapters/                  # Infrastructure adapters
-|   |-- inmemory/repository.lua
-|   |-- sequential/generator.lua
-|   `-- base62/encoder.lua
-|-- spec/                      # BDD tests (busted)
-|   |-- helpers.lua
-|   |-- *_spec.lua             #   Domain unit tests
-|   `-- conformance/           #   L0-L3 Conformance Suite
-|-- docs/                      # Documentation (mkdocs)
-|-- openspec/                  # Specification management
-`-- .github/workflows/         # CI/CD
-```
-
-## Compatibility
-
-- Lua 5.1 / LuaJIT 2.1 / Lua 5.3+
-- OpenResty (via adapters)
-- Zero runtime dependencies in Core
-
-## License
-
-Apache-2.0. See [LICENSE](LICENSE).
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Pull requests are welcome — please ensure `busted`, `luacheck`, and `luacov` all pass before submitting.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md). Apache-2.0; see [LICENSE](LICENSE).

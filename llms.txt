@@ -1,90 +1,61 @@
-# lua-slds
+# lua-slds · v0.2
 
-> Short Link Domain Specification (SLDS) — a pure Lua domain library defining short link identity, lifecycle, and resolution semantics.
+> Short Link Domain Specification: a pure Lua library for Identity + Lifecycle + Resolution Semantics.
 
-## What is SLDS?
+## Scope
 
-SLDS defines what a short link **is** (identity), how it **behaves** (lifecycle), and what it **means** to resolve one (resolution semantics), independent of transport, storage, caching, and security policy.
+- Lua 5.1 / Lua 5.3 / LuaJIT, zero runtime dependencies.
+- Four operations through Interactor; two Core ports: Repository and optional CodeGenerator.
+- Core never imports adapters or HTTP/database/cache/JSON/ngx libraries; it never fetches target URLs.
+- Host owns transport, authorization, tenant policy, caching, scheduling and durable telemetry delivery.
 
-- Core layer: zero external dependencies, pure Lua 5.1 / 5.3 / LuaJIT
-- Architecture: hexagonal (ports and adapters)
-- Specification: 10 iron rules + conformance test suite (L0-L3)
+## Current source API
 
-## Installation
+- slds.new({repository,code_generator?,lifecycle?,clock?,hooks?}) -> Interactor.
+- interactor:create(ctx,input) -> ShortLink | nil,err.
+- interactor:resolve(ctx,identity) -> ResolutionResult | nil,err.
+- interactor:update(ctx,identity,patch) -> ShortLink | nil,err.
+- interactor:delete(ctx,identity) -> true | nil,err.
+- interactor:use({[HookPoint]=callback}) -> Interactor; hooks:on(point,fn) shares that registry.
+- Root exports VERSION/new/Interactor/Identity/ShortLink/Lifecycle/Resolution/Errors/Hooks/HookPoint; no Service/flat aliases.
 
-```
-luarocks install lua-slds
-```
+## Contracts
 
-## Quick Start
+- Identity is a non-empty namespace/code tuple, logically immutable ordinary Lua table; callers must not rewrite fields.
+- Lifecycle has ACTIVE/DISABLED/DELETED and is_valid/can_transition/is_resolvable; partial functions default at construction. Hard identity/terminal guards cannot be relaxed.
+- EXPIRED is derived at expires_at <= now, never stored. Resolution returns found and resolvable; use resolvable before target.
+- Errors are exactly NOT_FOUND/CONFLICT/INVALID. Infrastructure errors pass unchanged. Dependency nil,nil or result+error is a programming error.
+- Repository atomically validates sparse writes against its latest state; Interactor update/delete never get first. Deleted identities remain reserved.
+- Patch permits only target/status/expires_at; unknown keys including metadata return INVALID, identity keys throw. Nil expiration means unchanged; no clearing sentinel.
+- can_update(current,patch) belongs only in authoritative Repository, after complete validation; false returns INVALID. External CAS may return CONFLICT with separate evidence.
+- Metadata is opaque independent raw-table graphs; no schema interpretation, update/deep merge or metatable transport.
+- CodeGenerator returns final non-empty string; only omitted Code invokes it. No retries/coercion. Composed adapter runs inner Generator then ordered dense Encoder array.
+- Sequential/Base62 integer domain [0,2^53-1] and instance-local exhaustion are adapter-specific; generic CodeGenerator is representation-agnostic.
+- Hook order: general BEFORE, specific BEFORE, operation, specific AFTER, general AFTER. AFTER observes all normal failures too.
+- Callbacks receive ctx,actual_point,payload..., AFTER includes value,err; ON_ERROR(ctx,failed_point,hook_err) does not recurse.
+- Hook payloads are independent snapshots with root domain methods; ctx stays shared/read-only by convention. pcall isolates exceptions, not latency/durable delivery.
+
+## Example
 
 ```lua
 local slds = require("slds")
-local service = slds.new({
-    repository = require("slds.adapters.inmemory.repository").new(),
-    generator  = require("slds.adapters.sequential.generator").new(),
-    encoder    = require("slds.adapters.base62.encoder").new(),
-})
-local link = service:create({}, { target = "https://example.com" })
-local result = service:resolve({}, slds.Identity.new("default", link.code))
-print(result.target, result.status)
+local interactor = slds.new({ repository = require("slds.adapters.inmemory.repository").new() })
+local link = assert(interactor:create({}, { code = "hello", target = "https://example.com" }))
+local result = assert(interactor:resolve({}, slds.Identity.new(link.namespace, link.code)))
+if result.resolvable then print(result.target) end
 ```
 
-## Core Concepts
+## Evidence and files
 
-- Identity = { namespace, code } — logically immutable ordinary Lua table; callers must not rewrite fields
-- ShortLink = { namespace, code, target, status, expires_at } — domain entity
-- Lifecycle = ACTIVE <-> DISABLED -> DELETED (terminal); EXPIRED is derived at resolution time
-- Resolution = first-class domain operation, returns ResolutionResult (not ShortLink)
-- Ports = Repository, Generator, Encoder (interface contracts, hexagonal)
-- Hooks = synchronous observers with per-callback domain snapshots and pcall exception isolation; ctx stays shared
-- Metadata = opaque raw-table snapshots; no business schema, metadata patch or deep merge
-- Repository update = atomic sparse patch against latest state; DELETED cannot be revived
-- Sequential/Base62 = bundled adapters with integer domain [0, 2^53-1]; generic ports remain representation-agnostic
+- sh scripts/test.sh resets LuaCov and requires >=95% for every src/ and adapters/ production Lua file, including unloaded files.
+- luacheck src/ adapters/ spec/ scripts/check-coverage.lua.
+- Conformance uses real adapter fixtures. Sequential/interleaving evidence does not establish external concurrency, tenant isolation or cache invalidation.
+- src/slds/interactor.lua: orchestration; src/slds/domain/: domain; src/slds/ports/: Repository/CodeGenerator.
+- adapters/: InMemory, Composed, Sequential, Base62.
+- docs/rfc/RFC-0002.md: current contracts; docs/rfc/RFC-0001.md: historical v0.1.
+- docs/api.md: exact signatures; docs/migration-v0.2.md: breaking changes; docs/validation.md: measured results.
+- openspec/ is currently Git-ignored; local proposals are not part of a commit by default.
 
-## 10 Iron Rules
-
-1. Core MUST NOT depend on HTTP
-2. Core MUST NOT depend on a specific database
-3. Core MUST NOT fetch Target URLs
-4. Code MUST be immutable after creation
-5. Code uniqueness MUST be enforced atomically by persistence layer
-6. Deleted Codes MUST NOT be reused by default
-7. Resolve MUST NOT require external event system
-8. Analytics MUST NOT be in resolution critical path
-9. Authorization MUST be outside Core Domain
-10. Any implementation MUST pass Conformance Test Suite
-
-## API
-
-- slds.new({ repository, generator, encoder, clock?, hooks? }) -> Service
-- service:create(ctx, input) -> ShortLink, err
-- service:resolve(ctx, identity) -> ResolutionResult | nil, err
-- service:update(ctx, identity, patch) -> ShortLink, err
-- service:delete(ctx, identity) -> boolean, err
-- service:use(hook) -> Service (chainable)
-- slds.Identity.new(namespace, code) -> Identity
-
-## Verification
-
-- sh scripts/test.sh — fresh LuaCov statistics, >=95% line coverage for every src/ and adapters/ Lua file
-- luacheck src/ adapters/ spec/ scripts/check-coverage.lua
-- Reference conformance uses real adapters and deterministic interleavings; external concurrency and optional cache/tenant behavior require separate evidence
-- docs/validation.md — runtime matrix, per-file results and migration notes
-
-## Key Files
-
-- src/slds/init.lua — module entry, public API
-- src/slds/domain/ — Identity, ShortLink, Lifecycle, Resolution, Errors
-- src/slds/ports/ — Repository, Generator, Encoder port interfaces
-- src/slds/service.lua — Application Service
-- src/slds/hooks.lua — Hooks mechanism
-- adapters/ — InMemory Repository, Sequential Generator, Base62 Encoder
-- spec/ — busted BDD tests + conformance L0-L3
-- docs/rfc/RFC-0001.md — full specification
-
-## Links
-
-- Repository: https://github.com/fangfengxiang/lua-slds
-- Documentation: https://fangfengxiang.github.io/lua-slds/
-- License: Apache-2.0
+Repository: https://github.com/fangfengxiang/lua-slds
+Documentation: https://fangfengxiang.github.io/lua-slds/
+License: Apache-2.0
