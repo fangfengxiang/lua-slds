@@ -13,6 +13,10 @@
          <lastmod>2026-10-18</lastmod>
     </url>
     <url>
+         <loc>https://fangfengxiang.github.io/lua-slds/migration-v0.2/</loc>
+         <lastmod>2026-10-18</lastmod>
+    </url>
+    <url>
          <loc>https://fangfengxiang.github.io/lua-slds/tutorial/</loc>
          <lastmod>2026-10-18</lastmod>
     </url>
@@ -37,7 +41,19 @@
          <lastmod>2026-10-18</lastmod>
     </url>
     <url>
+         <loc>https://fangfengxiang.github.io/lua-slds/design/v0.2-implementation-plan/</loc>
+         <lastmod>2026-10-18</lastmod>
+    </url>
+    <url>
+         <loc>https://fangfengxiang.github.io/lua-slds/design/v0.2-proposal/</loc>
+         <lastmod>2026-10-18</lastmod>
+    </url>
+    <url>
          <loc>https://fangfengxiang.github.io/lua-slds/rfc/RFC-0001/</loc>
+         <lastmod>2026-10-18</lastmod>
+    </url>
+    <url>
+         <loc>https://fangfengxiang.github.io/lua-slds/rfc/RFC-0002/</loc>
          <lastmod>2026-10-18</lastmod>
     </url>
     <url>

@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations-guide" class="md-skip">
+        <a href="#operations-guide-v02" class="md-skip">
           Skip to content
         </a>
       
@@ -621,22 +621,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#writing-a-custom-repository-adapter" class="md-nav__link">
+  <a href="#supply-a-direct-codegenerator" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a Custom Repository Adapter
+        Supply a direct CodeGenerator
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Writing a Custom Repository Adapter">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customize-lifecycle-and-authoritative-update-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customize Lifecycle and authoritative update policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implement-an-authoritative-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implement an authoritative Repository
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implement an authoritative Repository">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#redis-integration-considerations" class="md-nav__link">
+  <a href="#conditional-commits-and-caching" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Redis Integration Considerations
+        Conditional commits and caching
       
     </span>
   </a>
@@ -649,10 +671,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-a-custom-generator" class="md-nav__link">
+  <a href="#register-observers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a Custom Generator
+        Register observers
       
     </span>
   </a>
@@ -660,10 +682,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-a-custom-encoder" class="md-nav__link">
+  <a href="#resolve-in-a-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a Custom Encoder
+        Resolve in a host
       
     </span>
   </a>
@@ -671,121 +693,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multi-namespace-usage" class="md-nav__link">
+  <a href="#verify-an-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multi-Namespace Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hooks-in-production" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hooks in Production
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Hooks in Production">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#logger-hook" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logger Hook
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metrics-hook" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Metrics Hook
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Handling Patterns
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Error Handling Patterns">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-with-conflict-retry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create with Conflict Retry
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolve-with-fallback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolve with Fallback
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-with-fake-clock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing with Fake Clock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-openresty" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration with OpenResty
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conformance-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conformance Testing
+        Verify an integration
       
     </span>
   </a>
@@ -816,6 +727,10 @@
   
     
     
+      
+        
+      
+        
       
         
       
@@ -907,6 +822,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../rfc/RFC-0002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-0002 (v0.2)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../rfc/RFC-0001/" class="md-nav__link">
         
   
@@ -914,7 +857,35 @@
   <span class="md-ellipsis">
     
   
-    RFC-0001
+    RFC-0001 (v0.1 historical)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration-v0.2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.2 Migration
   
 
     
@@ -1201,22 +1172,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#writing-a-custom-repository-adapter" class="md-nav__link">
+  <a href="#supply-a-direct-codegenerator" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a Custom Repository Adapter
+        Supply a direct CodeGenerator
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Writing a Custom Repository Adapter">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customize-lifecycle-and-authoritative-update-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customize Lifecycle and authoritative update policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implement-an-authoritative-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implement an authoritative Repository
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implement an authoritative Repository">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#redis-integration-considerations" class="md-nav__link">
+  <a href="#conditional-commits-and-caching" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Redis Integration Considerations
+        Conditional commits and caching
       
     </span>
   </a>
@@ -1229,10 +1222,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-a-custom-generator" class="md-nav__link">
+  <a href="#register-observers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a Custom Generator
+        Register observers
       
     </span>
   </a>
@@ -1240,10 +1233,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-a-custom-encoder" class="md-nav__link">
+  <a href="#resolve-in-a-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a Custom Encoder
+        Resolve in a host
       
     </span>
   </a>
@@ -1251,121 +1244,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multi-namespace-usage" class="md-nav__link">
+  <a href="#verify-an-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multi-Namespace Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hooks-in-production" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hooks in Production
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Hooks in Production">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#logger-hook" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logger Hook
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metrics-hook" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Metrics Hook
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Handling Patterns
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Error Handling Patterns">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-with-conflict-retry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create with Conflict Retry
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolve-with-fallback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolve with Fallback
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-with-fake-clock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing with Fake Clock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-openresty" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration with OpenResty
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conformance-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conformance Testing
+        Verify an integration
       
     </span>
   </a>
@@ -1392,226 +1274,88 @@
   
 
 
-<h1 id="operations-guide">Operations Guide<a class="headerlink" href="#operations-guide" title="Permanent link">&para;</a></h1>
-<p>This guide covers production patterns, custom adapters, and operational considerations when using SLDS.</p>
-<h2 id="writing-a-custom-repository-adapter">Writing a Custom Repository Adapter<a class="headerlink" href="#writing-a-custom-repository-adapter" title="Permanent link">&para;</a></h2>
-<p>The Repository port defines four methods. Any implementation must satisfy the contract:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">_M</span><span class="p">.</span><span class="py">__index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_M</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nb">setmetatable</span><span class="p">({},</span><span class="w"> </span><span class="nv">_M</span><span class="p">)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kr">end</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">:</span><span class="nf">create</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="c1">-- MUST enforce uniqueness atomically (RULE-005)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="c1">-- Return: link, nil on success | nil, err on conflict</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="kr">end</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">:</span><span class="nf">get</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="c1">-- Return: ShortLink, nil on found | nil, Errors.NOT_FOUND on miss</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="kr">end</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">patch</span><span class="p">)</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="c1">-- Atomically validate and apply supplied fields to the latest record</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="c1">-- Preserve unspecified fields; reject DELETED; never partially commit</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="c1">-- Return: updated ShortLink | nil, err</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="kr">end</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="c1">-- Logical delete: set status = DELETED (RULE-006)</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="c1">-- Return: true, nil | nil, Errors.NOT_FOUND</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="kr">end</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="kr">return</span><span class="w"> </span><span class="nv">_M</span>
+<h1 id="operations-guide-v02">Operations guide · v0.2<a class="headerlink" href="#operations-guide-v02" title="Permanent link">&para;</a></h1>
+<h2 id="supply-a-direct-codegenerator">Supply a direct CodeGenerator<a class="headerlink" href="#supply-a-direct-codegenerator" title="Permanent link">&para;</a></h2>
+<p>Implement one method returning final Code. Use this when the host already has its own identifier service or code algorithm:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nv">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">input</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="s2">"campaign-"</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">input</span><span class="p">.</span><span class="py">metadata</span><span class="p">.</span><span class="py">campaign</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kd">local</span><span class="w"> </span><span class="nv">slds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds"</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">generator</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">})</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="kd">local</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">assert</span><span class="p">(</span><span class="nv">interactor</span><span class="p">:</span><span class="nf">create</span><span class="p">({},</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nv">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://example.com"</span><span class="p">,</span><span class="w"> </span><span class="nv">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">campaign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"spring"</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">}))</span>
 </code></pre></div>
-<h3 id="redis-integration-considerations">Redis Integration Considerations<a class="headerlink" href="#redis-integration-considerations" title="Permanent link">&para;</a></h3>
-<p>SLDS does not ship a Redis adapter. A host implementation needs an unambiguous encoding of the namespace/code tuple, a serializer for its supported metadata values, connection/error handling, and atomic write operations. Concatenating arbitrary identity fields with a delimiter can collide. A Lua table cannot be passed directly as a Redis value, and a <code>SETNX</code> result of <code>0</code> means conflict even though <code>0</code> is truthy in Lua.</p>
-<p>Use transactions or an equivalent server-side commit mechanism for sparse updates against the latest record. Do not implement an update as an unprotected get/modify/set sequence. Retain a tombstone after deletion so the identity remains reserved; expiring the uniqueness key would violate RULE-006.</p>
-<p><strong>Key rules for adapter implementations:</strong></p>
+<p>The example intentionally produces a deterministic Code: repeated creation conflicts, rather than becoming an idempotency API. Repository enforces uniqueness. Core passes unchanged ctx and an independent input snapshot. Return nil,err for expected failures; nil,nil is a programming error. Core performs no automatic retry or numeric coercion.</p>
+<p>For internal Generator/Encoder composition, use the <a href="../api/#bundled-adapters">bundled Composed adapter</a>. Its encoder array is dense and ordered; an empty array is valid if the inner generator already returns Code. The current Base62 accepts only exact integers in [0,2^53-1]; full uint64/string identifiers need a compatible external encoder. Do not coerce them with tonumber.</p>
+<h2 id="customize-lifecycle-and-authoritative-update-policy">Customize Lifecycle and authoritative update policy<a class="headerlink" href="#customize-lifecycle-and-authoritative-update-policy" title="Permanent link">&para;</a></h2>
+<p>Supply the same rules to Interactor and Repository. Missing predicates use defaults; the original table is not modified:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">slds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds"</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">local</span><span class="w"> </span><span class="nv">rules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nv">can_transition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">from</span><span class="p">,</span><span class="w"> </span><span class="nv">to</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Lifecycle</span><span class="p">.</span><span class="nf">can_transition</span><span class="p">(</span><span class="nv">from</span><span class="p">,</span><span class="w"> </span><span class="nv">to</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">            </span><span class="ow">and</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="p">(</span><span class="nv">from</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Lifecycle</span><span class="p">.</span><span class="py">DISABLED</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Lifecycle</span><span class="p">.</span><span class="py">ACTIVE</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="kd">local</span><span class="w"> </span><span class="nv">repo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Repository</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nv">lifecycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">rules</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nv">can_update</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">current</span><span class="p">,</span><span class="w"> </span><span class="nv">patch</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="nv">patch</span><span class="p">.</span><span class="py">target</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">patch</span><span class="p">.</span><span class="py">target</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">current</span><span class="p">.</span><span class="py">target</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">})</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span><span class="w"> </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">repo</span><span class="p">,</span><span class="w"> </span><span class="nv">lifecycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">rules</span><span class="w"> </span><span class="p">})</span>
+</code></pre></div>
+<p>This example prevents re-enabling a disabled link and prevents changing target. Invalid field values are rejected before can_update executes. The predicate receives the latest entity and raw sparse patch; false returns INVALID, while a thrown error or non-boolean is a programming error. It must be pure, synchronous and non-yielding. It does not run for delete. Its mutation cannot become committed data.</p>
+<p>No override can admit an unknown persistent status, revive DELETED, resolve DELETED or bypass expiration. A custom is_resolvable may allow DISABLED, in which case the result retains status DISABLED. The host should use result.resolvable.</p>
+<h2 id="implement-an-authoritative-repository">Implement an authoritative Repository<a class="headerlink" href="#implement-an-authoritative-repository" title="Permanent link">&para;</a></h2>
+<p>Provide create/get/update/delete; see <a href="../api/#core-ports">exact signatures</a>. No inheritance is needed. On success return an independent ShortLink, except delete returns true. Missing identity returns nil,Errors.NOT_FOUND, never nil,nil. Pass infrastructure errors unchanged.</p>
+<p>For update, perform the following inside the adapter's atomic commit mechanism:</p>
 <ol>
-<li>Code uniqueness MUST be atomic (use <code>SETNX</code>, <code>INSERT ... ON CONFLICT</code>, etc.)</li>
-<li>Delete is logical (set status = DELETED), not physical removal</li>
-<li>Deleted codes MUST NOT be reusable (keep the record, reject re-creation)</li>
-<li>Repository MAY use <code>ctx</code> for tenant-aware queries</li>
-<li>Updates validate domain transitions and values atomically against the latest record; failures leave it unchanged</li>
-<li>Input, returned and exported metadata table snapshots must not alias stored state</li>
+<li>Read the latest record and reject missing/DELETED state.</li>
+<li>Build a complete candidate using <code>current:with_patch(patch,lifecycle)</code>, validating fields, allowed keys and transitions.</li>
+<li>Evaluate optional can_update on isolated current/patch observations.</li>
+<li>Commit only after all checks succeed, preserving unspecified fields.</li>
 </ol>
-<h2 id="writing-a-custom-generator">Writing a Custom Generator<a class="headerlink" href="#writing-a-custom-generator" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Snowflake-style generator</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">_M</span><span class="p">.</span><span class="py">__index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_M</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nv">worker_id</span><span class="p">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nb">setmetatable</span><span class="p">({</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="nv">worker_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">worker_id</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nv">sequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="nv">last_ts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="nv">_M</span><span class="p">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="kr">end</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">:</span><span class="nf">generate</span><span class="p">(</span><span class="nv">ctx</span><span class="p">)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="c1">-- Implement snowflake logic here</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="c1">-- Return: id (number or string), nil</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="kr">end</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="kr">return</span><span class="w"> </span><span class="nv">_M</span>
+<p>Delete must apply full entity and transition validation with status=DELETED before committing. Repeated deletion returns INVALID. Identity uniqueness remains reserved, including after expiration and deletion.</p>
+<p>Store <code>{ namespace, code }</code> without delimiter collisions; namespace/code can contain NUL. Declare the serializer's supported metadata types: Core's raw cyclic-table snapshots do not imply that JSON or a database can serialize those graphs. Input and returned values must not alias storage.</p>
+<p>An external storage adapter needs real transactions, locking, CAS or an equivalent atomic mechanism. Unprotected get/modify/set does not satisfy the contract; Interactor performs no update/delete pre-read. InMemory's guarantee is limited to non-yielding operations within one Lua VM.</p>
+<h3 id="conditional-commits-and-caching">Conditional commits and caching<a class="headerlink" href="#conditional-commits-and-caching" title="Permanent link">&para;</a></h3>
+<p>can_update rejection is INVALID; it is not automatic stale-read detection. An external adapter may support host-specific opaque ctx conditions and return CONFLICT on a CAS mismatch. Core adds no revision field or conditional-update framework. Test and document that optional capability separately.</p>
+<p>A cache decorator implements the same Repository port. It owns invalidation, negative entries, stale refill races and post-commit invalidation failures. Caching entities lets Resolution recompute expiration from the current clock. Core provides no cache implementation or consistency guarantee; cache/real concurrency claims need adapter integration evidence.</p>
+<h2 id="register-observers">Register observers<a class="headerlink" href="#register-observers" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">slds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds"</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Hooks</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">hooks</span><span class="p">:</span><span class="nf">on</span><span class="p">(</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">value</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="c1">-- Send to the host's bounded telemetry path; handle value=nil on failures.</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nb">print</span><span class="p">(</span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kr">end</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">hooks</span><span class="p">:</span><span class="nf">on</span><span class="p">(</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">ON_ERROR</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nb">print</span><span class="p">(</span><span class="s2">"Hook failure"</span><span class="p">,</span><span class="w"> </span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="kr">end</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span><span class="w"> </span><span class="nv">hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">hooks</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">})</span>
 </code></pre></div>
-<p>The Generator produces an <strong>internal ID</strong>, not the short code. Declare its uniqueness scope and pair it with an Encoder that accepts its ID representation and range. The bundled Base62 accepts only integers in [0, 2^53-1]; a 64-bit or string Snowflake implementation needs a compatible encoder and must not coerce IDs to inexact Lua numbers.</p>
-<h2 id="writing-a-custom-encoder">Writing a Custom Encoder<a class="headerlink" href="#writing-a-custom-encoder" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Pass through IDs from a generator that already emits unique URL-safe strings.</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">_M</span><span class="p">.</span><span class="py">__index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_M</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">:</span><span class="nf">encode</span><span class="p">(</span><span class="nv">id</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nb">type</span><span class="p">(</span><span class="nv">id</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">id</span><span class="p">:</span><span class="nf">match</span><span class="p">(</span><span class="s2">"^[A-Za-z0-9_-]+$"</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="nb">error</span><span class="p">(</span><span class="s2">"encoder: expected a non-empty URL-safe string ID"</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="kr">end</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">id</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="kr">end</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="kr">return</span><span class="w"> </span><span class="nv">_M</span>
+<p>General BEFORE runs before operation-specific BEFORE; specific AFTER runs before general AFTER. Registration order applies within each point. Callbacks get the actual operation point and v0.2 arguments. All normal returns, including repository/generator errors, reach AFTER. Programming errors may propagate before AFTER.</p>
+<p>Each observer receives an independent payload snapshot retaining domain methods and nil gaps. ctx retains its reference and should be read-only. Hooks cannot transform operations. pcall isolates exceptions, not latency; use host-managed delivery for durable or asynchronous events. ON_ERROR failure does not recurse.</p>
+<h2 id="resolve-in-a-host">Resolve in a host<a class="headerlink" href="#resolve-in-a-host" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">resolve_or_fallback</span><span class="p">(</span><span class="nv">interactor</span><span class="p">,</span><span class="w"> </span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">fallback_url</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">result</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">interactor</span><span class="p">:</span><span class="nf">resolve</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">result</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="kr">end</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">resolvable</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">target</span><span class="w"> </span><span class="kr">end</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">fallback_url</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="kr">end</span>
 </code></pre></div>
-<p>The Encoder MUST be a pure transformation:</p>
-<ul>
-<li>No I/O (no database, no network, no <code>ngx</code>)</li>
-<li>No side effects</li>
-<li>Deterministic (same input always produces same output)</li>
-<li>A non-empty URL-safe string output for the supported ID domain</li>
-</ul>
-<p>If an encoder can map different IDs to the same code, Repository still enforces uniqueness and returns CONFLICT. The host decides whether to retry; a truncated hash does not guarantee a collision-free mapping.</p>
-<h2 id="multi-namespace-usage">Multi-Namespace Usage<a class="headerlink" href="#multi-namespace-usage" title="Permanent link">&para;</a></h2>
-<p>Namespaces partition the short link space. Each namespace has its own code pool.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">-- Marketing namespace</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">service</span><span class="p">:</span><span class="nf">create</span><span class="p">({</span><span class="w"> </span><span class="nv">tenant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"acme"</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nv">namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"marketing"</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nv">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"bf2026"</span><span class="p">,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nv">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://shop.example.com/black-friday"</span><span class="p">,</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">})</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">-- Internal namespace</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nv">service</span><span class="p">:</span><span class="nf">create</span><span class="p">({</span><span class="w"> </span><span class="nv">tenant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"acme"</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nv">namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"internal"</span><span class="p">,</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="nv">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"bf2026"</span><span class="p">,</span><span class="w">  </span><span class="c1">-- same code, different namespace -- no conflict</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="nv">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://wiki.example.com/black-friday-plan"</span><span class="p">,</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">})</span>
-</code></pre></div>
-<p>The <code>ctx</code> table is passed to all port methods. Repositories MAY use it for tenant-aware data isolation.</p>
-<h2 id="hooks-in-production">Hooks in Production<a class="headerlink" href="#hooks-in-production" title="Permanent link">&para;</a></h2>
-<h3 id="logger-hook">Logger Hook<a class="headerlink" href="#logger-hook" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">LoggerHook</span><span class="p">(</span><span class="nv">prefix</span><span class="p">)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nv">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s2">"[SLDS]"</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="nv">after_create</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">            </span><span class="nb">io.write</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">"%s created %s/%s</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w"> </span><span class="nv">prefix</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">namespace</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">code</span><span class="p">))</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="nv">after_resolve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">result</span><span class="p">)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">            </span><span class="kr">if</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">found</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"ACTIVE"</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">                </span><span class="nb">io.write</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">"%s resolved %s/%s -&gt; %s</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">                    </span><span class="nv">prefix</span><span class="p">,</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">namespace</span><span class="p">,</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">code</span><span class="p">,</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">target</span><span class="p">))</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">            </span><span class="kr">end</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">        </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">        </span><span class="nv">on_error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">,</span><span class="w"> </span><span class="nv">name</span><span class="p">)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">            </span><span class="nb">io.write</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">"%s hook %s error: %s</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w"> </span><span class="nv">prefix</span><span class="p">,</span><span class="w"> </span><span class="nv">name</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">))</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="kr">end</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="nv">service</span><span class="p">:</span><span class="nf">use</span><span class="p">(</span><span class="nf">LoggerHook</span><span class="p">(</span><span class="s2">"[APP]"</span><span class="p">))</span>
-</code></pre></div>
-<h3 id="metrics-hook">Metrics Hook<a class="headerlink" href="#metrics-hook" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">MetricsHook</span><span class="p">(</span><span class="nv">metrics</span><span class="p">)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="nv">after_resolve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">result</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">            </span><span class="nv">metrics</span><span class="p">:</span><span class="nf">increment</span><span class="p">(</span><span class="s2">"slds.resolve"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">                </span><span class="nv">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">tostring</span><span class="p">(</span><span class="nv">result</span><span class="p">.</span><span class="py">found</span><span class="p">),</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">                </span><span class="nv">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">status</span><span class="p">,</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">            </span><span class="p">})</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="kr">end</span>
-</code></pre></div>
-<p>Hooks are synchronous observers. SLDS isolates callback exceptions with <code>pcall</code>, while slow callbacks still add latency. Treat ctx as read-only and use the host's non-blocking telemetry path when needed. Measure complete operation latency in the host wrapper so repository errors are measured too; successful after_resolve callbacks do not run on infrastructure failure.</p>
-<h2 id="error-handling-patterns">Error Handling Patterns<a class="headerlink" href="#error-handling-patterns" title="Permanent link">&para;</a></h2>
-<h3 id="create-with-conflict-retry">Create with Conflict Retry<a class="headerlink" href="#create-with-conflict-retry" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">create_with_retry</span><span class="p">(</span><span class="nv">service</span><span class="p">,</span><span class="w"> </span><span class="nv">input</span><span class="p">,</span><span class="w"> </span><span class="nv">max_retries</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nv">max_retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">max_retries</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="mi">3</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nv">max_retries</span><span class="w"> </span><span class="kr">do</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span><span class="kd">local</span><span class="w"> </span><span class="nv">link</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">service</span><span class="p">:</span><span class="nf">create</span><span class="p">({},</span><span class="w"> </span><span class="nv">input</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">        </span><span class="kr">if</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="kr">end</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span><span class="kr">if</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">CONFLICT</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w">  </span><span class="c1">-- non-conflict error, do not retry</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="kr">end</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">        </span><span class="c1">-- Conflict -- try again (Generator will produce a new code)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span><span class="nv">input</span><span class="p">.</span><span class="py">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">nil</span><span class="w">  </span><span class="c1">-- clear custom code, let Generator produce</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="kr">end</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="s2">"max retries exceeded"</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="kr">end</span>
-</code></pre></div>
-<h3 id="resolve-with-fallback">Resolve with Fallback<a class="headerlink" href="#resolve-with-fallback" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">resolve_or_fallback</span><span class="p">(</span><span class="nv">service</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">fallback_url</span><span class="p">)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">result</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">service</span><span class="p">:</span><span class="nf">resolve</span><span class="p">({},</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">result</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="kr">end</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">found</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"ACTIVE"</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="nv">result</span><span class="p">.</span><span class="py">target</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="kr">end</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">fallback_url</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="kr">end</span>
-</code></pre></div>
-<h2 id="testing-with-fake-clock">Testing with Fake Clock<a class="headerlink" href="#testing-with-fake-clock" title="Permanent link">&para;</a></h2>
-<p>SLDS accepts a <code>clock</code> function for deterministic expiry testing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">fake_now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nv">generator</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.sequential.generator"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nv">encoder</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.base62.encoder"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nv">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="nv">fake_now</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">})</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">-- Create a link that expires in 60s</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="kd">local</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">service</span><span class="p">:</span><span class="nf">create</span><span class="p">({},</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="nv">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://example.com"</span><span class="p">,</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="nv">expires_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">fake_now</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">})</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1">-- Before expiry -- resolvable</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="kd">local</span><span class="w"> </span><span class="nv">r1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">service</span><span class="p">:</span><span class="nf">resolve</span><span class="p">({},</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Identity</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">code</span><span class="p">))</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">r1</span><span class="p">.</span><span class="py">found</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">r1</span><span class="p">.</span><span class="py">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"ACTIVE"</span><span class="p">)</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1">-- Advance time past expiry</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="nv">fake_now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">fake_now</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">61</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1">-- After expiry -- not resolvable</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="kd">local</span><span class="w"> </span><span class="nv">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">service</span><span class="p">:</span><span class="nf">resolve</span><span class="p">({},</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Identity</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">code</span><span class="p">))</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">r2</span><span class="p">.</span><span class="py">found</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">r2</span><span class="p">.</span><span class="py">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"EXPIRED"</span><span class="p">)</span><span class="w">  </span><span class="c1">-- derived, not persisted</span>
-</code></pre></div>
-<h2 id="integration-with-openresty">Integration with OpenResty<a class="headerlink" href="#integration-with-openresty" title="Permanent link">&para;</a></h2>
-<p>SLDS Core has zero <code>ngx</code> dependency. Integration happens in the host layer:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">location</span><span class="w"> </span><span class="s">/s/:code</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="kn">content_by_lua_block</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">        </span><span class="kn">local</span><span class="w"> </span><span class="s">slds</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">require("slds")</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">        </span><span class="s">local</span><span class="w"> </span><span class="s">service</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">require("app.slds_service")</span><span class="w">  </span><span class="s">--</span><span class="w"> </span><span class="s">host</span><span class="w"> </span><span class="s">module</span><span class="w"> </span><span class="s">returns</span><span class="w"> </span><span class="s">a</span><span class="w"> </span><span class="s">configured</span><span class="w"> </span><span class="s">worker-local</span><span class="w"> </span><span class="s">instance</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">        </span><span class="s">local</span><span class="w"> </span><span class="s">identity</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">slds.Identity.new("default",</span><span class="w"> </span><span class="s">ngx.var.code)</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">        </span><span class="s">local</span><span class="w"> </span><span class="s">result,</span><span class="w"> </span><span class="s">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">service:resolve(</span><span class="p">{}</span><span class="kn">,</span><span class="w"> </span><span class="s">identity)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">        </span><span class="s">if</span><span class="w"> </span><span class="s">not</span><span class="w"> </span><span class="s">result</span><span class="w"> </span><span class="s">then</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">            </span><span class="s">ngx.log(ngx.ERR,</span><span class="w"> </span><span class="s">"SLDS</span><span class="w"> </span><span class="s">resolve</span><span class="w"> </span><span class="s">failed:</span><span class="w"> </span><span class="s">",</span><span class="w"> </span><span class="s">err)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">            </span><span class="s">ngx.exit(503)</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="s">elseif</span><span class="w"> </span><span class="s">result.found</span><span class="w"> </span><span class="s">and</span><span class="w"> </span><span class="s">result.status</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">"ACTIVE"</span><span class="w"> </span><span class="s">then</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">            </span><span class="s">ngx.redirect(result.target,</span><span class="w"> </span><span class="mi">302</span><span class="s">)</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">        </span><span class="s">else</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">            </span><span class="s">ngx.exit(404)</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">        </span><span class="s">end</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="err">}</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="err">}</span>
-</code></pre></div>
-<p>The host's <code>app.slds_service</code> module configures a worker-local Service with suitable adapters. Lua service objects cannot be stored in <code>ngx.shared</code>; cross-worker persistence and uniqueness belong to the repository/generator implementation. Network connections must be acquired in a phase supported by the chosen client.</p>
-<h2 id="conformance-testing">Conformance Testing<a class="headerlink" href="#conformance-testing" title="Permanent link">&para;</a></h2>
-<p>If you are implementing a custom adapter and want to claim SLDS compatibility, run the Conformance Test Suite against your implementation:</p>
-<p>Register the reusable suites from a Busted spec using a fresh fixture factory. The <a href="../rfc/conformance-tests/">Conformance Tests guide</a> provides a complete factory example, the L0-L3 matrix, and the additional evidence required for real concurrency or optional host extensions (RULE-010).</p>
+<p>The host maps result.resolvable to redirects or application behavior, maps infrastructure errors to its own failure response, and performs authorization before calling Core. Namespace is a logical identity partition, not tenant authorization. ctx propagation alone proves no access isolation.</p>
+<p>In OpenResty, construct a worker-local Interactor in the host and acquire connections in a phase supported by the chosen client. Core has no ngx dependency. A Lua Interactor cannot be stored in ngx.shared; cross-worker persistence/uniqueness belongs to the selected adapters.</p>
+<h2 id="verify-an-integration">Verify an integration<a class="headerlink" href="#verify-an-integration" title="Permanent link">&para;</a></h2>
+<p>Use a deterministic clock to test expiration just before, at and after the timestamp. Run the reusable <a href="../rfc/conformance-tests/">conformance suites</a> against fresh real adapter fixtures. Declare which evidence is sequential, deterministically interleaved or actually concurrent. Run the <a href="../validation/">per-file coverage gate</a> from fresh statistics; never substitute aggregate coverage.</p>
 
 
 

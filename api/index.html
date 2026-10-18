@@ -16,7 +16,7 @@
         <link rel="prev" href="../how-to/">
       
       
-        <link rel="next" href="../rfc/RFC-0001/">
+        <link rel="next" href="../rfc/RFC-0002/">
       
       
         
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-reference" class="md-skip">
+        <a href="#api-reference-v02" class="md-skip">
           Skip to content
         </a>
       
@@ -605,6 +605,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -720,22 +724,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#module-slds" class="md-nav__link">
+  <a href="#root-module" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds
+        Root module
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Module: slds">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constants" class="md-nav__link">
+  <a href="#sldsnewopts-interactor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Constants
+        slds.new(opts) -&gt; Interactor
       
     </span>
   </a>
@@ -743,10 +758,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#exported-modules" class="md-nav__link">
+  <a href="#interactorcreatectxinput-shortlink-nilerr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Exported Modules
+        interactor:create(ctx,input) -&gt; ShortLink | nil,err
       
     </span>
   </a>
@@ -754,10 +769,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sldsnewopts-service" class="md-nav__link">
+  <a href="#interactorresolvectxidentity-resolutionresult-nilerr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        slds.new(opts) -&gt; Service
+        interactor:resolve(ctx,identity) -&gt; ResolutionResult | nil,err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactorupdatectxidentitypatch-shortlink-nilerr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interactor:update(ctx,identity,patch) -&gt; ShortLink | nil,err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactordeletectxidentity-true-nilerr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interactor:delete(ctx,identity) -&gt; true | nil,err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactorusehook-interactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interactor:use(hook) -&gt; Interactor
       
     </span>
   </a>
@@ -770,408 +818,79 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsidentity" class="md-nav__link">
+  <a href="#identity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Identity
+        Identity
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Identity">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#identitynewnamespace-code-identity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identity.new(namespace, code) -&gt; Identity
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metamethods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Metamethods
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsshortlink" class="md-nav__link">
+  <a href="#shortlink" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.ShortLink
+        ShortLink
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.ShortLink">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#shortlinknewopts-shortlink-nil-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink.new(opts) -&gt; ShortLink | nil, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkis_expirednow-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:is_expired(now) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkis_resolvablenow-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:is_resolvable(now) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkwith_patchpatch-shortlink-nil-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:with_patch(patch) -&gt; ShortLink | nil, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkto_table-table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:to_table() -&gt; table
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldslifecycle" class="md-nav__link">
+  <a href="#lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Lifecycle
+        Lifecycle
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Lifecycle">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#constants_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Constants
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lifecyclecan_transitionfrom-to-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lifecycle.can_transition(from, to) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lifecyclevalidate_transitionfrom-to" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lifecycle.validate_transition(from, to)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lifecycleis_resolvablestatus-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lifecycle.is_resolvable(status) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsresolution" class="md-nav__link">
+  <a href="#resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Resolution
+        Resolution
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Resolution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#resolutionresolvelink-identity-now-resolutionresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution.resolve(link, identity, now) -&gt; ResolutionResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolutionnot_foundidentity-resolutionresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution.not_found(identity) -&gt; ResolutionResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolutionresult-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ResolutionResult Fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsdomainerrors" class="md-nav__link">
+  <a href="#errors-and-dependency-responses" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.domain.errors
+        Errors and dependency responses
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.domain.errors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#error-codes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Codes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldshooks" class="md-nav__link">
+  <a href="#hooks-and-hookpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Hooks
+        Hooks and HookPoint
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Hooks">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hooksnew-hooks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hooks.new() -&gt; Hooks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hooksusehook-hooks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hooks:use(hook) -&gt; Hooks
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#port-sldsportsrepository" class="md-nav__link">
+  <a href="#core-ports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Port: slds.ports.repository
+        Core ports
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Port: slds.ports.repository">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#repositorycreatectx-link-link-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:create(ctx, link) -&gt; link, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repositorygetctx-identity-link-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:get(ctx, identity) -&gt; link, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repositoryupdatectx-identity-patch-link-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:update(ctx, identity, patch) -&gt; link, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repositorydeletectx-identity-boolean-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:delete(ctx, identity) -&gt; boolean, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-sldsportsgenerator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port: slds.ports.generator
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Port: slds.ports.generator">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#generatorgeneratectx-id-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        generator:generate(ctx) -&gt; id, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-sldsportsencoder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port: slds.ports.encoder
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Port: slds.ports.encoder">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#encoderencodeid-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        encoder:encode(id) -&gt; code
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1179,49 +898,10 @@
   <a href="#bundled-adapters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bundled Adapters
+        Bundled adapters
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Bundled Adapters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sldsadaptersinmemoryrepository" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        slds.adapters.inmemory.repository
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sldsadapterssequentialgenerator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        slds.adapters.sequential.generator
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sldsadaptersbase62encoder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        slds.adapters.base62.encoder
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1241,6 +921,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../rfc/RFC-0002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-0002 (v0.2)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../rfc/RFC-0001/" class="md-nav__link">
         
   
@@ -1248,7 +956,35 @@
   <span class="md-ellipsis">
     
   
-    RFC-0001
+    RFC-0001 (v0.1 historical)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration-v0.2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.2 Migration
   
 
     
@@ -1535,22 +1271,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#module-slds" class="md-nav__link">
+  <a href="#root-module" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds
+        Root module
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Module: slds">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constants" class="md-nav__link">
+  <a href="#sldsnewopts-interactor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Constants
+        slds.new(opts) -&gt; Interactor
       
     </span>
   </a>
@@ -1558,10 +1305,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#exported-modules" class="md-nav__link">
+  <a href="#interactorcreatectxinput-shortlink-nilerr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Exported Modules
+        interactor:create(ctx,input) -&gt; ShortLink | nil,err
       
     </span>
   </a>
@@ -1569,10 +1316,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sldsnewopts-service" class="md-nav__link">
+  <a href="#interactorresolvectxidentity-resolutionresult-nilerr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        slds.new(opts) -&gt; Service
+        interactor:resolve(ctx,identity) -&gt; ResolutionResult | nil,err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactorupdatectxidentitypatch-shortlink-nilerr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interactor:update(ctx,identity,patch) -&gt; ShortLink | nil,err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactordeletectxidentity-true-nilerr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interactor:delete(ctx,identity) -&gt; true | nil,err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactorusehook-interactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        interactor:use(hook) -&gt; Interactor
       
     </span>
   </a>
@@ -1585,408 +1365,79 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsidentity" class="md-nav__link">
+  <a href="#identity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Identity
+        Identity
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Identity">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#identitynewnamespace-code-identity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identity.new(namespace, code) -&gt; Identity
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metamethods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Metamethods
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsshortlink" class="md-nav__link">
+  <a href="#shortlink" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.ShortLink
+        ShortLink
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.ShortLink">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#shortlinknewopts-shortlink-nil-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink.new(opts) -&gt; ShortLink | nil, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkis_expirednow-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:is_expired(now) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkis_resolvablenow-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:is_resolvable(now) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkwith_patchpatch-shortlink-nil-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:with_patch(patch) -&gt; ShortLink | nil, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shortlinkto_table-table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ShortLink:to_table() -&gt; table
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldslifecycle" class="md-nav__link">
+  <a href="#lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Lifecycle
+        Lifecycle
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Lifecycle">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#constants_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Constants
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lifecyclecan_transitionfrom-to-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lifecycle.can_transition(from, to) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lifecyclevalidate_transitionfrom-to" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lifecycle.validate_transition(from, to)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lifecycleis_resolvablestatus-boolean" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lifecycle.is_resolvable(status) -&gt; boolean
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsresolution" class="md-nav__link">
+  <a href="#resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Resolution
+        Resolution
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Resolution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#resolutionresolvelink-identity-now-resolutionresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution.resolve(link, identity, now) -&gt; ResolutionResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolutionnot_foundidentity-resolutionresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution.not_found(identity) -&gt; ResolutionResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#resolutionresult-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ResolutionResult Fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldsdomainerrors" class="md-nav__link">
+  <a href="#errors-and-dependency-responses" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.domain.errors
+        Errors and dependency responses
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.domain.errors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#error-codes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Codes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-sldshooks" class="md-nav__link">
+  <a href="#hooks-and-hookpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module: slds.Hooks
+        Hooks and HookPoint
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Module: slds.Hooks">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hooksnew-hooks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hooks.new() -&gt; Hooks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hooksusehook-hooks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hooks:use(hook) -&gt; Hooks
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#port-sldsportsrepository" class="md-nav__link">
+  <a href="#core-ports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Port: slds.ports.repository
+        Core ports
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Port: slds.ports.repository">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#repositorycreatectx-link-link-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:create(ctx, link) -&gt; link, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repositorygetctx-identity-link-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:get(ctx, identity) -&gt; link, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repositoryupdatectx-identity-patch-link-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:update(ctx, identity, patch) -&gt; link, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repositorydeletectx-identity-boolean-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        repository:delete(ctx, identity) -&gt; boolean, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-sldsportsgenerator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port: slds.ports.generator
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Port: slds.ports.generator">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#generatorgeneratectx-id-err" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        generator:generate(ctx) -&gt; id, err
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-sldsportsencoder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port: slds.ports.encoder
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Port: slds.ports.encoder">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#encoderencodeid-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        encoder:encode(id) -&gt; code
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1994,49 +1445,10 @@
   <a href="#bundled-adapters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bundled Adapters
+        Bundled adapters
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Bundled Adapters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sldsadaptersinmemoryrepository" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        slds.adapters.inmemory.repository
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sldsadapterssequentialgenerator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        slds.adapters.sequential.generator
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sldsadaptersbase62encoder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        slds.adapters.base62.encoder
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2060,70 +1472,29 @@
   
 
 
-<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
-<h2 id="module-slds">Module: <code>slds</code><a class="headerlink" href="#module-slds" title="Permanent link">&para;</a></h2>
-<p>The main entry point, exported by <code>require("slds")</code>.</p>
-<h3 id="constants">Constants<a class="headerlink" href="#constants" title="Permanent link">&para;</a></h3>
+<h1 id="api-reference-v02">API Reference · v0.2<a class="headerlink" href="#api-reference-v02" title="Permanent link">&para;</a></h1>
+<h2 id="root-module">Root module<a class="headerlink" href="#root-module" title="Permanent link">&para;</a></h2>
+<p><code>require("slds")</code> exports:</p>
 <table>
 <thead>
 <tr>
-<th>Constant</th>
-<th>Value</th>
-<th>Description</th>
+<th>Field</th>
+<th>Value / module</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>slds.VERSION</code></td>
-<td><code>"0.1.0"</code></td>
-<td>Library version</td>
+<td><code>"0.2.0"</code></td>
 </tr>
 <tr>
-<td><code>slds.ACTIVE</code></td>
-<td><code>"ACTIVE"</code></td>
-<td>Lifecycle status</td>
+<td><code>slds.new</code></td>
+<td>Factory equivalent to <code>Interactor.new</code></td>
 </tr>
 <tr>
-<td><code>slds.DISABLED</code></td>
-<td><code>"DISABLED"</code></td>
-<td>Lifecycle status</td>
+<td><code>slds.Interactor</code></td>
+<td><code>slds.interactor</code></td>
 </tr>
-<tr>
-<td><code>slds.DELETED</code></td>
-<td><code>"DELETED"</code></td>
-<td>Lifecycle status (terminal)</td>
-</tr>
-<tr>
-<td><code>slds.Errors.NOT_FOUND</code></td>
-<td><code>"NOT_FOUND"</code></td>
-<td>Error code</td>
-</tr>
-<tr>
-<td><code>slds.Errors.EXPIRED</code></td>
-<td><code>"EXPIRED"</code></td>
-<td>Error code</td>
-</tr>
-<tr>
-<td><code>slds.CONFLICT</code></td>
-<td><code>"CONFLICT"</code></td>
-<td>Error code</td>
-</tr>
-<tr>
-<td><code>slds.INVALID</code></td>
-<td><code>"INVALID"</code></td>
-<td>Error code</td>
-</tr>
-</tbody>
-</table>
-<h3 id="exported-modules">Exported Modules<a class="headerlink" href="#exported-modules" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Module</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td><code>slds.Identity</code></td>
 <td><code>slds.domain.identity</code></td>
@@ -2148,406 +1519,305 @@
 <td><code>slds.Hooks</code></td>
 <td><code>slds.hooks</code></td>
 </tr>
+<tr>
+<td><code>slds.HookPoint</code></td>
+<td><code>slds.hook_point</code></td>
+</tr>
 </tbody>
 </table>
-<h3 id="sldsnewopts-service"><code>slds.new(opts) -&gt; Service</code><a class="headerlink" href="#sldsnewopts-service" title="Permanent link">&para;</a></h3>
-<p>Static factory (dot notation). Creates a new SLDS service instance.</p>
-<p><strong>Parameters:</strong></p>
+<p>There are no flat status/error aliases, <code>Service</code>, or adapter exports. Require adapters explicitly. Factories use dot notation; instance methods use colon notation.</p>
+<h2 id="interactor">Interactor<a class="headerlink" href="#interactor" title="Permanent link">&para;</a></h2>
+<h3 id="sldsnewopts-interactor"><code>slds.new(opts) -&gt; Interactor</code><a class="headerlink" href="#sldsnewopts-interactor" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Param</th>
-<th>Type</th>
+<th>Option</th>
 <th>Required</th>
-<th>Description</th>
+<th>Contract</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>opts.repository</code></td>
-<td>table</td>
+<td><code>repository</code></td>
 <td>yes</td>
-<td>Repository port implementation</td>
+<td>Table with create/get/update/delete methods</td>
 </tr>
 <tr>
-<td><code>opts.generator</code></td>
-<td>table</td>
-<td>yes</td>
-<td>Generator port implementation</td>
-</tr>
-<tr>
-<td><code>opts.encoder</code></td>
-<td>table</td>
-<td>yes</td>
-<td>Encoder port implementation</td>
-</tr>
-<tr>
-<td><code>opts.clock</code></td>
-<td>function</td>
+<td><code>code_generator</code></td>
 <td>no</td>
-<td>Function returning current timestamp (default: <code>os.time</code>)</td>
+<td>Table with generate(ctx,input); returns final Code</td>
 </tr>
 <tr>
-<td><code>opts.hooks</code></td>
-<td>Hooks</td>
+<td><code>lifecycle</code></td>
 <td>no</td>
-<td>Pre-configured Hooks instance (default: new)</td>
+<td>Partial table of is_valid/can_transition/is_resolvable functions</td>
+</tr>
+<tr>
+<td><code>clock</code></td>
+<td>no</td>
+<td>Function returning a finite number; defaults to os.time</td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td>no</td>
+<td>Hooks-compatible table with on/before/after; defaults to empty Hooks</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <code>Service</code></p>
-<p><strong>Errors:</strong> <code>error(msg, 2)</code> if any required port is missing/wrong type or clock is not a function. The clock must return a finite number. Expected port failures return nil,err; unexpected port programming errors propagate. Resolve returns a not-found result for NOT_FOUND (and legacy nil,nil absence), but propagates other repository errors without firing successful after_resolve.</p>
-<hr />
-<h2 id="module-sldsidentity">Module: <code>slds.Identity</code><a class="headerlink" href="#module-sldsidentity" title="Permanent link">&para;</a></h2>
-<h3 id="identitynewnamespace-code-identity"><code>Identity.new(namespace, code) -&gt; Identity</code><a class="headerlink" href="#identitynewnamespace-code-identity" title="Permanent link">&para;</a></h3>
-<p>Creates a logically immutable Identity value object using an ordinary Lua table. Callers must not assign namespace/code directly; operations capture identity values and never rewrite the caller object. Update APIs reject identity changes.</p>
+<p>Construction checks method types and fills missing Lifecycle predicates with defaults without mutating the host's table. Supply the same effective Lifecycle functions to the authoritative Repository. ctx must be a table; Core passes the same reference through, without interpreting it.</p>
+<h3 id="interactorcreatectxinput-shortlink-nilerr"><code>interactor:create(ctx,input) -&gt; ShortLink | nil,err</code><a class="headerlink" href="#interactorcreatectxinput-shortlink-nilerr" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Param</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
+<th>Input field</th>
+<th>Contract</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>namespace</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Non-empty logical partition</td>
+<td>Non-empty string; defaults to <code>"default"</code> only when nil</td>
 </tr>
 <tr>
 <td><code>code</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Non-empty short code</td>
+<td>Optional non-empty string; only nil invokes CodeGenerator</td>
 </tr>
-</tbody>
-</table>
-<p><strong>Errors:</strong> <code>error(msg, 2)</code> if namespace or code is empty/missing.</p>
-<h3 id="metamethods">Metamethods<a class="headerlink" href="#metamethods" title="Permanent link">&para;</a></h3>
-<ul>
-<li><code>__eq</code> — value equality: two identities are equal if <code>namespace</code> and <code>code</code> match.</li>
-<li><code>__tostring</code> — <code>"namespace:code"</code> format.</li>
-</ul>
-<hr />
-<h2 id="module-sldsshortlink">Module: <code>slds.ShortLink</code><a class="headerlink" href="#module-sldsshortlink" title="Permanent link">&para;</a></h2>
-<h3 id="shortlinknewopts-shortlink-nil-err"><code>ShortLink.new(opts) -&gt; ShortLink | nil, err</code><a class="headerlink" href="#shortlinknewopts-shortlink-nil-err" title="Permanent link">&para;</a></h3>
-<p>Creates a ShortLink domain entity.</p>
-<table>
-<thead>
-<tr>
-<th>Param</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>opts.namespace</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Logical partition</td>
-</tr>
-<tr>
-<td><code>opts.code</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Short code</td>
-</tr>
-<tr>
-<td><code>opts.target</code></td>
-<td>string</td>
-<td>yes</td>
-<td>Destination URL (must be safe scheme)</td>
-</tr>
-<tr>
-<td><code>opts.status</code></td>
-<td>string</td>
-<td>no</td>
-<td>Lifecycle status (default: <code>ACTIVE</code>)</td>
-</tr>
-<tr>
-<td><code>opts.expires_at</code></td>
-<td>number</td>
-<td>no</td>
-<td>Finite Unix timestamp; equality with now is not expired</td>
-</tr>
-<tr>
-<td><code>opts.metadata</code></td>
-<td>table</td>
-<td>no</td>
-<td>Opaque raw-table snapshot (Core MUST NOT interpret)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <code>ShortLink</code> or <code>nil, err</code> with an INVALID-prefixed error for invalid target/status/expires_at/metadata. Metadata must be nil or a table; expiration must be nil or a finite number.</p>
-<p><strong>Errors:</strong> <code>error(msg, 2)</code> for programming errors (wrong types, missing required fields).</p>
-<h3 id="shortlinkis_expirednow-boolean"><code>ShortLink:is_expired(now) -&gt; boolean</code><a class="headerlink" href="#shortlinkis_expirednow-boolean" title="Permanent link">&para;</a></h3>
-<p>Returns <code>true</code> if <code>expires_at</code> is set and <code>expires_at &lt; now</code>.</p>
-<h3 id="shortlinkis_resolvablenow-boolean"><code>ShortLink:is_resolvable(now) -&gt; boolean</code><a class="headerlink" href="#shortlinkis_resolvablenow-boolean" title="Permanent link">&para;</a></h3>
-<p>Returns <code>true</code> if status is <code>ACTIVE</code> and not expired.</p>
-<h3 id="shortlinkwith_patchpatch-shortlink-nil-err"><code>ShortLink:with_patch(patch) -&gt; ShortLink | nil, err</code><a class="headerlink" href="#shortlinkwith_patchpatch-shortlink-nil-err" title="Permanent link">&para;</a></h3>
-<p>Creates a new ShortLink with independent metadata table contents. Only non-nil target/status/expires_at fields are patched. Unsupported fields, including metadata, are ignored; nil expiration retains the previous value, and false is invalid rather than a clearing marker.</p>
-<table>
-<thead>
-<tr>
-<th>Patch Field</th>
-<th>Allowed</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td><code>target</code></td>
-<td>yes</td>
-</tr>
-<tr>
-<td><code>status</code></td>
-<td>yes (must be valid transition)</td>
+<td>Non-empty string; rejects javascript:, data: and file: schemes after whitespace/case normalization</td>
 </tr>
 <tr>
 <td><code>expires_at</code></td>
-<td>yes</td>
+<td>Optional finite number</td>
 </tr>
 <tr>
-<td><code>namespace</code></td>
-<td><strong>no</strong> (immutable, RULE-004)</td>
+<td><code>metadata</code></td>
+<td>Optional opaque table, captured as an independent raw-table graph</td>
 </tr>
 <tr>
-<td><code>code</code></td>
-<td><strong>no</strong> (immutable, RULE-004)</td>
+<td><code>status</code></td>
+<td>Must be omitted; Interactor creates ACTIVE</td>
 </tr>
 </tbody>
 </table>
-<h3 id="shortlinkto_table-table"><code>ShortLink:to_table() -&gt; table</code><a class="headerlink" href="#shortlinkto_table-table" title="Permanent link">&para;</a></h3>
-<p>Returns a plain table representation with independent nested metadata tables. Construction, patching and export copy raw table graphs, including cycles and table keys; metadata metatables are omitted without invoking them. Non-table leaves retain their values; internal mutable state of functions/userdata/threads remains host-owned.</p>
-<hr />
-<h2 id="module-sldslifecycle">Module: <code>slds.Lifecycle</code><a class="headerlink" href="#module-sldslifecycle" title="Permanent link">&para;</a></h2>
-<h3 id="constants_1">Constants<a class="headerlink" href="#constants_1" title="Permanent link">&para;</a></h3>
+<p>Core does not fetch or fully parse target URLs. Host URL policy may be stricter. Empty/wrong-type Code returns INVALID without generation. Missing Code without CodeGenerator returns INVALID. Generation receives the original ctx and an independent input snapshot. Generated Code must be a non-empty string; Core does not coerce or retry. Repository enforces uniqueness, including deleted identities.</p>
+<h3 id="interactorresolvectxidentity-resolutionresult-nilerr"><code>interactor:resolve(ctx,identity) -&gt; ResolutionResult | nil,err</code><a class="headerlink" href="#interactorresolvectxidentity-resolutionresult-nilerr" title="Permanent link">&para;</a></h3>
+<p>Captures identity, reads Repository once, then applies Resolution and the injected clock. Repository NOT_FOUND becomes a normal result with <code>found=false,resolvable=false,status=NOT_FOUND</code>; infrastructure errors remain <code>nil,err</code>. Resolution never writes storage.</p>
+<h3 id="interactorupdatectxidentitypatch-shortlink-nilerr"><code>interactor:update(ctx,identity,patch) -&gt; ShortLink | nil,err</code><a class="headerlink" href="#interactorupdatectxidentitypatch-shortlink-nilerr" title="Permanent link">&para;</a></h3>
+<p>Captures identity/patch and calls Repository.update directly, without a preliminary get. Only target/status/expires_at are allowed. Unknown keys, including metadata, return INVALID. Namespace/code patches raise a programming error. Missing record returns NOT_FOUND; terminal records, invalid fields, rejected rules or can_update return INVALID. Unspecified fields remain unchanged.</p>
+<p><code>expires_at=nil</code> means no change. No clearing sentinel is defined; false returns INVALID.</p>
+<h3 id="interactordeletectxidentity-true-nilerr"><code>interactor:delete(ctx,identity) -&gt; true | nil,err</code><a class="headerlink" href="#interactordeletectxidentity-true-nilerr" title="Permanent link">&para;</a></h3>
+<p>Calls Repository.delete without a preliminary get. Logical deletion validates the latest record, target state and transition, then retains the identity. Repeat deletion returns INVALID; missing identity returns NOT_FOUND.</p>
+<h3 id="interactorusehook-interactor"><code>interactor:use(hook) -&gt; Interactor</code><a class="headerlink" href="#interactorusehook-interactor" title="Permanent link">&para;</a></h3>
+<p>Convenience registration into the same Hooks registry. <code>hook</code> maps HookPoint values to functions; invalid keys/callbacks raise a programming error. It is chainable and uses only v0.2 signatures:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">interactor</span><span class="p">:</span><span class="nf">use</span><span class="p">({</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="p">[</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER_CREATE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="kr">if</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">code</span><span class="p">)</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">})</span>
+</code></pre></div>
+<h2 id="identity">Identity<a class="headerlink" href="#identity" title="Permanent link">&para;</a></h2>
+<p><code>Identity.new(namespace,code)</code> requires two non-empty strings. <code>Identity.new(code)</code> uses <code>Identity.DEFAULT_NAMESPACE</code>, <code>"default"</code>. Shared metatable methods provide value equality and <code>tostring(identity)</code> as <code>namespace:code</code>.</p>
+<p>Identity is an ordinary table with logical immutability: callers must not rewrite fields. The string representation is for display; it is not a collision-free storage key. Store the tuple unambiguously, including strings containing NUL.</p>
+<h2 id="shortlink">ShortLink<a class="headerlink" href="#shortlink" title="Permanent link">&para;</a></h2>
+<p><code>ShortLink.new(data,lifecycle?) -&gt; ShortLink | nil,INVALID</code> accepts namespace/code, target, optional status (defaults ACTIVE), expires_at and metadata. Invalid/missing identity fields or a non-table container are programming errors; invalid target/status/expiration/metadata returns INVALID.</p>
+<p><code>link:with_patch(patch,lifecycle?) -&gt; ShortLink | nil,INVALID</code> creates a new validated entity. Only explicit target/status/expires_at fields are applied; unknown keys are rejected, immutable keys raise an error, and DELETED cannot be updated. Same-status patches do not invoke the transition predicate.</p>
+<p><code>link:is_expired(now) -&gt; boolean</code> requires finite now and compares <code>expires_at &lt;= now</code>.</p>
+<p><code>link:to_table() -&gt; table</code> exports plain data with independent metadata. Construction, patch and export copy raw table graphs, retaining cycles/shared children and table keys without transporting or invoking metadata metatables. Non-table leaves retain their original values; host resource internals are not isolated. There is no ShortLink:is_resolvable method; use Resolution.</p>
+<h2 id="lifecycle">Lifecycle<a class="headerlink" href="#lifecycle" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Constant</th>
-<th>Value</th>
+<th>Member</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Lifecycle.ACTIVE</code></td>
-<td><code>"ACTIVE"</code></td>
+<td>ACTIVE / DISABLED / DELETED</td>
+<td>The only persistent statuses</td>
 </tr>
 <tr>
-<td><code>Lifecycle.DISABLED</code></td>
-<td><code>"DISABLED"</code></td>
+<td><code>is_valid(status)</code></td>
+<td>Default accepts those three statuses</td>
 </tr>
 <tr>
-<td><code>Lifecycle.DELETED</code></td>
-<td><code>"DELETED"</code></td>
+<td><code>can_transition(from,to)</code></td>
+<td>Default permits ACTIVE↔DISABLED and ACTIVE/DISABLED→DELETED</td>
 </tr>
 <tr>
-<td><code>Lifecycle.STATUSES</code></td>
-<td><code>{ "ACTIVE", "DISABLED", "DELETED" }</code></td>
+<td><code>is_resolvable(status)</code></td>
+<td>Default true only for ACTIVE</td>
 </tr>
 </tbody>
 </table>
-<h3 id="lifecyclecan_transitionfrom-to-boolean"><code>Lifecycle.can_transition(from, to) -&gt; boolean</code><a class="headerlink" href="#lifecyclecan_transitionfrom-to-boolean" title="Permanent link">&para;</a></h3>
-<p>Checks if a state transition is valid.</p>
-<table>
-<thead>
-<tr>
-<th>From</th>
-<th>To</th>
-<th>Allowed</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ACTIVE</td>
-<td>DISABLED</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>ACTIVE</td>
-<td>DELETED</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>DISABLED</td>
-<td>ACTIVE</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>DISABLED</td>
-<td>DELETED</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>DELETED</td>
-<td>*</td>
-<td><strong>no</strong> (terminal)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="lifecyclevalidate_transitionfrom-to"><code>Lifecycle.validate_transition(from, to)</code><a class="headerlink" href="#lifecyclevalidate_transitionfrom-to" title="Permanent link">&para;</a></h3>
-<p>Throws <code>error(msg, 2)</code> if the transition is invalid.</p>
-<h3 id="lifecycleis_resolvablestatus-boolean"><code>Lifecycle.is_resolvable(status) -&gt; boolean</code><a class="headerlink" href="#lifecycleis_resolvablestatus-boolean" title="Permanent link">&para;</a></h3>
-<p>Returns <code>true</code> only for <code>ACTIVE</code>.</p>
-<hr />
-<h2 id="module-sldsresolution">Module: <code>slds.Resolution</code><a class="headerlink" href="#module-sldsresolution" title="Permanent link">&para;</a></h2>
-<h3 id="resolutionresolvelink-identity-now-resolutionresult"><code>Resolution.resolve(link, identity, now) -&gt; ResolutionResult</code><a class="headerlink" href="#resolutionresolvelink-identity-now-resolutionresult" title="Permanent link">&para;</a></h3>
-<p>Applies domain resolution semantics to a ShortLink.</p>
-<p><strong>Logic:</strong></p>
-<ol>
-<li>If link is nil → <code>not_found(identity)</code></li>
-<li>If status is DELETED → found=true, status=DELETED, target=nil</li>
-<li>If status is DISABLED → found=true, status=DISABLED, target=nil</li>
-<li>If expired → found=true, status=EXPIRED, target=nil</li>
-<li>If ACTIVE and not expired → found=true, status=ACTIVE, target=link.target</li>
-</ol>
-<h3 id="resolutionnot_foundidentity-resolutionresult"><code>Resolution.not_found(identity) -&gt; ResolutionResult</code><a class="headerlink" href="#resolutionnot_foundidentity-resolutionresult" title="Permanent link">&para;</a></h3>
-<p>Creates a "not found" result.</p>
-<h3 id="resolutionresult-fields">ResolutionResult Fields<a class="headerlink" href="#resolutionresult-fields" title="Permanent link">&para;</a></h3>
+<p>A partial override provides only the predicates being changed; each must be a pure synchronous function. Rules may restrict allowed states/transitions. Custom resolvability may permit DISABLED, but DELETED is never resolvable and expired records remain denied. Unknown persistent statuses and terminal revival cannot be authorized by an override. No STATUSES array or validate_transition helper is exported.</p>
+<h2 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h2>
+<p><code>Resolution.resolve(link,identity,now,lifecycle?) -&gt; ResolutionResult</code> evaluates, in order: absence → DELETED → lifecycle denial → expiration → success. <code>Resolution.not_found(identity)</code> constructs absence; <code>Resolution.not_resolvable(link,status)</code> and <code>Resolution.resolvable(link)</code> construct result snapshots. The latter helpers construct results only; callers wanting decisions must use resolve.</p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Type</th>
-<th>Description</th>
+<th>Contract</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>found</code></td>
-<td>boolean</td>
-<td>Identity exists in repository</td>
+<td>Whether the identity exists</td>
 </tr>
 <tr>
-<td><code>namespace</code></td>
-<td>string</td>
-<td>Identity namespace</td>
+<td><code>resolvable</code></td>
+<td>Whether the host may resolve it now</td>
 </tr>
 <tr>
-<td><code>code</code></td>
-<td>string</td>
-<td>Identity code</td>
+<td><code>namespace</code>, <code>code</code></td>
+<td>Identity</td>
 </tr>
 <tr>
 <td><code>target</code></td>
-<td>string|nil</td>
-<td>Destination URL (only if resolvable)</td>
+<td>Present only when resolvable</td>
 </tr>
 <tr>
 <td><code>status</code></td>
-<td>string</td>
-<td>ACTIVE / DISABLED / DELETED / EXPIRED</td>
+<td>Actual lifecycle status, <code>Resolution.EXPIRED</code>, or <code>Errors.NOT_FOUND</code></td>
 </tr>
 <tr>
 <td><code>expires_at</code></td>
-<td>number|nil</td>
-<td>Expiry timestamp</td>
+<td>Stored optional expiration</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="module-sldsdomainerrors">Module: <code>slds.domain.errors</code><a class="headerlink" href="#module-sldsdomainerrors" title="Permanent link">&para;</a></h2>
-<h3 id="error-codes">Error Codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h3>
+<p>Custom rules permitting DISABLED resolution preserve DISABLED in the result. Expiration is derived at <code>expires_at &lt;= now</code>, never persisted. ResolutionResult is independent of the entity and has the shared Resolution metatable.</p>
+<h2 id="errors-and-dependency-responses">Errors and dependency responses<a class="headerlink" href="#errors-and-dependency-responses" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Constant</th>
-<th>Value</th>
-<th>When</th>
+<th>Error</th>
+<th>Expected use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>NOT_FOUND</code></td>
-<td><code>"NOT_FOUND"</code></td>
-<td>Identity not in repository</td>
+<td>Errors.NOT_FOUND</td>
+<td>Missing Repository identity</td>
 </tr>
 <tr>
-<td><code>EXPIRED</code></td>
-<td><code>"EXPIRED"</code></td>
-<td>Link expired at resolution time</td>
+<td>Errors.CONFLICT</td>
+<td>Duplicate create or adapter-declared conditional commit conflict</td>
 </tr>
 <tr>
-<td><code>DISABLED</code></td>
-<td><code>"DISABLED"</code></td>
-<td>Link disabled</td>
-</tr>
-<tr>
-<td><code>DELETED</code></td>
-<td><code>"DELETED"</code></td>
-<td>Link deleted</td>
-</tr>
-<tr>
-<td><code>CONFLICT</code></td>
-<td><code>"CONFLICT"</code></td>
-<td>Code already exists on create</td>
-</tr>
-<tr>
-<td><code>INVALID</code></td>
-<td><code>"INVALID"</code></td>
-<td>Invalid input (bad target, bad status)</td>
+<td>Errors.INVALID</td>
+<td>Invalid business fields, transitions, terminal writes or policy rejection</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="module-sldshooks">Module: <code>slds.Hooks</code><a class="headerlink" href="#module-sldshooks" title="Permanent link">&para;</a></h2>
-<h3 id="hooksnew-hooks"><code>Hooks.new() -&gt; Hooks</code><a class="headerlink" href="#hooksnew-hooks" title="Permanent link">&para;</a></h3>
-<p>Creates a new hooks registry.</p>
-<h3 id="hooksusehook-hooks"><code>Hooks:use(hook) -&gt; Hooks</code><a class="headerlink" href="#hooksusehook-hooks" title="Permanent link">&para;</a></h3>
-<p>Registers a hook table. Chainable.</p>
-<p>Hook table callbacks (all optional):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nv">before_create</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">input</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nv">after_create</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nv">before_resolve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nv">after_resolve</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">result</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nv">before_update</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">patch</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nv">after_update</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nv">before_delete</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nv">after_delete</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nv">on_error</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">,</span><span class="w"> </span><span class="nv">callback_name</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">}</span>
-</code></pre></div>
-<p>Hooks run synchronously in registration order. Each callback receives an independent domain payload snapshot retaining domain methods; mutations cannot affect the operation, stored data, caller objects or subsequent callbacks. ctx retains its original reference and must be treated as read-only. Exceptions trigger isolated on_error callbacks without failing the operation (RULE-007/008); elapsed callback time still adds latency. This is not a timeout, execution sandbox or durable event mechanism.</p>
-<hr />
-<h2 id="port-sldsportsrepository">Port: <code>slds.ports.repository</code><a class="headerlink" href="#port-sldsportsrepository" title="Permanent link">&para;</a></h2>
-<p>Interface contract. Direct use throws <code>error()</code>.</p>
-<h3 id="repositorycreatectx-link-link-err"><code>repository:create(ctx, link) -&gt; link, err</code><a class="headerlink" href="#repositorycreatectx-link-link-err" title="Permanent link">&para;</a></h3>
-<p>Create a new short link. MUST enforce code uniqueness atomically (RULE-005).</p>
-<h3 id="repositorygetctx-identity-link-err"><code>repository:get(ctx, identity) -&gt; link, err</code><a class="headerlink" href="#repositorygetctx-identity-link-err" title="Permanent link">&para;</a></h3>
-<p>Retrieve a short link by identity.</p>
-<h3 id="repositoryupdatectx-identity-patch-link-err"><code>repository:update(ctx, identity, patch) -&gt; link, err</code><a class="headerlink" href="#repositoryupdatectx-identity-patch-link-err" title="Permanent link">&para;</a></h3>
-<p>Atomically apply supplied non-nil target/status/expires_at fields to the latest stored record, using domain validation before commit. Unspecified fields remain unchanged. Different-field updates preserve both changes; same-field updates follow commit order. A record DELETED at commit returns nil,"DELETED" unchanged. Validation failure must not partially write. Identity patches raise a programming error. A service pre-read alone does not satisfy this contract.</p>
-<h3 id="repositorydeletectx-identity-boolean-err"><code>repository:delete(ctx, identity) -&gt; boolean, err</code><a class="headerlink" href="#repositorydeletectx-identity-boolean-err" title="Permanent link">&para;</a></h3>
-<p>Logical delete (set status to DELETED). Deleted codes MUST NOT be reused (RULE-006).</p>
-<hr />
-<h2 id="port-sldsportsgenerator">Port: <code>slds.ports.generator</code><a class="headerlink" href="#port-sldsportsgenerator" title="Permanent link">&para;</a></h2>
-<h3 id="generatorgeneratectx-id-err"><code>generator:generate(ctx) -&gt; id, err</code><a class="headerlink" href="#generatorgeneratectx-id-err" title="Permanent link">&para;</a></h3>
-<p>Produce an internal unique identifier. This is <strong>not</strong> the short code — the Encoder transforms it.</p>
-<hr />
-<h2 id="port-sldsportsencoder">Port: <code>slds.ports.encoder</code><a class="headerlink" href="#port-sldsportsencoder" title="Permanent link">&para;</a></h2>
-<h3 id="encoderencodeid-code"><code>encoder:encode(id) -&gt; code</code><a class="headerlink" href="#encoderencodeid-code" title="Permanent link">&para;</a></h3>
-<p>Pure transformation from internal ID to non-empty URL-safe code. No I/O, no side effects, deterministic. The host selects a compatible Generator/Encoder pair; Core imposes no numeric ID domain, alphabet or maximum length.</p>
-<hr />
-<h2 id="bundled-adapters">Bundled Adapters<a class="headerlink" href="#bundled-adapters" title="Permanent link">&para;</a></h2>
-<h3 id="sldsadaptersinmemoryrepository"><code>slds.adapters.inmemory.repository</code><a class="headerlink" href="#sldsadaptersinmemoryrepository" title="Permanent link">&para;</a></h3>
-<p>In-memory Repository for development and testing. Stores data as data[namespace][code], preserving all valid identity tuples, including embedded NULs. Methods do not yield and are atomic within one Lua VM; this is not cross-process concurrency support. Input/returned metadata tables do not alias stored data.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">repo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">).</span><span class="nf">new</span><span class="p">()</span>
-</code></pre></div>
-<h3 id="sldsadapterssequentialgenerator"><code>slds.adapters.sequential.generator</code><a class="headerlink" href="#sldsadapterssequentialgenerator" title="Permanent link">&para;</a></h3>
-<p>Sequential counter generator. Accepts integer start in [0, 9007199254740991], defaults to 1 only for nil, and guarantees increasing values only within one instance. The maximum is returned once, followed by persistent nil,"generator exhausted". Invalid starts raise a programming error.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">gen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.sequential.generator"</span><span class="p">).</span><span class="nf">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">  </span><span class="c1">-- start at 1</span>
-</code></pre></div>
-<h3 id="sldsadaptersbase62encoder"><code>slds.adapters.base62.encoder</code><a class="headerlink" href="#sldsadaptersbase62encoder" title="Permanent link">&para;</a></h3>
-<p>Base62 encoder (0-9, A-Z, a-z). Accepts only finite integers in [0, 9007199254740991]; invalid IDs raise a programming error. This range belongs to this reference adapter, not the generic port.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">enc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.base62.encoder"</span><span class="p">).</span><span class="nf">new</span><span class="p">()</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">print</span><span class="p">(</span><span class="nv">enc</span><span class="p">:</span><span class="nf">encode</span><span class="p">(</span><span class="mi">12345</span><span class="p">))</span><span class="w">  </span><span class="c1">-- "3D7"</span>
-</code></pre></div>
+<p>Expected failures return <code>nil,err</code>, without added prefixes. Infrastructure errors retain their original values. Success returns <code>result,nil</code>; delete success must be true. Dependency <code>nil,nil</code>, result plus non-nil error, wrong record type or wrong delete success type is a programming error. Unexpected exceptions propagate. Programming errors are not guaranteed AFTER callbacks.</p>
+<h2 id="hooks-and-hookpoint">Hooks and HookPoint<a class="headerlink" href="#hooks-and-hookpoint" title="Permanent link">&para;</a></h2>
+<p><code>Hooks.new()</code> creates an empty registry. <code>hooks:on(point,fn)</code> appends a callback and returns the registry. Points are BEFORE, AFTER, BEFORE_CREATE/AFTER_CREATE, BEFORE_RESOLVE/AFTER_RESOLVE, BEFORE_UPDATE/AFTER_UPDATE, BEFORE_DELETE/AFTER_DELETE and ON_ERROR. Their values are lower-case strings such as <code>"before_create"</code>.</p>
+<p>Order: general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER. Each point preserves registration order. BEFORE follows argument-container/identity checks and input capture, preceding generation and business validation. Every normal return, including INVALID/CONFLICT and infrastructure errors, reaches AFTER.</p>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Callback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BEFORE_CREATE</td>
+<td>fn(ctx,point,input)</td>
+</tr>
+<tr>
+<td>BEFORE_RESOLVE / BEFORE_DELETE</td>
+<td>fn(ctx,point,identity)</td>
+</tr>
+<tr>
+<td>BEFORE_UPDATE</td>
+<td>fn(ctx,point,identity,patch)</td>
+</tr>
+<tr>
+<td>AFTER_CREATE / AFTER_UPDATE</td>
+<td>fn(ctx,point,link,err)</td>
+</tr>
+<tr>
+<td>AFTER_RESOLVE</td>
+<td>fn(ctx,point,result,err)</td>
+</tr>
+<tr>
+<td>AFTER_DELETE</td>
+<td>fn(ctx,point,ok,err)</td>
+</tr>
+<tr>
+<td>ON_ERROR</td>
+<td>fn(ctx,failed_point,hook_err)</td>
+</tr>
+</tbody>
+</table>
+<p>General observers receive the actual operation point and corresponding arguments. ON_ERROR's second argument is the failed point; its own exceptions are isolated without recursion. Each callback gets independent domain payload snapshots, preserved root domain methods and nil argument positions. ctx is shared, read-only by convention. Callback returns are ignored; pcall isolates exceptions, not latency, mutation of ctx or event durability.</p>
+<p>Dispatcher methods <code>hooks:before(ctx,specific_before_point,...)</code> and <code>hooks:after(ctx,specific_after_point,...)</code> reject incorrect points. Hosts normally register observers and let Interactor dispatch.</p>
+<h2 id="core-ports">Core ports<a class="headerlink" href="#core-ports" title="Permanent link">&para;</a></h2>
+<p><code>require("slds.ports.repository")</code> and <code>require("slds.ports.code_generator")</code> document interfaces; their stub methods raise errors. Implementations use duck typing, with no inheritance requirement.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Success / failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repository:create(ctx,link)</td>
+<td>Independent ShortLink / nil,err; atomic identity uniqueness</td>
+</tr>
+<tr>
+<td>repository:get(ctx,identity)</td>
+<td>Independent ShortLink / nil,NOT_FOUND or infrastructure error</td>
+</tr>
+<tr>
+<td>repository:update(ctx,identity,patch)</td>
+<td>Updated independent ShortLink / nil,err; latest-state atomic validation/commit</td>
+</tr>
+<tr>
+<td>repository:delete(ctx,identity)</td>
+<td>true / nil,err; terminal logical deletion</td>
+</tr>
+<tr>
+<td>code_generator:generate(ctx,input)</td>
+<td>Final non-empty string / nil,err</td>
+</tr>
+</tbody>
+</table>
+<p>Repository updates validate a complete candidate using the raw sparse patch before calling an optional <code>can_update(current,patch)</code>. This authoritative pure, synchronous, non-yielding boolean predicate is injected only into the Repository. False returns INVALID; exception or non-boolean is a programming error and must leave storage unchanged. Its arguments must not affect committed data if mutated. Delete uses the same full entity/transition validation, without calling can_update. Atomicity must be implemented by the actual storage adapter, not by a Core pre-read.</p>
+<h2 id="bundled-adapters">Bundled adapters<a class="headerlink" href="#bundled-adapters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module / constructor</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>slds.adapters.inmemory.repository.new({lifecycle?,can_update?})</code></td>
+<td>Nested namespace/code map; independent snapshots; atomic non-yielding methods within one Lua VM</td>
+</tr>
+<tr>
+<td><code>slds.adapters.composed.code_generator.new({generator,encoders?})</code></td>
+<td>Inner generate(ctx), then ordered encoder:encode(previous); final Code validation</td>
+</tr>
+<tr>
+<td><code>slds.adapters.sequential.generator.new(start?)</code></td>
+<td>Exact integer start in [0,9007199254740991], default 1 only for nil; uniqueness only within that instance</td>
+</tr>
+<tr>
+<td><code>slds.adapters.base62.encoder.new()</code></td>
+<td>Pure deterministic alphabet 0–9,A–Z,a–z; exact integers in [0,9007199254740991]</td>
+</tr>
+</tbody>
+</table>
+<p>Composed captures a dense encoder array at construction; holes/non-encoder entries are programming errors. Empty arrays are valid when the inner generator already returns Code. Intermediate values are opaque; only nil means failure. First failure stops the pipeline and passes its error unchanged. Nil,nil or value+error is a programming error. Final empty/non-string output returns INVALID. The input argument is unused by this reference adapter.</p>
+<p>Sequential returns the maximum once, then persistently returns <code>nil,"generator exhausted"</code>. Invalid starts or unsupported Base62 inputs raise errors. Base62's range does not support full uint64; do not use tonumber to coerce large string IDs. External generators/encoders must agree on representation and range; Repository remains the uniqueness authority. No external Redis/Postgres/cache adapter is bundled.</p>
 
 
 

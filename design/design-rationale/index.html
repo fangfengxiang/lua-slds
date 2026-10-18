@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#design-rationale" class="md-skip">
+        <a href="#design-rationale-v02" class="md-skip">
           Skip to content
         </a>
       
@@ -603,6 +603,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -685,6 +689,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../rfc/RFC-0002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-0002 (v0.2)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../rfc/RFC-0001/" class="md-nav__link">
         
   
@@ -692,7 +724,35 @@
   <span class="md-ellipsis">
     
   
-    RFC-0001
+    RFC-0001 (v0.1 historical)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration-v0.2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.2 Migration
   
 
     
@@ -903,10 +963,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-why-slds-exists" class="md-nav__link">
+  <a href="#ask-for-the-final-value" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Why SLDS Exists
+        Ask for the final value
       
     </span>
   </a>
@@ -914,121 +974,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-key-design-decisions" class="md-nav__link">
+  <a href="#validate-where-the-latest-state-exists" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Key Design Decisions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Key Design Decisions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#21-resolution-repositoryget" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.1 Resolution ≠ Repository.get()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-lifecycle-operations-database-crud" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.2 Lifecycle Operations ≠ Database CRUD
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#23-status-lifecycle-fact-expiration-time-condition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.3 Status = Lifecycle Fact, Expiration = Time Condition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-generatorencoder-mechanism-not-domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.4 Generator/Encoder = Mechanism, Not Domain
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#25-host-identity-domain-shortlink" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.5 Host ≠ Identity, Domain ≠ ShortLink
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#26-core-dependency-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.6 Core Dependency Constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-boundary-judgment-methodology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Boundary Judgment Methodology
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Boundary Judgment Methodology">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-industry-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Industry Comparison
+        Validate where the latest state exists
       
     </span>
   </a>
@@ -1036,71 +985,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-lua-library-design-principles-applied" class="md-nav__link">
+  <a href="#keep-time-derived" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Lua Library Design Principles Applied
+        Keep time derived
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="5. Lua Library Design Principles Applied">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-oop-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.1 OOP Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-static-factory-vs-instance-method" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.2 Static Factory vs Instance Method
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-error-handling-three-class-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.3 Error Handling Three-Class System
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#54-constants-self-managed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.4 Constants Self-Managed
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
+  <a href="#extend-without-weakening-invariants" class="md-nav__link">
     <span class="md-ellipsis">
       
-        References
+        Extend without weakening invariants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observe-without-controlling-the-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observe without controlling the operation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-lua-conventions-and-measure-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Lua conventions and measure claims
       
     </span>
   </a>
@@ -1234,10 +1155,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-why-slds-exists" class="md-nav__link">
+  <a href="#ask-for-the-final-value" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Why SLDS Exists
+        Ask for the final value
       
     </span>
   </a>
@@ -1245,121 +1166,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-key-design-decisions" class="md-nav__link">
+  <a href="#validate-where-the-latest-state-exists" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Key Design Decisions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Key Design Decisions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#21-resolution-repositoryget" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.1 Resolution ≠ Repository.get()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#22-lifecycle-operations-database-crud" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.2 Lifecycle Operations ≠ Database CRUD
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#23-status-lifecycle-fact-expiration-time-condition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.3 Status = Lifecycle Fact, Expiration = Time Condition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-generatorencoder-mechanism-not-domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.4 Generator/Encoder = Mechanism, Not Domain
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#25-host-identity-domain-shortlink" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.5 Host ≠ Identity, Domain ≠ ShortLink
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#26-core-dependency-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.6 Core Dependency Constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-boundary-judgment-methodology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Boundary Judgment Methodology
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Boundary Judgment Methodology">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-industry-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Industry Comparison
+        Validate where the latest state exists
       
     </span>
   </a>
@@ -1367,71 +1177,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-lua-library-design-principles-applied" class="md-nav__link">
+  <a href="#keep-time-derived" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Lua Library Design Principles Applied
+        Keep time derived
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="5. Lua Library Design Principles Applied">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#51-oop-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.1 OOP Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-static-factory-vs-instance-method" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.2 Static Factory vs Instance Method
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#53-error-handling-three-class-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.3 Error Handling Three-Class System
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#54-constants-self-managed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.4 Constants Self-Managed
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
+  <a href="#extend-without-weakening-invariants" class="md-nav__link">
     <span class="md-ellipsis">
       
-        References
+        Extend without weakening invariants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observe-without-controlling-the-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observe without controlling the operation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-lua-conventions-and-measure-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Lua conventions and measure claims
       
     </span>
   </a>
@@ -1458,312 +1240,26 @@
   
 
 
-<h1 id="design-rationale">Design Rationale<a class="headerlink" href="#design-rationale" title="Permanent link">&para;</a></h1>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Status</strong></td>
-<td>Draft</td>
-</tr>
-<tr>
-<td><strong>Created</strong></td>
-<td>2026-10-08</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="1-why-slds-exists">1. Why SLDS Exists<a class="headerlink" href="#1-why-slds-exists" title="Permanent link">&para;</a></h2>
-<p>GitHub has no shortage of short link projects — but they are all <strong>too heavy</strong>. They bundle HTTP routing, database access, caching, analytics, rate limiting, and domain logic into a single monolithic codebase. There is no clean separation between <em>what a short link IS</em> and <em>how it is served</em>.</p>
-<p>SLDS exists to define only the former:</p>
-<blockquote>
-<p>What is the <strong>identity</strong>, <strong>lifecycle</strong>, and <strong>resolution semantics</strong> of a short link?</p>
-</blockquote>
-<p>Everything else — HTTP, databases, caching, security, observability — is intentionally excluded from the domain specification. These are Infrastructure Adapter concerns.</p>
-<p><strong>Analogy:</strong> <code>dkjson</code> defines JSON encoding/decoding — it does not define how to serve JSON over HTTP. <code>lua-MessagePack</code> defines MessagePack — it does not define message queues. SLDS defines short link domain semantics — it does not define short link infrastructure.</p>
-<hr />
-<h2 id="2-key-design-decisions">2. Key Design Decisions<a class="headerlink" href="#2-key-design-decisions" title="Permanent link">&para;</a></h2>
-<h3 id="21-resolution-repositoryget">2.1 Resolution ≠ Repository.get()<a class="headerlink" href="#21-resolution-repositoryget" title="Permanent link">&para;</a></h3>
-<p>This is the most important architectural decision in SLDS.</p>
-<p><strong>Wrong approach:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kr">function</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="nv">code</span><span class="p">)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">repository</span><span class="p">:</span><span class="nf">get</span><span class="p">(</span><span class="nv">code</span><span class="p">)</span><span class="w">  </span><span class="c1">-- just a passthrough</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kr">end</span>
-</code></pre></div>
-<p><strong>Right approach:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kr">function</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">repository</span><span class="p">:</span><span class="nf">get</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="nv">ResolutionResult</span><span class="p">.</span><span class="nf">not_found</span><span class="p">(</span><span class="nv">identity</span><span class="p">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="kr">end</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="c1">-- Domain decides resolvability, not the repository</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">DELETED</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="nv">ResolutionResult</span><span class="p">.</span><span class="nf">not_resolvable</span><span class="p">(</span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">DELETED</span><span class="p">)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="kr">end</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">DISABLED</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="nv">ResolutionResult</span><span class="p">.</span><span class="nf">not_resolvable</span><span class="p">(</span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">DISABLED</span><span class="p">)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="kr">end</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">expires_at</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">expires_at</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">clock</span><span class="p">:</span><span class="nf">now</span><span class="p">()</span><span class="w"> </span><span class="kr">then</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="nv">ResolutionResult</span><span class="p">.</span><span class="nf">not_resolvable</span><span class="p">(</span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">EXPIRED</span><span class="p">)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="kr">end</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">ResolutionResult</span><span class="p">.</span><span class="nf">resolvable</span><span class="p">(</span><span class="nv">link</span><span class="p">)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="kr">end</span>
-</code></pre></div>
-<p><strong>Rationale:</strong> The domain — not the persistence layer — decides whether a link can be resolved. Resolution involves business rules (status, expiration). <code>Repository.get()</code> is just data retrieval. Conflating them violates the domain boundary.</p>
-<p><strong>Industry parallel:</strong> In DDD, a domain service encapsulates business rules that don't naturally belong to a single entity. Resolution is such a domain service.</p>
-<h3 id="22-lifecycle-operations-database-crud">2.2 Lifecycle Operations ≠ Database CRUD<a class="headerlink" href="#22-lifecycle-operations-database-crud" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>CRUD</th>
-<th>SLDS Operation</th>
-<th>Why Different</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>INSERT</td>
-<td><code>create</code></td>
-<td>Involves Generator + Encoder + Repository, not just a SQL INSERT</td>
-</tr>
-<tr>
-<td>SELECT</td>
-<td><code>resolve</code></td>
-<td>Domain logic (status, expiration) applied — not a raw fetch</td>
-</tr>
-<tr>
-<td>UPDATE</td>
-<td><code>update</code></td>
-<td>Only mutable fields (target, status, expires_at) — code is immutable</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td><code>delete</code></td>
-<td>Logical delete (status = DELETED), not physical row removal</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Rationale:</strong> Exposing CRUD directly would leak persistence semantics into the domain. SLDS operations are lifecycle operations — they carry domain meaning, not database mechanics.</p>
-<h3 id="23-status-lifecycle-fact-expiration-time-condition">2.3 Status = Lifecycle Fact, Expiration = Time Condition<a class="headerlink" href="#23-status-lifecycle-fact-expiration-time-condition" title="Permanent link">&para;</a></h3>
-<p>EXPIRED is not a persistent status. It is a <strong>derived</strong> state:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>status (stored)    : ACTIVE | DISABLED | DELETED
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>status (effective)  : ACTIVE | DISABLED | DELETED | EXPIRED
-</code></pre></div>
-<p><strong>Why?</strong> Because expiration is time-dependent. Storing EXPIRED would require a background job to transition ACTIVE → EXPIRED at the expiry moment. This is:</p>
-<ol>
-<li><strong>Operationally complex</strong> — you need cron jobs or timers</li>
-<li><strong>Race-prone</strong> — what if the job runs late?</li>
-<li><strong>Reversible</strong> — what if expires_at is updated to the future? Would you need to transition EXPIRED → ACTIVE?</li>
-</ol>
-<p>By making EXPIRED a derived state, SLDS avoids all these problems. The derivation happens at resolution time, which is the only time it matters.</p>
-<h3 id="24-generatorencoder-mechanism-not-domain">2.4 Generator/Encoder = Mechanism, Not Domain<a class="headerlink" href="#24-generatorencoder-mechanism-not-domain" title="Permanent link">&para;</a></h3>
-<p>The Generator and Encoder are <strong>mechanisms</strong> — they produce short codes. They are NOT domain concepts.</p>
-<p><strong>Why separate them?</strong></p>
-<ol>
-<li><strong>Swappability:</strong> Base62 today, hash-based tomorrow, vanity codes for marketing.</li>
-<li><strong>Testability:</strong> In tests, you can inject a deterministic generator.</li>
-<li><strong>Extensibility:</strong> Different namespaces can use different encoders.</li>
-</ol>
-<p><strong>Industry parallel:</strong> In hexagonal architecture, the "driving" and "driven" adapters are separate from the domain. Generator and Encoder are driven adapters — the domain doesn't care <em>how</em> codes are produced, only <em>that</em> they are unique.</p>
-<h3 id="25-host-identity-domain-shortlink">2.5 Host ≠ Identity, Domain ≠ ShortLink<a class="headerlink" href="#25-host-identity-domain-shortlink" title="Permanent link">&para;</a></h3>
-<p>A common mistake is to conflate the host (e.g., <code>short.example.com</code>) with the short link identity. SLDS explicitly separates them:</p>
-<ul>
-<li><strong>Host</strong> is an Application/Infrastructure concern — it determines which HTTP server handles the request.</li>
-<li><strong>Identity</strong> is <code>{ namespace, code }</code> — it determines which short link is being resolved.</li>
-</ul>
-<p>A single SLDS instance can serve multiple hosts. A single host can route to multiple SLDS namespaces. These are orthogonal concerns.</p>
-<h3 id="26-core-dependency-constraints">2.6 Core Dependency Constraints<a class="headerlink" href="#26-core-dependency-constraints" title="Permanent link">&para;</a></h3>
-<p><strong>Why ban ngx, redis, mysql, cjson from Core?</strong></p>
-<p>Because these dependencies make the Core:</p>
-<ol>
-<li><strong>Non-portable</strong> — can't run in plain Lua or LuaJIT without OpenResty</li>
-<li><strong>Non-testable</strong> — can't unit test without mocking the entire OpenResty stack</li>
-<li><strong>Non-reusable</strong> — can't use the domain logic in a CLI tool, a migration script, or a different runtime</li>
-</ol>
-<p>By restricting Core to pure Lua, SLDS becomes a true domain library that can be embedded anywhere. The Infrastructure Adapters layer adds OpenResty/Redis/MySQL when needed.</p>
-<p><strong>Industry parallel:</strong> <code>dkjson</code> has zero dependencies. <code>lua-cjson</code> is a C extension but the Lua interface is pure. <code>lua-resty-http</code> depends on <code>ngx</code> but explicitly separates the HTTP client from the protocol.</p>
-<hr />
-<h2 id="3-boundary-judgment-methodology">3. Boundary Judgment Methodology<a class="headerlink" href="#3-boundary-judgment-methodology" title="Permanent link">&para;</a></h2>
-<p>SLDS uses a simple boundary test:</p>
-<blockquote>
-<p>"If we remove this capability, does SLDS's Identity/Lifecycle/Resolution semantics still hold? If yes, it probably shouldn't be in Core."</p>
-</blockquote>
-<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Capability</th>
-<th>Remove it?</th>
-<th>Semantics hold?</th>
-<th>In Core?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Identity</td>
-<td>No</td>
-<td>N/A</td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td>Resolution</td>
-<td>No</td>
-<td>N/A</td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td>HTTP routing</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>❌ No</td>
-</tr>
-<tr>
-<td>Redis cache</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>❌ No</td>
-</tr>
-<tr>
-<td>Rate limiting</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>❌ No</td>
-</tr>
-<tr>
-<td>Click analytics</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>❌ No</td>
-</tr>
-<tr>
-<td>Metadata storage</td>
-<td>Yes</td>
-<td>Partially (but metadata is a passthrough)</td>
-<td>✅ Yes (as passthrough)</td>
-</tr>
-<tr>
-<td>Hooks</td>
-<td>Yes</td>
-<td>Yes (hooks are optional)</td>
-<td>✅ Yes (as extension point)</td>
-</tr>
-<tr>
-<td>Clock injection</td>
-<td>Yes</td>
-<td>Deterministic expiration checks need a time input</td>
-<td>✅ Yes (constructor function, no additional port)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="4-industry-comparison">4. Industry Comparison<a class="headerlink" href="#4-industry-comparison" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Project</th>
-<th>Approach</th>
-<th>SLDS Difference</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://github.com/cydrobolt/polr">Polr</a></td>
-<td>Full-stack PHP shortener</td>
-<td>SLDS separates domain from infrastructure</td>
-</tr>
-<tr>
-<td><a href="https://yourls.org/">YOURLS</a></td>
-<td>Full-stack PHP shortener</td>
-<td>SLDS is a library, not an application</td>
-</tr>
-<tr>
-<td><a href="https://github.com/thedevs-network/kutt">Kutt</a></td>
-<td>Full-stack Node.js shortener</td>
-<td>SLDS is language-agnostic spec with Lua reference</td>
-</tr>
-<tr>
-<td><a href="https://github.com/shlinkio/shlink">Shlink</a></td>
-<td>PHP shortener with REST API</td>
-<td>SLDS defines domain semantics, not REST API</td>
-</tr>
-</tbody>
-</table>
-<p>SLDS's positioning is closer to <strong>specification</strong> than <strong>application</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SLDS (Specification)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  ├── slds-core (Lua reference implementation)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  │
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  ├── slds-conformance (test suite)
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  │
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  └── implementations (Redis, MySQL, OpenResty adapters)
-</code></pre></div>
-<hr />
-<h2 id="5-lua-library-design-principles-applied">5. Lua Library Design Principles Applied<a class="headerlink" href="#5-lua-library-design-principles-applied" title="Permanent link">&para;</a></h2>
-<p>SLDS follows Lua community conventions, aligned with the lua-yar project:</p>
-<h3 id="51-oop-pattern">5.1 OOP Pattern<a class="headerlink" href="#51-oop-pattern" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Class-level shared metatable (Programming in Lua §16)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">_M</span><span class="p">.</span><span class="py">__index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_M</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">.</span><span class="nf">new</span><span class="p">(...)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nb">setmetatable</span><span class="p">({...},</span><span class="w"> </span><span class="nv">_M</span><span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="kr">end</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="kr">function</span><span class="w"> </span><span class="nc">_M</span><span class="p">:</span><span class="nf">method</span><span class="p">()</span><span class="w">  </span><span class="c1">-- instance method uses colon</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="c1">-- self is available</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="kr">end</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="kr">return</span><span class="w"> </span><span class="nv">_M</span>
-</code></pre></div>
-<p><strong>Not:</strong> inline <code>setmetatable({}, {__index = Class})</code> (creates a new metatable per instance — deviates from standard libraries).</p>
-<h3 id="52-static-factory-vs-instance-method">5.2 Static Factory vs Instance Method<a class="headerlink" href="#52-static-factory-vs-instance-method" title="Permanent link">&para;</a></h3>
-<ul>
-<li><code>Slds.new()</code> — dot notation (factory, no self)</li>
-<li><code>slds:resolve(ctx, identity)</code> — colon notation (instance method, self needed)</li>
-</ul>
-<h3 id="53-error-handling-three-class-system">5.3 Error Handling Three-Class System<a class="headerlink" href="#53-error-handling-three-class-system" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Error Type</th>
-<th>Pattern</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Runtime error</td>
-<td><code>return nil, err</code></td>
-<td>Repository failure, not found</td>
-</tr>
-<tr>
-<td>Programming error</td>
-<td><code>error(msg, 2)</code></td>
-<td>Invalid argument type, invariant violation</td>
-</tr>
-<tr>
-<td>Third-party API</td>
-<td><code>pcall</code> wrap</td>
-<td>User-provided hook callback</td>
-</tr>
-</tbody>
-</table>
-<h3 id="54-constants-self-managed">5.4 Constants Self-Managed<a class="headerlink" href="#54-constants-self-managed" title="Permanent link">&para;</a></h3>
-<p>Each module defines its own constants as local variables. No centralized constants module (following <code>lua-resty-http</code>'s <code>resty.http_const</code> pattern). Constants are only defined when they serve a functional purpose, eliminate magic numbers, or represent a finite enumeration.</p>
-<hr />
-<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Source design discussion: <code>docs/raw/slds-rfc-v0.1-draft.txt</code></li>
-<li>Boundary discussion: <code>docs/raw/slds-boundary-discussion.txt</code></li>
-<li>Programming in Lua, Chapter 16 (Object-Oriented Programming)</li>
-<li>Hexagonal Architecture (Alistair Cockburn, 2005)</li>
-<li>Domain-Driven Design (Eric Evans, 2003)</li>
-</ul>
+<h1 id="design-rationale-v02">Design rationale · v0.2<a class="headerlink" href="#design-rationale-v02" title="Permanent link">&para;</a></h1>
+<p>SLDS answers three questions: which short link is this, which lifecycle changes are valid, and may this link resolve now? A capability belongs in Core only when it is necessary to answer those questions or provide the smallest explicit integration boundary.</p>
+<h2 id="ask-for-the-final-value">Ask for the final value<a class="headerlink" href="#ask-for-the-final-value" title="Permanent link">&para;</a></h2>
+<p>Create needs Code, not an internal counter/UUID and an encoder. Repository and optional CodeGenerator are therefore the only Core ports. Adapter authors can compose generator/encoder components without making every caller configure them. Explicit-code creation works with Repository alone. No new algorithm, registry or generic pipeline framework is needed.</p>
+<p>Sequential/Base62 remain useful reference components. Their numeric limits are documented at the adapter level, leaving Core free to accept a non-empty string of any representation or length supported by the host.</p>
+<h2 id="validate-where-the-latest-state-exists">Validate where the latest state exists<a class="headerlink" href="#validate-where-the-latest-state-exists" title="Permanent link">&para;</a></h2>
+<p>A Core pre-read cannot establish the state present when a database write commits. Interactor.update/delete therefore call the write port directly. Repository applies the same domain value/transition rules to its latest record under an atomic commit mechanism. Sparse patches preserve unrelated concurrent changes; failed validation cannot partially write or revive DELETED.</p>
+<p>can_update is a small repository-local business predicate, not a policy engine or automatic stale-read detector. Complete field validation runs first, so invalid expiration values cannot turn an ordinary comparison into an accidental programming exception. Optional CAS remains an adapter/host contract with separate concurrency evidence.</p>
+<h2 id="keep-time-derived">Keep time derived<a class="headerlink" href="#keep-time-derived" title="Permanent link">&para;</a></h2>
+<p>Only ACTIVE, DISABLED and DELETED are stored. Expiration is computed at resolution time using expires_at &lt;= now. Persisting EXPIRED would require scheduled state transitions and complicate extending expiration. Resolution remains pure and storage-free; Repository.get alone cannot tell a host whether it may redirect now.</p>
+<p>found and resolvable answer different questions. A disabled/deleted/expired identity can exist while being unresolvable. Custom rules may permit DISABLED, so comparing status to ACTIVE is less reliable than checking resolvable.</p>
+<h2 id="extend-without-weakening-invariants">Extend without weakening invariants<a class="headerlink" href="#extend-without-weakening-invariants" title="Permanent link">&para;</a></h2>
+<p>Lifecycle overrides supply three functions, with partial defaults resolved at construction. Hard identity, known-status and terminal guards remain independent of those functions. This allows host-specific restrictions without introducing new status types or a general rule system.</p>
+<p>Metadata stays opaque. Raw-table snapshots preserve table ownership without adding serialization, deep merge or freezing. Unknown patches return INVALID rather than silently accepting an operation that had no effect. Expiration clearing is deferred because the latest design requires no sentinel in this version.</p>
+<h2 id="observe-without-controlling-the-operation">Observe without controlling the operation<a class="headerlink" href="#observe-without-controlling-the-operation" title="Permanent link">&para;</a></h2>
+<p>Hooks registers ordered functions by explicit point. General/specific phases make ordering deterministic. BEFORE covers valid calls before generation and business validation; AFTER sees every normal outcome, including failures.</p>
+<p>Each observer gets independent domain payloads; ctx remains shared and should be read-only. pcall prevents one observer exception from breaking an operation. It cannot bound callback latency, make delivery durable or protect shared host resources. The host must provide those capabilities if needed.</p>
+<h2 id="use-lua-conventions-and-measure-claims">Use Lua conventions and measure claims<a class="headerlink" href="#use-lua-conventions-and-measure-claims" title="Permanent link">&para;</a></h2>
+<p>Shared class metatables, dot factories, colon methods and explicit construction keep the implementation familiar on Lua 5.1/5.3/LuaJIT. Normalized rules and point-indexed Hook arrays avoid unnecessary work; no I/O pre-read is needed for update/delete. Performance multipliers are not claimed without benchmarks.</p>
+<p>Each production file needs fresh independent coverage &gt;=95%; aggregate coverage is insufficient. Real reference adapters power conformance. Sequential tests and controlled interleavings demonstrate defined scenarios, not external database concurrency, cache invalidation or tenant authorization. See <a href="../../validation/">validation records</a> and <a href="../../adr/decisions/">architecture decisions</a>.</p>
 
 
 

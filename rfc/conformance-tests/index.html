@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://fangfengxiang.github.io/lua-slds/rfc/conformance-tests/">
       
       
-        <link rel="prev" href="../RFC-0001/">
+        <link rel="prev" href="../../migration-v0.2/">
       
       
         <link rel="next" href="../../validation/">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slds-conformance-test-specification" class="md-skip">
+        <a href="#slds-conformance-tests-v02" class="md-skip">
           Skip to content
         </a>
       
@@ -605,6 +605,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -688,6 +692,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../RFC-0002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-0002 (v0.2)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../RFC-0001/" class="md-nav__link">
         
   
@@ -695,7 +727,35 @@
   <span class="md-ellipsis">
     
   
-    RFC-0001
+    RFC-0001 (v0.1 historical)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration-v0.2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.2 Migration
   
 
     
@@ -776,10 +836,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scope-and-evidence" class="md-nav__link">
+  <a href="#reuse-the-suites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scope and evidence
+        Reuse the suites
       
     </span>
   </a>
@@ -787,10 +847,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reusing-the-suite" class="md-nav__link">
+  <a href="#evidence-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reusing the suite
+        Evidence matrix
       
     </span>
   </a>
@@ -798,32 +858,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contract-to-evidence-matrix" class="md-nav__link">
+  <a href="#coverage-and-declaration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Contract-to-evidence matrix
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#additional-reference-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Additional reference checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coverage-and-declarations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coverage and declarations
+        Coverage and declaration
       
     </span>
   </a>
@@ -1084,10 +1122,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scope-and-evidence" class="md-nav__link">
+  <a href="#reuse-the-suites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scope and evidence
+        Reuse the suites
       
     </span>
   </a>
@@ -1095,10 +1133,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reusing-the-suite" class="md-nav__link">
+  <a href="#evidence-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reusing the suite
+        Evidence matrix
       
     </span>
   </a>
@@ -1106,32 +1144,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contract-to-evidence-matrix" class="md-nav__link">
+  <a href="#coverage-and-declaration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Contract-to-evidence matrix
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#additional-reference-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Additional reference checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coverage-and-declarations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coverage and declarations
+        Coverage and declaration
       
     </span>
   </a>
@@ -1158,201 +1174,169 @@
   
 
 
-<h1 id="slds-conformance-test-specification">SLDS Conformance Test Specification<a class="headerlink" href="#slds-conformance-test-specification" title="Permanent link">&para;</a></h1>
+<h1 id="slds-conformance-tests-v02">SLDS conformance tests · v0.2<a class="headerlink" href="#slds-conformance-tests-v02" title="Permanent link">&para;</a></h1>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Value</th>
+<th>Scope</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Status</td>
-<td>Reference suite implemented; external concurrency evidence supplied per adapter</td>
+<td>Contract</td>
+<td>RFC-0002 / v0.2 source API</td>
 </tr>
 <tr>
-<td>Contract version</td>
-<td>0.1.0, hardened reference behavior (2026-10-18)</td>
+<td>Default implementation</td>
+<td>Real InMemory Repository and Composed(Sequential→Base62) CodeGenerator</td>
 </tr>
 <tr>
-<td>Runtime matrix</td>
-<td>Lua 5.1 / Lua 5.3 / LuaJIT; Lua 5.5 is an additional local check</td>
+<td>CI interpreters</td>
+<td>Lua 5.1 / Lua 5.3 / LuaJIT</td>
+</tr>
+<tr>
+<td>Additional local check</td>
+<td>Lua 5.5</td>
 </tr>
 </tbody>
 </table>
-<h2 id="scope-and-evidence">Scope and evidence<a class="headerlink" href="#scope-and-evidence" title="Permanent link">&para;</a></h2>
-<p>Compatibility means passing the applicable behavioral contracts with a declared implementation, interpreter and evidence scope. A passing sequential test does not prove real database concurrency. Core is not required to add caching or tenant policy to satisfy optional extension labels.</p>
-<p>The default suite runs the actual InMemory Repository, Sequential Generator and Base62 Encoder. Fault injection replaces specific methods or ports; it does not maintain a second mock storage implementation.</p>
-<h2 id="reusing-the-suite">Reusing the suite<a class="headerlink" href="#reusing-the-suite" title="Permanent link">&para;</a></h2>
-<p>The four <code>spec/conformance/*_spec.lua</code> files register functions from <code>spec/conformance/suites/</code>. An adapter author supplies a fresh fixture factory; the same assertions can be reused without copying them:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.service"</span><span class="p">)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">)</span><span class="w"> </span><span class="c1">-- replace with your implementation</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.sequential.generator"</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Encoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.base62.encoder"</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">make_fixture</span><span class="p">(</span><span class="nv">opts</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nv">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">repo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">repository</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">Repository</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">gen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">generator</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">Generator</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">enc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">encoder</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">Encoder</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">svc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Service</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">repo</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="nv">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">gen</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="nv">encoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enc</span><span class="p">,</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="nv">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">clock</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="mi">1000000</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="p">})</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">svc</span><span class="p">,</span><span class="w"> </span><span class="nv">repo</span><span class="p">,</span><span class="w"> </span><span class="nv">gen</span><span class="p">,</span><span class="w"> </span><span class="nv">enc</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="kr">end</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l0_core"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l1_lifecycle"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l2_reliability"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l3_extensions"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
+<p>Compatibility requires the applicable behavioral scenarios plus an explicit evidence declaration. Sequential and deterministically interleaved tests do not establish actual external storage concurrency. Optional cache/tenant/CAS features require separate integration evidence.</p>
+<h2 id="reuse-the-suites">Reuse the suites<a class="headerlink" href="#reuse-the-suites" title="Permanent link">&para;</a></h2>
+<p>Register the four reusable suites from a Busted spec file. Replace Repository with the actual adapter being evaluated; keep fresh independent fixture state:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.interactor"</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Composed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.composed.code_generator"</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.sequential.generator"</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Encoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.base62.encoder"</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">make_fixture</span><span class="p">(</span><span class="nv">opts</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nv">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">repo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">repository</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">Repository</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nv">lifecycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">lifecycle</span><span class="p">,</span><span class="w"> </span><span class="nv">can_update</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">can_update</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">gen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">generator</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">Generator</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">enc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">encoder</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">Encoder</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">code_generator</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Composed</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span><span class="w"> </span><span class="nv">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">gen</span><span class="p">,</span><span class="w"> </span><span class="nv">encoders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">enc</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="kr">end</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">clock</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">clock</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="nv">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="mi">1000000</span><span class="w"> </span><span class="kr">end</span><span class="w"> </span><span class="kr">end</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Interactor</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">        </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">repo</span><span class="p">,</span><span class="w"> </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">code_generator</span><span class="p">,</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">        </span><span class="nv">lifecycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">lifecycle</span><span class="p">,</span><span class="w"> </span><span class="nv">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">clock</span><span class="p">,</span><span class="w"> </span><span class="nv">hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">opts</span><span class="p">.</span><span class="py">hooks</span><span class="p">,</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">interactor</span><span class="p">,</span><span class="w"> </span><span class="nv">repo</span><span class="p">,</span><span class="w"> </span><span class="nv">code_generator</span><span class="p">,</span><span class="w"> </span><span class="nv">enc</span><span class="p">,</span><span class="w"> </span><span class="nv">gen</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="kr">end</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l0_core"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l1_lifecycle"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l2_reliability"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nb">require</span><span class="p">(</span><span class="s2">"spec.conformance.suites.l3_extensions"</span><span class="p">)(</span><span class="nv">make_fixture</span><span class="p">)</span>
 </code></pre></div>
-<p>Register from a Busted spec file. Every factory call must produce independent state unless a test explicitly passes a shared repository to change its clock. The factory accepts repository/generator/encoder/clock overrides for deterministic tests. The L2 interleaving tests wrap an instance's public <code>update</code> method; provide a writable Lua wrapper if an adapter uses userdata internally. Real external adapter tests must isolate and clean up their own records.</p>
-<h2 id="contract-to-evidence-matrix">Contract-to-evidence matrix<a class="headerlink" href="#contract-to-evidence-matrix" title="Permanent link">&para;</a></h2>
+<p>Run from a source checkout with its spec modules on package.path and installed adapter modules available. Each call creates fresh state unless a test explicitly supplies a shared Repository. Keep overrides for fault injection. The third return is now the final CodeGenerator, not the internal Generator.</p>
+<p>L2 controlled interleavings wrap the public update method; supply a writable Lua wrapper if your adapter uses userdata. Actual external tests must isolate and clean up records while retaining required identity reservations. The fixture must configure consistent Lifecycle functions at Interactor and Repository.</p>
+<h2 id="evidence-matrix">Evidence matrix<a class="headerlink" href="#evidence-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Level / scenario group</th>
-<th>Contract / iron rule</th>
+<th>Level/scenarios</th>
+<th>Contract</th>
 <th>Reference evidence</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>L0 <code>create_basic</code>, custom code</td>
-<td>Generator/Encoder composition; create and resolve</td>
-<td>Real reference adapters, sequential</td>
+<td>L0 creation, explicit Code, resolution</td>
+<td>Four operations, optional final-code generation</td>
+<td>Real adapters, sequential</td>
 </tr>
 <tr>
-<td>L0 resolve ACTIVE / absent</td>
-<td>ResolutionResult structure and domain resolution</td>
-<td>Real reference adapters, sequential</td>
+<td>L0 identity immutability</td>
+<td>RULE-004</td>
+<td>Public patches reject namespace/code</td>
 </tr>
 <tr>
-<td>L0 target/status update, delete</td>
-<td>Lifecycle operations</td>
-<td>Real reference adapters, sequential</td>
+<td>L1 disabled/deleted/expired</td>
+<td>Persistent state, derived expiry and terminal guards</td>
+<td>Deterministic clock; no stored EXPIRED</td>
 </tr>
 <tr>
-<td>L0 <code>code_immutability</code></td>
-<td>Identity / RULE-004</td>
-<td>Public API rejects code changes</td>
+<td>L1 duplicate/reuse rejection</td>
+<td>RULE-005/006</td>
+<td>Sequential duplicate rejection and retained tombstones</td>
 </tr>
 <tr>
-<td>L1 disabled/deleted/expired and re-enable</td>
-<td>Lifecycle matrix; EXPIRED derived</td>
-<td>Deterministic clock, persisted state remains ACTIVE for expiration</td>
+<td>L2 duplicate creation</td>
+<td>Original data survives conflicts</td>
+<td>Sequential; no idempotency-key API</td>
 </tr>
 <tr>
-<td>L1 deleted terminal and code not reused</td>
-<td>RULE-004/006</td>
-<td>Invalid transitions rejected; tombstone reserves identity</td>
+<td>L2 same-field commit order</td>
+<td>Latest same-field commit wins</td>
+<td>Sequential commits, no stale-read detection claim</td>
 </tr>
 <tr>
-<td>L1 custom code conflict</td>
-<td>Repository / RULE-005</td>
-<td>Sequential duplicate rejection, not real concurrent create</td>
+<td>L2 different-field interleavings</td>
+<td>Sparse writes retain unspecified fields</td>
+<td>Another commit injected immediately before authoritative update</td>
 </tr>
 <tr>
-<td>L2 <code>create_idempotent</code>, <code>sequential_duplicate_create</code></td>
-<td>Duplicate rejection leaves original data intact</td>
-<td>Sequential calls; no idempotency-key API implied</td>
+<td>L2 delete interleavings</td>
+<td>DELETED cannot be revived</td>
+<td>Delete injected before update; terminal write returns INVALID unchanged</td>
 </tr>
 <tr>
-<td>L2 <code>same_field_commit_order</code></td>
-<td>Last commit for the same field wins</td>
-<td>Sequential commits; no application read-modify-write conflict detection</td>
-</tr>
-<tr>
-<td>L2 deterministic different-field interleaving</td>
-<td>Sparse patches preserve unspecified fields</td>
-<td>Another status commit injected after Service read, before repository commit</td>
-</tr>
-<tr>
-<td>L2 deterministic delete interleaving</td>
-<td>DELETED cannot be revived / RULE-006</td>
-<td>Another delete injected before commit; stale target/ACTIVE writes fail unchanged</td>
-</tr>
-<tr>
-<td>L2 uniqueness enforced by repository</td>
+<td>L2 direct Repository uniqueness</td>
 <td>RULE-005</td>
-<td>Direct Repository create conflict, sequential</td>
-</tr>
-<tr>
-<td>L2 update/delete then resolve</td>
-<td>Resolution visibility</td>
-<td>Committed reference state is visible</td>
+<td>Sequential direct adapter conflict</td>
 </tr>
 <tr>
 <td>L3 metadata</td>
-<td>Opaque data preserved and not interpreted</td>
-<td>Real adapter; snapshot ownership additionally covered by boundary tests</td>
+<td>Opaque data and ownership boundaries</td>
+<td>Actual adapter plus graph/snapshot unit tests</td>
 </tr>
 <tr>
-<td>L3 hooks</td>
-<td>RULE-007/008</td>
-<td>Before/after ordering and exceptions; observer snapshots covered by boundary tests</td>
+<td>L3 Hooks</td>
+<td>Ordering, exception isolation and snapshots</td>
+<td>Observations asserted outside pcall-isolated callbacks</td>
 </tr>
 <tr>
-<td>L3 context and namespaces</td>
-<td>Context propagation; Identity tuple</td>
-<td>Context and namespace assertions; no tenant authorization claim</td>
+<td>L3 ctx/namespaces</td>
+<td>Opaque propagation and tuple partitioning</td>
+<td>No tenant authorization claim</td>
 </tr>
 <tr>
 <td>L3 repository visibility</td>
-<td>Read committed changes in the reference repository</td>
-<td>No cache is installed or verified</td>
+<td>Resolve sees committed reference changes</td>
+<td>No cache installed or verified</td>
 </tr>
 <tr>
 <td>External concurrent create/update</td>
-<td>RULE-005 and atomic Repository commit</td>
-<td><strong>Unverified here</strong>: requires actual concurrent clients against the external adapter</td>
+<td>Atomicity across actual clients</td>
+<td>Not established by reference tests; adapter-specific integration required</td>
 </tr>
 <tr>
-<td>Tenant isolation / authorization</td>
-<td>Host policy / RULE-009</td>
-<td><strong>Not applicable</strong> to the reference adapter; requires a host/adapter integration suite</td>
+<td>External CAS/cache/tenant extensions</td>
+<td>Declared host/adapter contracts</td>
+<td>Not bundled; separate applicable tests required</td>
 </tr>
 <tr>
-<td>Cache invalidation / negative cache</td>
-<td>Host caching policy</td>
-<td><strong>Not applicable</strong>: Core has no cache</td>
-</tr>
-<tr>
-<td>Pure Core dependency boundary</td>
+<td>Core dependencies</td>
 <td>RULE-001/002/003</td>
-<td>No infrastructure require or target fetching in Core; code review plus runtime matrix</td>
-</tr>
-<tr>
-<td>Applicable conformance</td>
-<td>RULE-010</td>
-<td>Factory-driven suite plus explicit evidence declaration</td>
+<td>Pure Lua source review and interpreter matrix</td>
 </tr>
 </tbody>
 </table>
-<h2 id="additional-reference-checks">Additional reference checks<a class="headerlink" href="#additional-reference-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Identity tuples containing NUL remain distinct.</li>
-<li>Input, returned and exported metadata tables do not alias stored tables; raw cyclic graphs and shared children retain their relationships within each snapshot.</li>
-<li>Invalid field values and failed commits leave stored data unchanged; expected repository failures remain distinguishable from absence.</li>
-<li>Hook payloads retain domain methods, have independent nested tables, and preserve nil argument gaps. ctx remains host-owned; slow callbacks still add latency.</li>
-<li>Sequential/Base62 upper bounds and exhaustion are adapter-specific unit tests. A compatible string-ID pair and code longer than ten characters verify that generic Core does not impose those restrictions.</li>
-</ul>
-<p>These tests are in <code>spec/reference_adapters_spec.lua</code>, <code>spec/value_boundaries_spec.lua</code>, <code>spec/service_boundaries_spec.lua</code>, <code>spec/hook_observation_spec.lua</code>, and <code>spec/public_api_spec.lua</code>.</p>
-<h2 id="coverage-and-declarations">Coverage and declarations<a class="headerlink" href="#coverage-and-declarations" title="Permanent link">&para;</a></h2>
-<p>Run <code>sh scripts/test.sh</code> followed by <code>luacheck src/ adapters/ spec/ scripts/check-coverage.lua</code>. The script starts with fresh LuaCov data, reports every production Lua file (including unloaded ones), and fails unless each reaches at least 95% line coverage. Project or merged coverage cannot substitute for this per-file requirement. The GitHub Actions matrix runs it for Lua 5.1, Lua 5.3 and LuaJIT.</p>
-<p>A compatibility declaration records:</p>
-<ul>
-<li>Suite revision and contract version.</li>
-<li>Repository / Generator / Encoder combination and each applicable extension.</li>
-<li>Interpreter and exact commands executed.</li>
-<li>Passed scenarios, unverified scenarios and not-applicable capabilities.</li>
-<li>Evidence type: sequential, deterministic interleaving, or actual external concurrency.</li>
-</ul>
-<p>Do not advertise an unconditional L2/L3 badge while omitting unverified concurrency or optional extension applicability. Local reference results and migration notes are in <a href="../../validation/">validation.md</a>.</p>
+<p>Additional direct tests cover partial Lifecycle defaults, hard invariants, expires_at==now, unsupported patches, validation before can_update, rollback, full delete validation, no Interactor write pre-read, malformed dependency responses, CodeGenerator pipeline boundaries, full normal-error AFTER paths and nonrecursive ON_ERROR. Reference component numeric limits/exhaustion are tested without imposing their domain on Core.</p>
+<p>Relevant files include spec/repository_v02_spec.lua, spec/reference_adapters_spec.lua, spec/value_boundaries_spec.lua, spec/interactor_boundaries_spec.lua, spec/v02_interactor_spec.lua, spec/code_generator_spec.lua, spec/hook_points_spec.lua, spec/hook_observation_spec.lua and spec/public_api_spec.lua.</p>
+<h2 id="coverage-and-declaration">Coverage and declaration<a class="headerlink" href="#coverage-and-declaration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sh<span class="w"> </span>scripts/test.sh
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>luacheck<span class="w"> </span>src/<span class="w"> </span>adapters/<span class="w"> </span>spec/<span class="w"> </span>scripts/check-coverage.lua
+</code></pre></div>
+<p>Each production file under src/ and adapters/ must reach at least 95% from fresh independent statistics, including unloaded files. CI applies the gate separately per interpreter; aggregate/merged coverage is insufficient.</p>
+<p>Record contract/suite revision, actual Repository/CodeGenerator components, interpreter, exact commands, applicable extensions, pass/failure counts and unresolved evidence. Label evidence sequential, controlled interleaving or actual external concurrency. Do not turn ctx propagation into a tenant-isolation claim or uncached visibility into a cache-invalidation claim. See <a href="../../validation/">validation records</a>.</p>
 
 
 
