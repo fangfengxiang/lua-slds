@@ -95,7 +95,13 @@ GitHub Actions 在 Lua 5.1、Lua 5.3、LuaJIT 上独立测试并上传同份 Lua
 
 新增 API 断言在旧实现上先得到 1 failure、1 error：use 仍存在、构造器仍强制 hooks.on。删除后通过；原有 Hook 快照、异常、nil 参数和错误传播断言均保留，并迁移为 Hooks 注入。新增 128 回调 FIFO、实际四操作的通用/专属阶段顺序，以及真实适配器的三种组合、部分 Lifecycle 一致配置验证。三级存储组合仅在测试内，用两个读前层与一个权威层演示读取回填、失效、终态和故障区分，不是生产缓存或外部并发证据。
 
-luacheck 检查 45 个 Lua 文件，0 warnings/errors；rockspec lint、独立安装后的 CRUD、README/教程 Lua 示例和合规指南原样 fixture 的 50 项测试通过。版本来源检查和 actionlint 通过；实际暂存导出目录的联网 MkDocs 严格构建通过，未包含 report.md 或忽略的 openspec/。本次远端检查须按新 PR/提交另行确认；不能引用 PR #7 的旧成功代替。
+luacheck 检查 45 个 Lua 文件，0 warnings/errors；rockspec lint、独立安装后的 CRUD、README/教程 Lua 示例和合规指南原样 fixture 的 50 项测试通过。版本来源检查和 actionlint 通过；实际暂存导出目录的联网 MkDocs 严格构建通过，未包含 report.md 或忽略的 openspec/。
+
+本次实现提交 `3442a3dd891a206358ebdf47046e240be93800bb` 已通过 [CI](https://github.com/fangfengxiang/lua-slds/actions/runs/39139693860) 与 [Docs](https://github.com/fangfengxiang/lua-slds/actions/runs/39139693861)。远端三组测试各 265 项通过，全部生产文件分别达到 95% 门禁。
+
+[Codecov 对应本次实现提交](https://app.codecov.io/gh/fangfengxiang/lua-slds/commit/3442a3dd891a206358ebdf47046e240be93800bb) 状态 complete、3 个上传会话，553/553 行覆盖、0 miss；17 个生产文件逐文件 100%，差异覆盖率 100%。已核对报告中的文件集合与全部 src/adapters Lua 模块完全一致。
+
+交付为 [Draft PR #8](https://github.com/fangfengxiang/lua-slds/pull/8)，保持未合并。上述证据固定到实现提交供审计；后续纯文档记录提交的最新检查以 PR checks 为准，不能拿 PR #7 或旧提交的结果替代。
 
 ## 证据边界
 
