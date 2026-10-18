@@ -41,7 +41,7 @@ jobs:
       - name: Test and enforce 95% coverage for every production file
         run: sh scripts/test.sh
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           files: ./luacov.report.out
           disable_search: true
