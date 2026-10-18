@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-reference-v02" class="md-skip">
+        <a href="#api-reference-v011" class="md-skip">
           Skip to content
         </a>
       
@@ -314,7 +314,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../design/design-rationale/" class="md-tabs__link">
+        <a href="../report/" class="md-tabs__link">
           
   
   
@@ -607,8 +607,6 @@
       
         
       
-        
-      
     
     
     
@@ -801,17 +799,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#interactorusehook-interactor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        interactor:use(hook) -&gt; Interactor
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -928,7 +915,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -949,42 +936,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../rfc/RFC-0001/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -1040,7 +999,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -1069,6 +1028,8 @@
   
     
     
+      
+        
       
         
       
@@ -1124,6 +1085,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1348,17 +1337,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#interactorusehook-interactor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        interactor:use(hook) -&gt; Interactor
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1472,7 +1450,7 @@
   
 
 
-<h1 id="api-reference-v02">API Reference · v0.2<a class="headerlink" href="#api-reference-v02" title="Permanent link">&para;</a></h1>
+<h1 id="api-reference-v011">API Reference · v0.1.1<a class="headerlink" href="#api-reference-v011" title="Permanent link">&para;</a></h1>
 <h2 id="root-module">Root module<a class="headerlink" href="#root-module" title="Permanent link">&para;</a></h2>
 <p><code>require("slds")</code> exports:</p>
 <table>
@@ -1485,7 +1463,7 @@
 <tbody>
 <tr>
 <td><code>slds.VERSION</code></td>
-<td><code>"0.2.0"</code></td>
+<td><code>"0.1.1"</code></td>
 </tr>
 <tr>
 <td><code>slds.new</code></td>
@@ -1560,7 +1538,7 @@
 <tr>
 <td><code>hooks</code></td>
 <td>no</td>
-<td>Hooks-compatible table with on/before/after; defaults to empty Hooks</td>
+<td>Hooks-compatible table with before/after; defaults to empty Hooks</td>
 </tr>
 </tbody>
 </table>
@@ -1608,14 +1586,6 @@
 <p><code>expires_at=nil</code> means no change. No clearing sentinel is defined; false returns INVALID.</p>
 <h3 id="interactordeletectxidentity-true-nilerr"><code>interactor:delete(ctx,identity) -&gt; true | nil,err</code><a class="headerlink" href="#interactordeletectxidentity-true-nilerr" title="Permanent link">&para;</a></h3>
 <p>Calls Repository.delete without a preliminary get. Logical deletion validates the latest record, target state and transition, then retains the identity. Repeat deletion returns INVALID; missing identity returns NOT_FOUND.</p>
-<h3 id="interactorusehook-interactor"><code>interactor:use(hook) -&gt; Interactor</code><a class="headerlink" href="#interactorusehook-interactor" title="Permanent link">&para;</a></h3>
-<p>Convenience registration into the same Hooks registry. <code>hook</code> maps HookPoint values to functions; invalid keys/callbacks raise a programming error. It is chainable and uses only v0.2 signatures:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">interactor</span><span class="p">:</span><span class="nf">use</span><span class="p">({</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="p">[</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER_CREATE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="kr">if</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">code</span><span class="p">)</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">})</span>
-</code></pre></div>
 <h2 id="identity">Identity<a class="headerlink" href="#identity" title="Permanent link">&para;</a></h2>
 <p><code>Identity.new(namespace,code)</code> requires two non-empty strings. <code>Identity.new(code)</code> uses <code>Identity.DEFAULT_NAMESPACE</code>, <code>"default"</code>. Shared metatable methods provide value equality and <code>tostring(identity)</code> as <code>namespace:code</code>.</p>
 <p>Identity is an ordinary table with logical immutability: callers must not rewrite fields. The string representation is for display; it is not a collision-free storage key. Store the tuple unambiguously, including strings containing NUL.</p>
@@ -1714,8 +1684,8 @@
 </table>
 <p>Expected failures return <code>nil,err</code>, without added prefixes. Infrastructure errors retain their original values. Success returns <code>result,nil</code>; delete success must be true. Dependency <code>nil,nil</code>, result plus non-nil error, wrong record type or wrong delete success type is a programming error. Unexpected exceptions propagate. Programming errors are not guaranteed AFTER callbacks.</p>
 <h2 id="hooks-and-hookpoint">Hooks and HookPoint<a class="headerlink" href="#hooks-and-hookpoint" title="Permanent link">&para;</a></h2>
-<p><code>Hooks.new()</code> creates an empty registry. <code>hooks:on(point,fn)</code> appends a callback and returns the registry. Points are BEFORE, AFTER, BEFORE_CREATE/AFTER_CREATE, BEFORE_RESOLVE/AFTER_RESOLVE, BEFORE_UPDATE/AFTER_UPDATE, BEFORE_DELETE/AFTER_DELETE and ON_ERROR. Their values are lower-case strings such as <code>"before_create"</code>.</p>
-<p>Order: general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER. Each point preserves registration order. BEFORE follows argument-container/identity checks and input capture, preceding generation and business validation. Every normal return, including INVALID/CONFLICT and infrastructure errors, reaches AFTER.</p>
+<p><code>Hooks.new()</code> creates an empty registry. <code>hooks:on(point,fn)</code> is the only registration API; Interactor only dispatches observers. Complete registration during application startup, before operations begin. Changing registrations while operations are running is unsupported; no freeze/lock API is provided. <code>hooks:on(point,fn)</code> appends a callback and returns the registry. Points are BEFORE, AFTER, BEFORE_CREATE/AFTER_CREATE, BEFORE_RESOLVE/AFTER_RESOLVE, BEFORE_UPDATE/AFTER_UPDATE, BEFORE_DELETE/AFTER_DELETE and ON_ERROR. Their values are lower-case strings such as <code>"before_create"</code>.</p>
+<p>Same-point callbacks execute in FIFO registration order; no priorities or sorting are defined. Order: general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER. Each point preserves registration order. BEFORE follows argument-container/identity checks and input capture, preceding generation and business validation. Every normal return, including INVALID/CONFLICT and infrastructure errors, reaches AFTER.</p>
 <table>
 <thead>
 <tr>

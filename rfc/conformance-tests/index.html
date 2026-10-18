@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://fangfengxiang.github.io/lua-slds/rfc/conformance-tests/">
       
       
-        <link rel="prev" href="../../migration-v0.2/">
+        <link rel="prev" href="../../migration/">
       
       
         <link rel="next" href="../../validation/">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slds-conformance-tests-v02" class="md-skip">
+        <a href="#slds-conformance-tests-v011" class="md-skip">
           Skip to content
         </a>
       
@@ -314,7 +314,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../design/design-rationale/" class="md-tabs__link">
+        <a href="../../report/" class="md-tabs__link">
           
   
   
@@ -607,8 +607,6 @@
       
         
       
-        
-      
     
     
     
@@ -699,7 +697,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -720,42 +718,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../RFC-0001/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -891,7 +861,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -920,6 +890,8 @@
   
     
     
+      
+        
       
         
       
@@ -975,6 +947,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1174,7 +1174,7 @@
   
 
 
-<h1 id="slds-conformance-tests-v02">SLDS conformance tests · v0.2<a class="headerlink" href="#slds-conformance-tests-v02" title="Permanent link">&para;</a></h1>
+<h1 id="slds-conformance-tests-v011">SLDS conformance tests · v0.1.1<a class="headerlink" href="#slds-conformance-tests-v011" title="Permanent link">&para;</a></h1>
 <table>
 <thead>
 <tr>
@@ -1185,7 +1185,7 @@
 <tbody>
 <tr>
 <td>Contract</td>
-<td>RFC-0002 / v0.2 source API</td>
+<td>RFC-0002 / v0.1.1 source API</td>
 </tr>
 <tr>
 <td>Default implementation</td>
@@ -1299,7 +1299,7 @@
 </tr>
 <tr>
 <td>L3 Hooks</td>
-<td>Ordering, exception isolation and snapshots</td>
+<td>Sole startup on registration, FIFO/phase order, exception isolation and snapshots</td>
 <td>Observations asserted outside pcall-isolated callbacks</td>
 </tr>
 <tr>
@@ -1329,6 +1329,7 @@
 </tr>
 </tbody>
 </table>
+<p>spec/composition_spec.lua additionally exercises Sequential→Base62, URL-derived Code, explicit shared Lifecycle and a test-only three-tier Repository using real InMemory instances. Its tiered checks cover cold/warm hits, independent snapshots, write invalidation, cached entity expiration, tombstones and failure passthrough. All writes route through one authority; no external cache consistency, distributed invalidation or database concurrency is established. Core and the four bundled adapters remain unchanged.</p>
 <p>Additional direct tests cover partial Lifecycle defaults, hard invariants, expires_at==now, unsupported patches, validation before can_update, rollback, full delete validation, no Interactor write pre-read, malformed dependency responses, CodeGenerator pipeline boundaries, full normal-error AFTER paths and nonrecursive ON_ERROR. Reference component numeric limits/exhaustion are tested without imposing their domain on Core.</p>
 <p>Relevant files include spec/repository_v02_spec.lua, spec/reference_adapters_spec.lua, spec/value_boundaries_spec.lua, spec/interactor_boundaries_spec.lua, spec/v02_interactor_spec.lua, spec/code_generator_spec.lua, spec/hook_points_spec.lua, spec/hook_observation_spec.lua and spec/public_api_spec.lua.</p>
 <h2 id="coverage-and-declaration">Coverage and declaration<a class="headerlink" href="#coverage-and-declaration" title="Permanent link">&para;</a></h2>

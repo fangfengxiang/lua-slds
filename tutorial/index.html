@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#quick-start-tutorial-v02" class="md-skip">
+        <a href="#quick-start-tutorial-v011" class="md-skip">
           Skip to content
         </a>
       
@@ -314,7 +314,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../design/design-rationale/" class="md-tabs__link">
+        <a href="../report/" class="md-tabs__link">
           
   
   
@@ -528,10 +528,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-install-this-checkout" class="md-nav__link">
+  <a href="#1-install-the-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Install this checkout
+        1. Install the package
       
     </span>
   </a>
@@ -732,8 +732,6 @@
       
         
       
-        
-      
     
     
     
@@ -823,7 +821,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -844,42 +842,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../rfc/RFC-0001/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -935,7 +905,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -964,6 +934,8 @@
   
     
     
+      
+        
       
         
       
@@ -1019,6 +991,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1166,10 +1166,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-install-this-checkout" class="md-nav__link">
+  <a href="#1-install-the-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Install this checkout
+        1. Install the package
       
     </span>
   </a>
@@ -1262,14 +1262,12 @@
   
 
 
-<h1 id="quick-start-tutorial-v02">Quick start tutorial · v0.2<a class="headerlink" href="#quick-start-tutorial-v02" title="Permanent link">&para;</a></h1>
-<p>Build a complete short link lifecycle using the bundled reference adapters. No server or database is needed. Examples target the current v0.2 source API.</p>
-<h2 id="1-install-this-checkout">1. Install this checkout<a class="headerlink" href="#1-install-this-checkout" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/fangfengxiang/lua-slds.git
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>lua-slds
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>luarocks<span class="w"> </span>make<span class="w"> </span>lua-slds-scm-1.rockspec
+<h1 id="quick-start-tutorial-v011">Quick start tutorial · v0.1.1<a class="headerlink" href="#quick-start-tutorial-v011" title="Permanent link">&para;</a></h1>
+<p>Build a complete short link lifecycle using the bundled reference adapters. No server or database is needed. Examples use the v0.1.1 API.</p>
+<h2 id="1-install-the-package">1. Install the package<a class="headerlink" href="#1-install-the-package" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>luarocks<span class="w"> </span>install<span class="w"> </span>lua-slds
 </code></pre></div>
-<p>When reviewing an unpublished change, check out its branch before running make. Installing the package also maps bundled adapters to their documented module names.</p>
+<p>The package includes the reference adapters under their documented module names.</p>
 <h2 id="2-assemble-the-two-ports">2. Assemble the two ports<a class="headerlink" href="#2-assemble-the-two-ports" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">slds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds"</span><span class="p">)</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">)</span>
@@ -1277,15 +1275,23 @@
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Sequential</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.sequential.generator"</span><span class="p">)</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kd">local</span><span class="w"> </span><span class="nv">Base62</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.base62.encoder"</span><span class="p">)</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kd">local</span><span class="w"> </span><span class="nv">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Repository</span><span class="p">.</span><span class="nf">new</span><span class="p">(),</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Composed</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="nv">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Sequential</span><span class="p">.</span><span class="nf">new</span><span class="p">(),</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="nv">encoders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">Base62</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="p">}),</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nv">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="nv">now</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">})</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kd">local</span><span class="w"> </span><span class="nv">observed</span><span class="p">,</span><span class="w"> </span><span class="nv">hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Hooks</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">hooks</span><span class="p">:</span><span class="nf">on</span><span class="p">(</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER_RESOLVE</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">value</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nv">observed</span><span class="p">[</span><span class="o">#</span><span class="nv">observed</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">value</span><span class="p">.</span><span class="py">status</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="kr">end</span><span class="p">):</span><span class="nf">on</span><span class="p">(</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">ON_ERROR</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nb">print</span><span class="p">(</span><span class="s2">"Observer failed:"</span><span class="p">,</span><span class="w"> </span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="kr">end</span><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="kd">local</span><span class="w"> </span><span class="nv">lifecycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Lifecycle</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="kd">local</span><span class="w"> </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Repository</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span><span class="w"> </span><span class="nv">lifecycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">lifecycle</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="kd">local</span><span class="w"> </span><span class="nv">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">repository</span><span class="p">,</span><span class="w"> </span><span class="nv">lifecycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">lifecycle</span><span class="p">,</span><span class="w"> </span><span class="nv">hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">hooks</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Composed</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span><span class="nv">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Sequential</span><span class="p">.</span><span class="nf">new</span><span class="p">(),</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="nv">encoders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">Base62</span><span class="p">.</span><span class="nf">new</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="nv">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="nv">now</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="p">})</span>
 </code></pre></div>
 <p>Repository persists entities. CodeGenerator returns final Code; this adapter composes an instance-local counter with Base62. Core never imports either component. If all callers supply explicit codes, omit code_generator entirely.</p>
 <h2 id="3-create">3. Create<a class="headerlink" href="#3-create" title="Permanent link">&para;</a></h2>
@@ -1324,19 +1330,11 @@
 </code></pre></div>
 <p>Only target/status/expires_at may be patched. Namespace/code are immutable; metadata and unknown patch fields return INVALID. Nil expiration means unchanged; there is no clearing sentinel. Repository validates and applies the sparse patch against the latest state, preserving unspecified fields.</p>
 <h2 id="6-observe-operations">6. Observe operations<a class="headerlink" href="#6-observe-operations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">observed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">interactor</span><span class="p">:</span><span class="nf">use</span><span class="p">({</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="p">[</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER_RESOLVE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">callback_ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">value</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="nv">observed</span><span class="p">[</span><span class="o">#</span><span class="nv">observed</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nv">point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">value</span><span class="p">.</span><span class="py">status</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">err</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="p">[</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">ON_ERROR</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">callback_ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span><span class="nb">print</span><span class="p">(</span><span class="s2">"Observer failed:"</span><span class="p">,</span><span class="w"> </span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">})</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">interactor</span><span class="p">:</span><span class="nf">resolve</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">))</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">observed</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nv">point</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER_RESOLVE</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Observers were registered before operations in step 2.</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">interactor</span><span class="p">:</span><span class="nf">resolve</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">))</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">observed</span><span class="p">[</span><span class="o">#</span><span class="nv">observed</span><span class="p">].</span><span class="nv">point</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER_RESOLVE</span><span class="p">)</span>
 </code></pre></div>
-<p>Each callback receives its own domain payload snapshot. ctx stays shared and should be treated as read-only. Observers execute synchronously; exceptions are isolated with pcall, while callback latency remains part of operation latency. AFTER also receives normal failures, so check value before accessing its fields.</p>
+<p>Register only with hooks:on(point,fn) during startup. Do not change registrations while serving operations. Within one point, callbacks execute in registration order; phase order remains fixed. Each callback receives its own domain payload snapshot. ctx stays shared and should be treated as read-only. Observers execute synchronously; exceptions are isolated with pcall, while callback latency remains part of operation latency. AFTER also receives normal failures, so check value before accessing its fields.</p>
 <h2 id="7-delete-and-handle-failures">7. Delete and handle failures<a class="headerlink" href="#7-delete-and-handle-failures" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">interactor</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">))</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">deleted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">assert</span><span class="p">(</span><span class="nv">interactor</span><span class="p">:</span><span class="nf">resolve</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">))</span>
@@ -1349,7 +1347,7 @@
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">assert</span><span class="p">(</span><span class="nv">duplicate</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">conflict</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="py">Errors</span><span class="p">.</span><span class="py">CONFLICT</span><span class="p">)</span>
 </code></pre></div>
 <p>DELETED is terminal and reserves the identity. Expected failures use nil,err; unknown programming failures raise errors. A missing identity resolves normally to found=false/resolvable=false/status=NOT_FOUND, whereas a Repository connection failure returns nil and its original error.</p>
-<p>Continue with the <a href="../how-to/">operations guide</a>, <a href="../api/">API reference</a> or <a href="../migration-v0.2/">v0.2 migration guide</a>.</p>
+<p>Continue with the <a href="../how-to/">operations guide</a>, <a href="../api/">API reference</a> or <a href="../migration/">v0.1.1 migration guide</a>.</p>
 
 
 

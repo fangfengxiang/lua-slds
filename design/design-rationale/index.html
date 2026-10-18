@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://fangfengxiang.github.io/lua-slds/design/design-rationale/">
       
       
-        <link rel="prev" href="../../validation/">
+        <link rel="prev" href="../../report/">
       
       
         <link rel="next" href="../domain-layer/">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#design-rationale-v02" class="md-skip">
+        <a href="#design-rationale-v011" class="md-skip">
           Skip to content
         </a>
       
@@ -314,7 +314,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../../report/" class="md-tabs__link">
           
   
   
@@ -605,8 +605,6 @@
       
         
       
-        
-      
     
     
     
@@ -696,7 +694,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -717,42 +715,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rfc/RFC-0001/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -808,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -839,6 +809,8 @@
   
     
     
+      
+        
       
         
       
@@ -895,6 +867,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1240,7 +1240,7 @@
   
 
 
-<h1 id="design-rationale-v02">Design rationale · v0.2<a class="headerlink" href="#design-rationale-v02" title="Permanent link">&para;</a></h1>
+<h1 id="design-rationale-v011">Design rationale · v0.1.1<a class="headerlink" href="#design-rationale-v011" title="Permanent link">&para;</a></h1>
 <p>SLDS answers three questions: which short link is this, which lifecycle changes are valid, and may this link resolve now? A capability belongs in Core only when it is necessary to answer those questions or provide the smallest explicit integration boundary.</p>
 <h2 id="ask-for-the-final-value">Ask for the final value<a class="headerlink" href="#ask-for-the-final-value" title="Permanent link">&para;</a></h2>
 <p>Create needs Code, not an internal counter/UUID and an encoder. Repository and optional CodeGenerator are therefore the only Core ports. Adapter authors can compose generator/encoder components without making every caller configure them. Explicit-code creation works with Repository alone. No new algorithm, registry or generic pipeline framework is needed.</p>

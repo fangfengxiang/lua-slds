@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://fangfengxiang.github.io/lua-slds/migration-v0.2/">
+        <link rel="canonical" href="https://fangfengxiang.github.io/lua-slds/report/">
       
       
-        <link rel="prev" href="../rfc/RFC-0001/">
+        <link rel="prev" href="../validation/">
       
       
-        <link rel="next" href="../rfc/conformance-tests/">
+        <link rel="next" href="../design/design-rationale/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>v0.2 Migration - lua-slds</title>
+        <title>Architecture Review (Chinese) - lua-slds</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#migrating-from-v01-to-v02" class="md-skip">
+        <a href="#lua-slds-011" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              v0.2 Migration
+              Architecture Review (Chinese)
             
           </span>
         </div>
@@ -286,12 +286,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../api/" class="md-tabs__link">
           
   
@@ -310,11 +308,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../design/design-rationale/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -590,14 +590,10 @@
       
   
   
-    
   
   
-  
     
     
-      
-        
       
         
       
@@ -613,22 +609,21 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -646,7 +641,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -699,7 +694,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -720,14 +715,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../rfc/RFC-0001/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
+    v0.1.1 Migration
   
 
     
@@ -736,125 +731,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#construction-and-names" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Construction and names
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resolution-and-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution and time
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#writes-and-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Writes and errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hooks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hooks
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -902,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -927,8 +803,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -940,25 +818,28 @@
       
         
       
+        
+      
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -976,7 +857,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -986,6 +867,147 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        定位决定取舍
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        当前模块与责任
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        已收敛的关键契约
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        对早期分析的纠正
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证与证据边界
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        发布准备与后续改进原则
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
             
               
                 
@@ -1133,10 +1155,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#construction-and-names" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Construction and names
+        定位决定取舍
       
     </span>
   </a>
@@ -1144,10 +1166,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#resolution-and-time" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Resolution and time
+        当前模块与责任
       
     </span>
   </a>
@@ -1155,10 +1177,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writes-and-errors" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writes and errors
+        已收敛的关键契约
       
     </span>
   </a>
@@ -1166,10 +1188,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hooks" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Hooks
+        对早期分析的纠正
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证与证据边界
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        发布准备与后续改进原则
       
     </span>
   </a>
@@ -1196,73 +1240,113 @@
   
 
 
-<h1 id="migrating-from-v01-to-v02">Migrating from v0.1 to v0.2<a class="headerlink" href="#migrating-from-v01-to-v02" title="Permanent link">&para;</a></h1>
-<p>v0.2 is a breaking public API and contract upgrade. It preserves pure Lua, zero runtime dependencies, four operations and the Identity/Lifecycle/Resolution scope. It supplies no legacy aliases or dual Hook callback formats.</p>
-<h2 id="construction-and-names">Construction and names<a class="headerlink" href="#construction-and-names" title="Permanent link">&para;</a></h2>
+<h1 id="lua-slds-011">lua-slds 0.1.1 架构复查报告<a class="headerlink" href="#lua-slds-011" title="Permanent link">&para;</a></h1>
+<p>本报告依据当前源码、测试及交付配置校订早期分析，供维护者审查架构边界与发布准备情况。API 的精确签名以 <a href="../api/">API 参考</a>和 <a href="../rfc/RFC-0002/">RFC-0002</a>为准；从 0.1.0 升级须阅读<a href="../migration/">迁移说明</a>。</p>
+<h2 id="_1">定位决定取舍<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>SLDS 定义 Identity、Lifecycle 和 Resolution Semantics。核心解决短链身份、状态转换和解析结果的一致性，不承担 HTTP、目标请求、数据库连接、鉴权、租户隔离、缓存协调或遥测投递。核心及随库参考适配器没有外部运行时依赖。</p>
+<p>因此，优化应优先修复契约漏洞、数据别名污染和错误分类。没有实际需求时，不引入管理器、容器、事件总线、CQRS 框架、批量接口或新的领域端口。维护成本和每次操作的工作量同样属于设计成本。</p>
+<h2 id="_2">当前模块与责任<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>v0.1</th>
-<th>v0.2</th>
+<th>模块</th>
+<th>当前责任与边界</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>slds.service / Service</td>
-<td>slds.interactor / slds.Interactor</td>
+<td>Interactor</td>
+<td>create、resolve、update、delete 四个操作的编排；显式注入依赖</td>
 </tr>
 <tr>
-<td>new{repository,generator,encoder}</td>
-<td>new{repository,code_generator?}</td>
+<td>Identity / ShortLink</td>
+<td>身份、字段校验、稀疏补丁和逻辑不可变约定</td>
 </tr>
 <tr>
-<td>slds.ACTIVE / DISABLED / DELETED</td>
-<td>slds.Lifecycle.ACTIVE / DISABLED / DELETED</td>
+<td>Lifecycle / Resolution</td>
+<td>三个持久状态、终态约束和只读解析；过期由时间派生</td>
 </tr>
 <tr>
-<td>slds.CONFLICT / INVALID</td>
-<td>slds.Errors.CONFLICT / INVALID</td>
+<td>Repository</td>
+<td>唯一性，以及基于最新记录的原子验证与写入</td>
 </tr>
 <tr>
-<td>Errors.EXPIRED / DISABLED / DELETED</td>
-<td>Resolution.EXPIRED / Lifecycle.DISABLED / DELETED</td>
+<td>CodeGenerator（可选）</td>
+<td>返回最终非空字符串 Code；显式 Code 不调用生成器</td>
 </tr>
 <tr>
-<td>Core Generator/Encoder ports</td>
-<td>Adapter-internal components; Core CodeGenerator port</td>
+<td>Hooks / HookPoint</td>
+<td>启动期注册的同步观察者；固定执行阶段与异常隔离</td>
+</tr>
+<tr>
+<td>InMemory</td>
+<td>单 Lua VM 内、不让出执行权的参考存储</td>
+</tr>
+<tr>
+<td>Composed / Sequential / Base62</td>
+<td>适配器内部的生成与编码组合，不扩展 Core 端口</td>
 </tr>
 </tbody>
 </table>
-<p>Wrap the existing Sequential/Base62 pair:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.composed.code_generator"</span><span class="p">).</span><span class="nf">new</span><span class="p">({</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nv">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.sequential.generator"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nv">encoders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.base62.encoder"</span><span class="p">).</span><span class="nf">new</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">})</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds"</span><span class="p">).</span><span class="nf">new</span><span class="p">({</span><span class="w"> </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">repository</span><span class="p">,</span><span class="w"> </span><span class="nv">code_generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">code_generator</span><span class="w"> </span><span class="p">})</span>
-</code></pre></div>
-<p>If every create supplies Code, omit code_generator. Only code==nil invokes it; empty/wrong-type Code is INVALID. Generation receives ctx,input and returns final non-empty Code. Core no longer prefixes generation/encoding errors and never retries conflicts.</p>
-<h2 id="resolution-and-time">Resolution and time<a class="headerlink" href="#resolution-and-time" title="Permanent link">&para;</a></h2>
-<p>Use result.resolvable to decide whether to resolve. result.found only reports existence. Expiration changes from strict <code>&lt; now</code> to <code>&lt;= now</code>; equality is expired. EXPIRED remains derived, never stored. Custom rules may allow DISABLED resolution, preserving DISABLED status; DELETED always remains denied.</p>
-<p>Remove ShortLink:is_resolvable and Lifecycle.validate_transition/STATUSES usages. Use Resolution.resolve and Lifecycle's three predicates. Constructors accept partial Lifecycle overrides without modifying the supplied table; the authoritative Repository and Interactor must share effective rules.</p>
-<h2 id="writes-and-errors">Writes and errors<a class="headerlink" href="#writes-and-errors" title="Permanent link">&para;</a></h2>
-<p>Repository is the authoritative latest-state validation/commit boundary. Interactor.update/delete no longer get first. Adapters must reject stale writes to DELETED and preserve unspecified fields. Delete validates the target state as well as the transition.</p>
-<p>Expected business errors are exactly NOT_FOUND/CONFLICT/INVALID. Invalid transition, terminal update and repeat delete return nil,INVALID, rather than throwing or returning a lifecycle status. Infrastructure errors pass unchanged. Missing Repository.get returns nil,NOT_FOUND; nil,nil is now a programming error. Success plus an error is also invalid.</p>
-<p>Unknown patch keys, including metadata, now return INVALID instead of being ignored. Namespace/code patches remain programming errors. Metadata is still captured at creation and retained through updates. Nil expires_at still means unchanged; false is INVALID. The latest architecture supplement deliberately defers expiration clearing, so issue #6's earlier clearing goal is not implemented in this release.</p>
-<p>Create must omit status; explicit status returns INVALID. The Interactor creates ACTIVE. can_update belongs only in the authoritative Repository, runs after complete field validation, and returns a boolean. False is INVALID, not CONFLICT. External CAS can return CONFLICT, but needs its own adapter contract and evidence.</p>
-<h2 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h2>
-<p>Use hooks:on(HookPoint,fn) or interactor:use({[HookPoint]=fn}). The use convenience shares the same registry and retains no old callback signatures:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">interactor</span><span class="p">:</span><span class="nf">use</span><span class="p">({</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="p">[</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">AFTER_CREATE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="kr">if</span><span class="w"> </span><span class="nv">link</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">.</span><span class="py">code</span><span class="p">)</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="nb">print</span><span class="p">(</span><span class="nv">point</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p">[</span><span class="nv">slds</span><span class="p">.</span><span class="py">HookPoint</span><span class="p">.</span><span class="py">ON_ERROR</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nb">print</span><span class="p">(</span><span class="nv">failed_point</span><span class="p">,</span><span class="w"> </span><span class="nv">hook_err</span><span class="p">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="kr">end</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">})</span>
-</code></pre></div>
-<p>Add point as the second callback argument; AFTER also receives err, and AFTER_DELETE receives ok,err. ON_ERROR receives failed_point,hook_err. BEFORE now covers generation and business validation after argument capture. Every normal success/failure reaches AFTER; handle nil values. Programming errors may still propagate without AFTER.</p>
-<p>Ordering is general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER, with registration order within each point. Per-callback payload isolation and shared read-only ctx remain. Callbacks execute synchronously; no timeout or durable-delivery guarantee is introduced.</p>
-<p>See <a href="../rfc/RFC-0002/">RFC-0002</a>, <a href="../api/">API</a> and <a href="../validation/">validation evidence</a> before claiming compatibility.</p>
+<p>Core 不导入适配器。宿主负责组装 Repository、可选 CodeGenerator，以及一致的 Lifecycle。公共入口是 Interactor；旧 Service、平铺常量和旧 Hook 注册方式已移除。</p>
+<h2 id="_3">已收敛的关键契约<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li>身份为 namespace/code，公开更新不允许修改。DELETED 为终态，删除身份不可重新创建。</li>
+<li>update/delete 不在 Interactor 预读。Repository 在最新记录上验证；更新只提交显式字段，避免旧快照覆盖其他写入。完整字段校验先于 can_update；拒绝返回 INVALID。</li>
+<li>Patch 只支持 target/status/expires_at。metadata 和未知字段返回 INVALID；nil 表示未提供，不支持用 false 清除过期时间，也不引入 metadata 深合并。</li>
+<li>解析区分 found 与 resolvable。未找到是正常解析结果；基础设施故障仍为 nil,err。DELETED 优先拒绝，其后检查可解析规则，再按 expires_at &lt;= now 派生 EXPIRED；解析不写存储。</li>
+<li>Errors 只有 NOT_FOUND、CONFLICT、INVALID。端口的基础设施错误原样传递，编程错误抛出；不把依赖契约错误伪装成领域失败。</li>
+<li>Hooks:on(point,fn) 是唯一注册入口。阶段固定为通用 BEFORE、操作 BEFORE、操作、操作 AFTER、通用 AFTER；同点回调按注册顺序执行，正常成功及失败都执行 AFTER。回调异常进入非递归 ON_ERROR。</li>
+<li>Hook 领域参数逐回调形成快照，ctx 原样传递并约定只读。metadata 使用保留循环与共享引用关系的原始表快照；这不等于对 userdata 等外部资源做深度隔离。</li>
+<li>Sequential 与 Base62 的精确整数域为 [0,2^53-1]。Sequential 唯一性仅属于单个实例，达到最大值后持续报告耗尽；这些限制属于参考适配器，不属于通用端口。</li>
+</ul>
+<h2 id="_4">对早期分析的纠正<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>早期结论或建议</th>
+<th>当前判断</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service 依赖 Repository、Generator、Encoder 三个端口</td>
+<td>当前是 Interactor 与两个端口；Generator/Encoder 留在适配器内部</td>
+</tr>
+<tr>
+<td>AFTER 只观察成功</td>
+<td>正常失败同样触发 AFTER，回调须检查 value/err</td>
+</tr>
+<tr>
+<td>只有 L1 合规测试</td>
+<td>L0–L3 均存在，默认使用真实参考适配器；自定义实现可注入 fixture factory</td>
+</tr>
+<tr>
+<td>InMemory 的普通 Lua 写入必然不原子</td>
+<td>不让出执行权的操作在单 VM 内成立；不能外推到数据库、多个 worker 或分布式缓存</td>
+</tr>
+<tr>
+<td>因文件长度拆分 Service 或引入 CQRS</td>
+<td>先检查职责与真实缺陷；当前四操作编排不需要额外架构层</td>
+</tr>
+<tr>
+<td>引入 metadata 深合并、批量操作、租户端口或分析端口</td>
+<td>缺少领域必需性依据，保留宿主扩展边界</td>
+</tr>
+<tr>
+<td>高覆盖率足以证明性能、并发或生产可靠性</td>
+<td>覆盖率只反映测试执行到的代码；这些结论需要独立场景和测量</td>
+</tr>
+</tbody>
+</table>
+<p>原分析中无法由源码和测试支持的赞誉、性能结论及路线图已移除。局部表复制会产生分配，但它保护已明确的数据隔离契约；没有实际剖析证据，不以削弱隔离来宣称性能优化。</p>
+<h2 id="_5">验证与证据边界<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>当前测试基线为 265 个通过断言用例；Lua 5.1、Lua 5.3、LuaJIT 及额外本地 Lua 5.5 运行中，17 个生产 Lua 文件分别达到 100% 行覆盖率。持续门禁仍为每文件至少 95%，包含入口、端口、内部模块及未加载文件。逐文件清单、重现命令和远端检查入口见<a href="../validation/">验证记录</a>。</p>
+<p>组合测试覆盖真实 Sequential → Base62、宿主 CodeGenerator、共享 Lifecycle，以及两个读前端加一个权威写入点。它们验证内存模型中的编排与失效行为，不证明 Redis、数据库事务、外部并发、跨进程唯一性或真实分布式缓存的一致性。pcall 隔离异常，也不意味着 Hook 非阻塞、有超时或可靠投递。</p>
+<p>本地 openspec/ 被 Git 忽略；不能把本地提案称为已交付规范。可审查的当前契约保存在版本控制中的 RFC、API、设计决策和迁移说明中。</p>
+<h2 id="_6">发布准备与后续改进原则<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>用户从 LuaRocks 使用 <code>luarocks install lua-slds</code> 安装。发布应先合并通过检查的提交，再对同一提交发布版本标签和 GitHub Release。CI 校验标签与源码版本一致，从该标签生成 rockspec 和源码包，再上传 LuaRocks；发布阶段不自动改写 main。缺少发布密钥或上传失败必须让任务失败。具体步骤见<a href="https://github.com/fangfengxiang/lua-slds/blob/main/CONTRIBUTING.md#releasing">贡献指南的发布说明</a>。</p>
+<p>后续只在具体缺陷或宿主集成需求出现时增加实现：外部 Repository 先通过现有合规套件，再补充其事务与并发证据；性能优化先测量，再保持契约进行局部改动。当前没有理由增加 Core 依赖、端口或通用框架。</p>
 
 
 

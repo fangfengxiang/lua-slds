@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations-guide-v02" class="md-skip">
+        <a href="#operations-guide-v011" class="md-skip">
           Skip to content
         </a>
       
@@ -314,7 +314,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../design/design-rationale/" class="md-tabs__link">
+        <a href="../report/" class="md-tabs__link">
           
   
   
@@ -632,6 +632,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#choose-bundled-building-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose bundled building blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customize-lifecycle-and-authoritative-update-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -738,8 +749,6 @@
       
         
       
-        
-      
     
     
     
@@ -829,7 +838,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -850,42 +859,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../rfc/RFC-0001/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -941,7 +922,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -970,6 +951,8 @@
   
     
     
+      
+        
       
         
       
@@ -1025,6 +1008,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1183,6 +1194,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#choose-bundled-building-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose bundled building blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customize-lifecycle-and-authoritative-update-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1274,7 +1296,7 @@
   
 
 
-<h1 id="operations-guide-v02">Operations guide · v0.2<a class="headerlink" href="#operations-guide-v02" title="Permanent link">&para;</a></h1>
+<h1 id="operations-guide-v011">Operations guide · v0.1.1<a class="headerlink" href="#operations-guide-v011" title="Permanent link">&para;</a></h1>
 <h2 id="supply-a-direct-codegenerator">Supply a direct CodeGenerator<a class="headerlink" href="#supply-a-direct-codegenerator" title="Permanent link">&para;</a></h2>
 <p>Implement one method returning final Code. Use this when the host already has its own identifier service or code algorithm:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -1293,6 +1315,9 @@
 </code></pre></div>
 <p>The example intentionally produces a deterministic Code: repeated creation conflicts, rather than becoming an idempotency API. Repository enforces uniqueness. Core passes unchanged ctx and an independent input snapshot. Return nil,err for expected failures; nil,nil is a programming error. Core performs no automatic retry or numeric coercion.</p>
 <p>For internal Generator/Encoder composition, use the <a href="../api/#bundled-adapters">bundled Composed adapter</a>. Its encoder array is dense and ordered; an empty array is valid if the inner generator already returns Code. The current Base62 accepts only exact integers in [0,2^53-1]; full uint64/string identifiers need a compatible external encoder. Do not coerce them with tonumber.</p>
+<h2 id="choose-bundled-building-blocks">Choose bundled building blocks<a class="headerlink" href="#choose-bundled-building-blocks" title="Permanent link">&para;</a></h2>
+<p>InMemory, Sequential, Base62 and Composed are ready to assemble through their documented constructors. InMemory state belongs to its Lua instance/VM and is lost on restart. Sequential counters are instance-local and restart when recreated; independent counters can produce the same ID. Use a host-selected authoritative Repository for durable storage and cross-process uniqueness.</p>
+<p>The three executable compositions in spec/composition_spec.lua use unchanged Core ports: Sequential→Base62, URL-derived Code and a three-tier Repository. A URL generator must define collisions and still let Repository return CONFLICT; deterministic generation does not imply idempotency. The tiered test routes all writes through its third tier and invalidates both fronts; external writers, distributed invalidation and cache products require their own integration contracts. No new production adapter is added.</p>
 <h2 id="customize-lifecycle-and-authoritative-update-policy">Customize Lifecycle and authoritative update policy<a class="headerlink" href="#customize-lifecycle-and-authoritative-update-policy" title="Permanent link">&para;</a></h2>
 <p>Supply the same rules to Interactor and Repository. Missing predicates use defaults; the original table is not modified:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">slds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds"</span><span class="p">)</span>
@@ -1342,7 +1367,8 @@
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span><span class="w"> </span><span class="nv">hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">hooks</span><span class="p">,</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">})</span>
 </code></pre></div>
-<p>General BEFORE runs before operation-specific BEFORE; specific AFTER runs before general AFTER. Registration order applies within each point. Callbacks get the actual operation point and v0.2 arguments. All normal returns, including repository/generator errors, reach AFTER. Programming errors may propagate before AFTER.</p>
+<p>Finish all hooks:on registrations at application startup, before operations. Changing the registry during dispatch is unsupported. Register multiple functions by repeated on calls or a host loop; no bulk, priority or lifecycle APIs are needed.</p>
+<p>General BEFORE runs before operation-specific BEFORE; specific AFTER runs before general AFTER. Registration order applies within each point. Callbacks get the actual operation point and v0.1.1 arguments. All normal returns, including repository/generator errors, reach AFTER. Programming errors may propagate before AFTER.</p>
 <p>Each observer receives an independent payload snapshot retaining domain methods and nil gaps. ctx retains its reference and should be read-only. Hooks cannot transform operations. pcall isolates exceptions, not latency; use host-managed delivery for durable or asynchronous events. ON_ERROR failure does not recurse.</p>
 <h2 id="resolve-in-a-host">Resolve in a host<a class="headerlink" href="#resolve-in-a-host" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">local</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="nf">resolve_or_fallback</span><span class="p">(</span><span class="nv">interactor</span><span class="p">,</span><span class="w"> </span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">fallback_url</span><span class="p">)</span>

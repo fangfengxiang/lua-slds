@@ -16,7 +16,7 @@
         <link rel="prev" href="../../api/">
       
       
-        <link rel="next" href="../RFC-0001/">
+        <link rel="next" href="../../migration/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>RFC-0002 (v0.2) - lua-slds</title>
+        <title>RFC-0002 (v0.1.1) - lua-slds</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rfc-0002-slds-v02-public-api-and-authoritative-writes" class="md-skip">
+        <a href="#rfc-0002-slds-v011-public-api-and-authoritative-writes" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RFC-0002 (v0.2)
+              RFC-0002 (v0.1.1)
             
           </span>
         </div>
@@ -314,7 +314,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../design/design-rationale/" class="md-tabs__link">
+        <a href="../../report/" class="md-tabs__link">
           
   
   
@@ -607,8 +607,6 @@
       
         
       
-        
-      
     
     
     
@@ -708,7 +706,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -726,7 +724,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -866,42 +864,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../RFC-0001/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -957,7 +927,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -986,6 +956,8 @@
   
     
     
+      
+        
       
         
       
@@ -1041,6 +1013,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1306,7 +1306,7 @@
   
 
 
-<h1 id="rfc-0002-slds-v02-public-api-and-authoritative-writes">RFC-0002: SLDS v0.2 — Public API and authoritative writes<a class="headerlink" href="#rfc-0002-slds-v02-public-api-and-authoritative-writes" title="Permanent link">&para;</a></h1>
+<h1 id="rfc-0002-slds-v011-public-api-and-authoritative-writes">RFC-0002: SLDS v0.1.1 — Public API and authoritative writes<a class="headerlink" href="#rfc-0002-slds-v011-public-api-and-authoritative-writes" title="Permanent link">&para;</a></h1>
 <table>
 <thead>
 <tr>
@@ -1317,11 +1317,11 @@
 <tbody>
 <tr>
 <td>Status</td>
-<td>Implemented in the v0.2 source branch; release/CI evidence tracked separately</td>
+<td>Current contract for the consolidated 0.1.1 release</td>
 </tr>
 <tr>
 <td>Version</td>
-<td>0.2.0</td>
+<td>0.1.1</td>
 </tr>
 <tr>
 <td>Date</td>
@@ -1329,7 +1329,7 @@
 </tr>
 <tr>
 <td>Supersedes</td>
-<td>RFC-0001 for the current API and behavioral contracts</td>
+<td>The 0.1.0 contracts; see the migration guide</td>
 </tr>
 <tr>
 <td>Runtime</td>
@@ -1337,7 +1337,7 @@
 </tr>
 </tbody>
 </table>
-<p>MUST, MUST NOT and SHOULD below describe conformance requirements. <a href="../../api/">API reference</a> gives exact signatures; <a href="../../migration-v0.2/">migration notes</a> list breaking changes. The <a href="../RFC-0001/">v0.1 RFC</a> remains historical.</p>
+<p>MUST, MUST NOT and SHOULD below describe conformance requirements. <a href="../../api/">API reference</a> gives exact signatures; <a href="../../migration/">migration notes</a> list breaking changes. Superseded contracts remain available in Git history.</p>
 <h2 id="1-position-and-iron-rules">1. Position and iron rules<a class="headerlink" href="#1-position-and-iron-rules" title="Permanent link">&para;</a></h2>
 <p><strong>SLDS = Identity + Lifecycle + Resolution Semantics.</strong> Core remains a small pure Lua library; the host explicitly assembles dependencies. It MUST NOT introduce an HTTP server, database/cache client, JSON library, target request, scheduler, authorization system or durable event framework.</p>
 <table>
@@ -1399,7 +1399,7 @@
 <p>Identity is the <code>{namespace,code}</code> tuple of non-empty strings. It is logically immutable, represented by an ordinary Lua table with shared class metatable. Callers MUST NOT rewrite identity fields. Storage MUST preserve distinct valid tuples, including NUL-containing strings; a delimiter display string is not sufficient as a storage key.</p>
 <p>ShortLink stores identity, target, status, optional expires_at and opaque metadata. Target MUST be a non-empty string and MUST reject javascript:, data: and file: schemes after whitespace/case normalization. Core does not fetch or fully parse the target; host policy may be stricter. Expiration MUST be nil or a finite number. Metadata MUST be nil or a table.</p>
 <p>Only ACTIVE, DISABLED and DELETED may be persisted. Lifecycle exposes is_valid, can_transition and is_resolvable. Defaults permit ACTIVE↔DISABLED and ACTIVE/DISABLED→DELETED. Same-status patches do not invoke the transition predicate. Partial overrides may restrict states/transitions or customize resolvability, but MUST NOT admit unknown statuses, revive DELETED or resolve DELETED. Invalid business values/transitions return INVALID.</p>
-<p>ShortLink.new(data,rules?) and with_patch(patch,rules?) perform domain validation. The allowed patch fields are target/status/expires_at. Namespace/code patches are programming errors; all other keys, including metadata, return INVALID. Nil expiration means unchanged. v0.2 defines no expiration-clearing sentinel; false is INVALID.</p>
+<p>ShortLink.new(data,rules?) and with_patch(patch,rules?) perform domain validation. The allowed patch fields are target/status/expires_at. Namespace/code patches are programming errors; all other keys, including metadata, return INVALID. Nil expiration means unchanged. v0.1.1 defines no expiration-clearing sentinel; false is INVALID.</p>
 <p>Metadata table graphs MUST be independently captured at construction, patch, export, storage and observer boundaries. Preserve graph cycles/shared children/table keys; omit metadata metatables without invoking them. Non-table leaves retain their values; host resource internal state is outside the snapshot guarantee. Adapters may declare a narrower serializable value set and MUST validate it.</p>
 <h2 id="4-resolution">4. Resolution<a class="headerlink" href="#4-resolution" title="Permanent link">&para;</a></h2>
 <p>Resolution MUST be a pure domain decision and MUST NOT write Repository. It evaluates:</p>
@@ -1424,16 +1424,16 @@
 <p>Interactor.update/delete MUST NOT pre-read. Repository.update MUST atomically locate the latest record, reject DELETED, validate the complete candidate using the raw sparse patch, evaluate optional can_update, then commit. Invalid fields MUST be rejected before policy evaluation. Unspecified fields MUST remain intact; failure MUST leave storage unchanged.</p>
 <p>can_update(current,patch) is an adapter-injected pure synchronous non-yielding boolean predicate, not a Core port. False returns INVALID. Exception or non-boolean return is a programming error with rollback. Its observations MUST NOT alias actual committed data. It MUST NOT run for delete.</p>
 <p>Delete MUST validate the complete candidate and current→DELETED transition, including custom is_valid(DELETED). Repeat deletion returns INVALID and MUST NOT erase the identity reservation.</p>
-<p>Different-field sparse updates preserve each other; same-field updates follow commit order. This does not promise application stale-read detection. External adapters MAY implement host-specific ctx CAS conditions and return CONFLICT; v0.2 adds no generic version fields. Cache decorators MAY implement the same port, with declared consistency and separate tests. Neither external CAS nor caching is bundled or proven by reference tests.</p>
+<p>Different-field sparse updates preserve each other; same-field updates follow commit order. This does not promise application stale-read detection. External adapters MAY implement host-specific ctx CAS conditions and return CONFLICT; v0.1.1 adds no generic version fields. Cache decorators MAY implement the same port, with declared consistency and separate tests. Neither external CAS nor caching is bundled or proven by reference tests.</p>
 <h2 id="8-hooks">8. Hooks<a class="headerlink" href="#8-hooks" title="Permanent link">&para;</a></h2>
 <p>Hooks stores ordered callback arrays by HookPoint: BEFORE/AFTER, operation-specific before/after points and ON_ERROR. Order MUST be general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER, with registration order within a point.</p>
 <p>BEFORE follows programming argument checks and snapshot capture, preceding generation/business validation. Every normal return MUST reach the corresponding specific/general AFTER exactly once. Callbacks use <code>(ctx,point,payload...)</code>; AFTER includes value,err and AFTER_DELETE includes ok,err. ON_ERROR uses <code>(ctx,failed_point,hook_err)</code> and MUST NOT recurse on its own failure.</p>
 <p>Each callback MUST receive independent domain payload snapshots preserving root domain methods and nil argument positions. ctx MUST retain its original reference and SHOULD be read-only. Callback returns are ignored; each callback exception is isolated with pcall. No timeout, sandbox, asynchronous scheduling or durable delivery is promised. Empty points SHOULD avoid snapshot allocation.</p>
-<p>hooks:on(point,fn) registers callbacks. Interactor:use(hook) maps HookPoint values to those same v0.2 callbacks; it MUST NOT create a separate legacy dispatcher.</p>
+<p>hooks:on(point,fn) MUST be the only registration entry. Interactor MUST only dispatch observers and MUST NOT expose registration methods. Hosts MUST finish registration at application startup before invoking operations. Mutation of registrations during operations is unsupported; implementations MUST NOT add priorities, global sorting or lifecycle/freeze APIs for this iteration.</p>
 <h2 id="9-verification-and-delivery">9. Verification and delivery<a class="headerlink" href="#9-verification-and-delivery" title="Permanent link">&para;</a></h2>
 <p>All production Lua files under src/ and adapters/ MUST individually reach at least 95% line coverage, including unloaded files, port stubs and internal helpers. Fresh LuaCov measurements MUST run separately on Lua 5.1, Lua 5.3 and LuaJIT. Codecov project/patch targets remain at least 95%, with zero tolerance. Aggregate or merged coverage cannot replace per-file gates.</p>
 <p>Reference conformance MUST use actual bundled adapters with fresh fixture factories. Fault injection MAY replace specific methods. Deterministic interleavings MUST NOT be advertised as external concurrency proof, ctx propagation as tenant isolation, or uncached visibility as cache invalidation. Exact interpreter/test/file results and remote status belong in <a href="../../validation/">validation records</a>.</p>
-<p>Issue #6 is delivered through an independent branch and Draft PR, without merging main. The latest supplemental design defers its earlier expiration-clearing goal; this difference is explicit in migration notes. Local ignored OpenSpec proposals/specs are not part of the Git delivery unless repository policy changes.</p>
+<p>Version 0.1.1 consolidates the domain fixes and final Hook API into one reviewed release change. Expiration clearing remains intentionally unsupported, as documented in the migration guide. Local ignored OpenSpec proposals/specs are not part of the Git delivery unless repository policy changes.</p>
 
 
 

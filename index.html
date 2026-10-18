@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lua-slds-v02" class="md-skip">
+        <a href="#lua-slds-v011" class="md-skip">
           Skip to content
         </a>
       
@@ -312,7 +312,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="design/design-rationale/" class="md-tabs__link">
+        <a href="report/" class="md-tabs__link">
           
   
   
@@ -683,8 +683,6 @@
       
         
       
-        
-      
     
     
     
@@ -774,7 +772,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -795,42 +793,14 @@
   
   
     <li class="md-nav__item">
-      <a href="rfc/RFC-0001/" class="md-nav__link">
+      <a href="migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -886,7 +856,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -915,6 +885,8 @@
   
     
     
+      
+        
       
         
       
@@ -970,6 +942,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1169,11 +1169,11 @@
   
 
 
-<h1 id="lua-slds-v02">lua-slds · v0.2<a class="headerlink" href="#lua-slds-v02" title="Permanent link">&para;</a></h1>
+<h1 id="lua-slds-v011">lua-slds · v0.1.1<a class="headerlink" href="#lua-slds-v011" title="Permanent link">&para;</a></h1>
 <p><strong>SLDS = Identity + Lifecycle + Resolution Semantics.</strong> This pure Lua library defines short link behavior independently of HTTP, database clients, caches and authorization. Core has zero runtime dependencies and supports Lua 5.1, Lua 5.3 and LuaJIT.</p>
-<p>SLDS 只定义短链是什么、如何变更以及何时可以解析。宿主显式组装依赖；四个用例由 Interactor 编排，Core 只使用 Repository 与可选 CodeGenerator 两个端口。Generator/Encoder 是 Adapter 内部组件。</p>
+<p>The host assembles Interactor explicitly with Repository and optional CodeGenerator. Generator/Encoder remain adapter components. See the <a href="https://github.com/fangfengxiang/lua-slds/blob/main/README.zh-CN.md">Chinese README</a> for the Chinese introduction.</p>
 <h2 id="start-with-an-explicit-code">Start with an explicit code<a class="headerlink" href="#start-with-an-explicit-code" title="Permanent link">&para;</a></h2>
-<p>These examples target the v0.2 source API. Install the current checkout with <code>luarocks make lua-slds-scm-1.rockspec</code>:</p>
+<p>Install the package and bundled adapters with <code>luarocks install lua-slds</code>. These examples use the v0.1.1 API:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">slds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds"</span><span class="p">)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">local</span><span class="w"> </span><span class="nv">interactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slds</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">).</span><span class="nf">new</span><span class="p">(),</span>
@@ -1194,7 +1194,7 @@
 <li>Hooks execute synchronously; callback errors are isolated, callback latency is not.</li>
 <li>Core does not provide caches, external concurrency coordination, HTTP routing, analytics delivery or authorization.</li>
 </ul>
-<p>v0.2 changes public names and Hook signatures. Read the <a href="migration-v0.2/">migration guide</a> before updating an integration.</p>
+<p>Version 0.1.1 changes public names and Hook signatures relative to 0.1.0. Read the <a href="migration/">migration guide</a> before updating an integration.</p>
 <h2 id="documentation-by-task">Documentation by task<a class="headerlink" href="#documentation-by-task" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1234,7 +1234,7 @@
 </tr>
 </tbody>
 </table>
-<p>The <a href="rfc/RFC-0001/">v0.1 RFC</a> is retained as historical documentation. Repository <a href="https://github.com/fangfengxiang/lua-slds/blob/main/CONTRIBUTING.md">contribution rules</a> and <a href="https://github.com/fangfengxiang/lua-slds/blob/main/LICENSE">license</a> remain available on GitHub.</p>
+<p>Repository <a href="https://github.com/fangfengxiang/lua-slds/blob/main/CONTRIBUTING.md">contribution rules</a> and <a href="https://github.com/fangfengxiang/lua-slds/blob/main/LICENSE">license</a> remain available on GitHub.</p>
 
 
 

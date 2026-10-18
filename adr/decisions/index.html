@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-decision-records" class="md-skip">
+        <a href="#architecture-decisions" class="md-skip">
           Skip to content
         </a>
       
@@ -312,7 +312,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../design/design-rationale/" class="md-tabs__link">
+        <a href="../../report/" class="md-tabs__link">
           
   
   
@@ -603,8 +603,6 @@
       
         
       
-        
-      
     
     
     
@@ -694,7 +692,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -715,42 +713,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rfc/RFC-0001/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -806,7 +776,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -837,6 +807,8 @@
   
     
     
+      
+        
       
         
       
@@ -893,6 +865,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1045,10 +1045,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#decision-index" class="md-nav__link">
+  <a href="#pure-domain-and-explicit-composition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision Index
+        Pure domain and explicit composition
       
     </span>
   </a>
@@ -1056,10 +1056,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-001-hexagonal-architecture-ports-adapters" class="md-nav__link">
+  <a href="#identity-uniqueness-and-deletion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-001: Hexagonal Architecture (Ports &amp; Adapters)
+        Identity, uniqueness and deletion
       
     </span>
   </a>
@@ -1067,10 +1067,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-002-expired-as-derived-state-not-persisted" class="md-nav__link">
+  <a href="#derived-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-002: EXPIRED as Derived State (Not Persisted)
+        Derived resolution
       
     </span>
   </a>
@@ -1078,10 +1078,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-003-resolutionresult-instead-of-shortlink" class="md-nav__link">
+  <a href="#authoritative-sparse-writes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-003: ResolutionResult Instead of ShortLink
+        Authoritative sparse writes
       
     </span>
   </a>
@@ -1089,10 +1089,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-004-code-immutability-after-creation" class="md-nav__link">
+  <a href="#snapshots-and-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-004: Code Immutability After Creation
+        Snapshots and errors
       
     </span>
   </a>
@@ -1100,10 +1100,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-005-logical-delete-no-physical-removal" class="md-nav__link">
+  <a href="#one-observer-registration-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-005: Logical Delete (No Physical Removal)
+        One observer registration API
       
     </span>
   </a>
@@ -1111,76 +1111,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-006-hooks-isolation-via-pcall" class="md-nav__link">
+  <a href="#evidence-instead-of-broad-guarantees" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-006: Hooks Isolation via pcall
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-007-zero-core-dependencies-pure-lua" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-007: Zero Core Dependencies (Pure Lua)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-008-generatorencoder-separation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-008: Generator/Encoder Separation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-009-error-handling-three-class-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-009: Error Handling Three-Class System
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-010-conformance-test-suite-as-specification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-010: Conformance Test Suite as Specification
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-011-contract-hardening-and-evidence-boundaries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-011: Contract hardening and evidence boundaries
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-012-v02-minimal-api-and-authoritative-writes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-012: v0.2 minimal API and authoritative writes
+        Evidence instead of broad guarantees
       
     </span>
   </a>
@@ -1230,10 +1164,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#decision-index" class="md-nav__link">
+  <a href="#pure-domain-and-explicit-composition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision Index
+        Pure domain and explicit composition
       
     </span>
   </a>
@@ -1241,10 +1175,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-001-hexagonal-architecture-ports-adapters" class="md-nav__link">
+  <a href="#identity-uniqueness-and-deletion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-001: Hexagonal Architecture (Ports &amp; Adapters)
+        Identity, uniqueness and deletion
       
     </span>
   </a>
@@ -1252,10 +1186,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-002-expired-as-derived-state-not-persisted" class="md-nav__link">
+  <a href="#derived-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-002: EXPIRED as Derived State (Not Persisted)
+        Derived resolution
       
     </span>
   </a>
@@ -1263,10 +1197,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-003-resolutionresult-instead-of-shortlink" class="md-nav__link">
+  <a href="#authoritative-sparse-writes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-003: ResolutionResult Instead of ShortLink
+        Authoritative sparse writes
       
     </span>
   </a>
@@ -1274,10 +1208,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-004-code-immutability-after-creation" class="md-nav__link">
+  <a href="#snapshots-and-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-004: Code Immutability After Creation
+        Snapshots and errors
       
     </span>
   </a>
@@ -1285,10 +1219,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-005-logical-delete-no-physical-removal" class="md-nav__link">
+  <a href="#one-observer-registration-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-005: Logical Delete (No Physical Removal)
+        One observer registration API
       
     </span>
   </a>
@@ -1296,76 +1230,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-006-hooks-isolation-via-pcall" class="md-nav__link">
+  <a href="#evidence-instead-of-broad-guarantees" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADR-006: Hooks Isolation via pcall
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-007-zero-core-dependencies-pure-lua" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-007: Zero Core Dependencies (Pure Lua)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-008-generatorencoder-separation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-008: Generator/Encoder Separation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-009-error-handling-three-class-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-009: Error Handling Three-Class System
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-010-conformance-test-suite-as-specification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-010: Conformance Test Suite as Specification
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-011-contract-hardening-and-evidence-boundaries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-011: Contract hardening and evidence boundaries
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-012-v02-minimal-api-and-authoritative-writes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADR-012: v0.2 minimal API and authoritative writes
+        Evidence instead of broad guarantees
       
     </span>
   </a>
@@ -1392,264 +1260,26 @@
   
 
 
-<h1 id="architecture-decision-records">Architecture Decision Records<a class="headerlink" href="#architecture-decision-records" title="Permanent link">&para;</a></h1>
-<p>This document indexes architectural decisions. ADR-012 defines the current v0.2 changes; historical portions of ADR-008/011 are explicitly superseded. See <a href="../../rfc/RFC-0002/">RFC-0002</a>.</p>
-<h2 id="decision-index">Decision Index<a class="headerlink" href="#decision-index" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Title</th>
-<th>Status</th>
-<th>Date</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ADR-001</td>
-<td>Hexagonal Architecture (Ports &amp; Adapters)</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-002</td>
-<td>EXPIRED as Derived State (Not Persisted)</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-003</td>
-<td>ResolutionResult Instead of ShortLink</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-004</td>
-<td>Code Immutability After Creation</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-005</td>
-<td>Logical Delete (No Physical Removal)</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-006</td>
-<td>Hooks Isolation via pcall</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-007</td>
-<td>Zero Core Dependencies (Pure Lua)</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-008</td>
-<td>Generator/Encoder Separation</td>
-<td>Superseded at Core boundary by ADR-012</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-009</td>
-<td>Error Handling Three-Class System</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-010</td>
-<td>Conformance Test Suite as Specification</td>
-<td>Accepted</td>
-<td>2026-10-08</td>
-</tr>
-<tr>
-<td>ADR-011</td>
-<td>Contract hardening and evidence boundaries</td>
-<td>Partly superseded by ADR-012</td>
-<td>2026-10-18</td>
-</tr>
-<tr>
-<td>ADR-012</td>
-<td>v0.2 minimal API and authoritative writes</td>
-<td>Accepted</td>
-<td>2026-10-18</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="adr-001-hexagonal-architecture-ports-adapters">ADR-001: Hexagonal Architecture (Ports &amp; Adapters)<a class="headerlink" href="#adr-001-hexagonal-architecture-ports-adapters" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> SLDS needs to support multiple storage backends (Redis, MySQL, in-memory) and runtime environments (plain Lua, OpenResty). The domain logic must remain stable regardless of infrastructure choices.</p>
-<p><strong>Decision:</strong> Use hexagonal architecture. The domain core depends on port interfaces (Repository and optional CodeGenerator in v0.2). Adapters implement these ports. The domain never imports an adapter directly.</p>
-<p><strong>Consequences:</strong>
-- (+) Domain logic is infrastructure-agnostic
-- (+) Adapters can be swapped without domain changes
-- (+) Domain is fully testable with mock/in-memory adapters
-- (-) Slightly more boilerplate (port definitions + adapter implementations)</p>
-<hr />
-<h2 id="adr-002-expired-as-derived-state-not-persisted">ADR-002: EXPIRED as Derived State (Not Persisted)<a class="headerlink" href="#adr-002-expired-as-derived-state-not-persisted" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> Short links can have an optional <code>expires_at</code> timestamp. When expired, resolution should return "not resolvable". Should EXPIRED be a persistent status stored in the repository, or a derived state computed at resolution time?</p>
-<p><strong>Decision:</strong> EXPIRED is <strong>derived at resolution time</strong>, not stored as a persistent status. Only three statuses are persisted: ACTIVE, DISABLED, DELETED.</p>
-<p><strong>Rationale:</strong> Storing EXPIRED as a persistent status would require:
-- A background scanner to periodically check and update expired records
-- A scheduler dependency in the domain (violates RULE-001/RULE-002)
-- Race conditions between the scanner and concurrent resolution</p>
-<p>Deriving EXPIRED at resolution time (<code>expires_at &lt;= now</code> in v0.2) is O(1), requires no background process, and is always accurate.</p>
-<p><strong>Consequences:</strong>
-- (+) No background process needed
-- (+) Always accurate (checked at query time)
-- (+) No scheduler dependency in Core
-- (-) <code>expires_at</code> must be stored and indexed if query-by-status is needed</p>
-<hr />
-<h2 id="adr-003-resolutionresult-instead-of-shortlink">ADR-003: ResolutionResult Instead of ShortLink<a class="headerlink" href="#adr-003-resolutionresult-instead-of-shortlink" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> The resolve operation returns link information to the caller. Should it return the internal <code>ShortLink</code> entity or a separate <code>ResolutionResult</code>?</p>
-<p><strong>Decision:</strong> Return <code>ResolutionResult</code>, a stable contract that does not expose the internal ShortLink entity.</p>
-<p><strong>Rationale:</strong> Returning the raw entity would leak persistence details. If ShortLink's schema changes, all consumers would break. ResolutionResult is a stable contract with a defined field set.</p>
-<p><strong>Consequences:</strong>
-- (+) Internal entity schema can evolve without breaking consumers
-- (+) Clear distinction between "raw data" (ShortLink) and "resolution outcome" (ResolutionResult)
-- (-) Extra mapping layer in Resolution.resolve()</p>
-<hr />
-<h2 id="adr-004-code-immutability-after-creation">ADR-004: Code Immutability After Creation<a class="headerlink" href="#adr-004-code-immutability-after-creation" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> Can the <code>code</code> field of a ShortLink be changed after creation?</p>
-<p><strong>Decision:</strong> Code is <strong>immutable</strong> after creation. The <code>update</code> operation rejects patches that include <code>namespace</code> or <code>code</code>.</p>
-<p><strong>Rationale:</strong> Changing the code would invalidate all existing short URLs pointing to the old code. It would also violate the uniqueness contract (the old code is now free, the new code might conflict). Immutability simplifies caching, indexing, and auditing.</p>
-<p><strong>Consequences:</strong>
-- (+) Short URLs are permanent once created
-- (+) Cache invalidation is simpler (code never changes)
-- (+) Audit trail is clean
-- (-) Cannot "rename" a short link (must delete + create new)</p>
-<hr />
-<h2 id="adr-005-logical-delete-no-physical-removal">ADR-005: Logical Delete (No Physical Removal)<a class="headerlink" href="#adr-005-logical-delete-no-physical-removal" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> When a short link is deleted, should the record be physically removed from the repository?</p>
-<p><strong>Decision:</strong> Delete is <strong>logical</strong> — sets status to <code>DELETED</code> (terminal). The record remains in the repository. Deleted codes MUST NOT be reused (RULE-006).</p>
-<p><strong>Rationale:</strong>
-- Audit trail: deleted links may need to be tracked for compliance
-- Collision prevention: reusing a deleted code would redirect old references to a new target
-- Terminal state: DELETED has no outgoing transitions in the state machine</p>
-<p><strong>Consequences:</strong>
-- (+) Retained identity/tombstone; full audit history remains a host concern
-- (+) No accidental code reuse
-- (-) Reserved identities consume storage; archival must retain uniqueness reservations</p>
-<hr />
-<h2 id="adr-006-hooks-isolation-via-pcall">ADR-006: Hooks Isolation via pcall<a class="headerlink" href="#adr-006-hooks-isolation-via-pcall" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> Hooks (Logger, Metrics, Tracer) are user-provided extensions. If a hook fails, should the operation fail?</p>
-<p><strong>Decision:</strong> Hooks are isolated via <code>pcall</code>. A failing hook triggers <code>on_error</code> callbacks without failing the operation. Callbacks remain synchronous and add latency; see ADR-011 for observer snapshots and guarantee boundaries.</p>
-<p><strong>Rationale:</strong> Hooks are observability extensions, not domain logic (RULE-007, RULE-008). A broken logger should not prevent a successful resolution. The <code>pcall</code> isolation is applied to each hook callback independently, and <code>on_error</code> itself is also isolated (double isolation).</p>
-<p><strong>Consequences:</strong>
-- (+) Hook exceptions do not abort operations; callback latency remains a host concern
-- (+) Hook exceptions are isolated; host code remains responsible for callback latency and side effects
-- (-) Silent failures (mitigated by on_error callback)</p>
-<hr />
-<h2 id="adr-007-zero-core-dependencies-pure-lua">ADR-007: Zero Core Dependencies (Pure Lua)<a class="headerlink" href="#adr-007-zero-core-dependencies-pure-lua" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> SLDS Core needs to run in multiple environments (plain Lua 5.1/5.3, LuaJIT, OpenResty). Should it depend on any external libraries?</p>
-<p><strong>Decision:</strong> Core layer has <strong>zero external dependencies</strong>. Only pure Lua stdlib is used. No <code>ngx</code>, <code>redis</code>, <code>mysql</code>, <code>cjson</code>, or any third-party Lua rock.</p>
-<p><strong>Rationale:</strong> A domain specification library should be as portable as possible. Depending on <code>cjson</code> or <code>ngx</code> would limit the environments where Core can run. The protocol/codec libraries that SLDS is modeled after (dkjson, lua-MessagePack) are also pure Lua.</p>
-<p><strong>Consequences:</strong>
-- (+) Maximum portability
-- (+) Easy to test (no mocking of external deps)
-- (+) Clear boundary between Core and Infrastructure
-- (-) Some convenience features (e.g., JSON encoding of metadata) must be done by the host</p>
-<hr />
-<h2 id="adr-008-generatorencoder-separation">ADR-008: Generator/Encoder Separation<a class="headerlink" href="#adr-008-generatorencoder-separation" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Historical Core-port decision, superseded by ADR-012. Components remain separate inside adapters.</p>
-<p><strong>Context:</strong> Short code generation involves two concerns: uniqueness (ensuring no two links share a code) and encoding (producing a URL-safe string). Should these be combined into one port or separated?</p>
-<p><strong>Decision:</strong> Separate into two ports: <strong>Generator</strong> (produces internal unique ID) and <strong>Encoder</strong> (transforms ID to short code string).</p>
-<p><strong>Rationale:</strong>
-- Uniqueness is an infrastructure concern (needs atomicity, possibly distributed coordination)
-- Encoding is a pure transformation (no I/O, deterministic, mathematical)
-- Separation allows swapping either independently (e.g., sequential → snowflake generator, Base62 → hash encoder)</p>
-<p><strong>Consequences:</strong>
-- (+) Independent evolution of uniqueness strategy and encoding format
-- (+) Encoder is trivially testable (pure function)
-- (-) Two ports instead of one (minor complexity)</p>
-<hr />
-<h2 id="adr-009-error-handling-three-class-system">ADR-009: Error Handling Three-Class System<a class="headerlink" href="#adr-009-error-handling-three-class-system" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> SLDS needs a consistent error handling strategy. When should it use <code>error()</code> vs <code>return nil, err</code> vs <code>pcall</code>?</p>
-<p><strong>Decision:</strong> Three-class error handling:</p>
-<ol>
-<li><strong>Runtime errors</strong> → <code>return nil, err</code> (repository failures, not found, conflicts)</li>
-<li><strong>Programming errors</strong> → <code>error(msg, 2)</code> (invalid arguments, immutable field violation)</li>
-<li><strong>Hook exception isolation</strong> → <code>pcall</code> (user hook callbacks); expected port failures return nil,err and unexpected port programming errors propagate.</li>
-</ol>
-<p><strong>Rationale:</strong> This follows the Lua ecosystem convention (lua-resty-redis, lua-resty-http, dkjson). Runtime errors are expected conditions the caller should handle. Programming errors are bugs that should fail fast. Third-party code is isolated to prevent crashes.</p>
-<p><strong>Consequences:</strong>
-- (+) Callers can distinguish "expected failures" from "bugs"
-- (+) Fail-fast for programming errors prevents silent corruption
-- (+) Hook exceptions do not fail operations; port programming errors remain visible
-- (-) Slightly more cognitive load (three patterns instead of one)</p>
-<hr />
-<h2 id="adr-010-conformance-test-suite-as-specification">ADR-010: Conformance Test Suite as Specification<a class="headerlink" href="#adr-010-conformance-test-suite-as-specification" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted</p>
-<p><strong>Context:</strong> SLDS is a specification, not just a library. Multiple implementations may exist (reference implementation, Redis-backed, MySQL-backed). How do we ensure they all comply?</p>
-<p><strong>Decision:</strong> The Conformance Test Suite (L0-L3) is the <strong>specification enforcement mechanism</strong>. Any implementation claiming SLDS compatibility MUST pass the applicable test suite (RULE-010).</p>
-<p><strong>Test levels:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Level</th>
-<th>Scope</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>L0</td>
-<td>Core: create/resolve/update/delete</td>
-</tr>
-<tr>
-<td>L1</td>
-<td>Lifecycle: expiration, disabled, terminal delete, code reuse</td>
-</tr>
-<tr>
-<td>L2</td>
-<td>Duplicate rejection, commit order, deterministic interleavings and atomicity; external concurrency requires adapter evidence</td>
-</tr>
-<tr>
-<td>L3</td>
-<td>Metadata, hooks, context propagation and visibility; cache/tenant extensions require host integration evidence</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Consequences:</strong>
-- (+) Objective compatibility verification
-- (+) Tests serve as executable specification
-- (+) New implementations can self-verify applicable scenarios and identify outstanding evidence
-- (-) Test suite must be maintained alongside the spec</p>
-<h2 id="adr-011-contract-hardening-and-evidence-boundaries">ADR-011: Contract hardening and evidence boundaries<a class="headerlink" href="#adr-011-contract-hardening-and-evidence-boundaries" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Historical v0.1 hardening (2026-10-18). ADR-012 supersedes terminal error codes and the public API; snapshot and evidence principles remain accepted.</p>
-<ul>
-<li>Preserve ordinary Lua tables and logical identity immutability; update APIs and stored snapshots protect persistent identity, not arbitrary direct assignments.</li>
-<li>Apply sparse patches atomically against the latest record using domain rules. Reject updates to DELETED at commit with nil,DELETED; different fields survive, the same field follows commit order. This does not provide application read-modify-write conflict detection.</li>
-<li>Copy raw metadata table graphs on domain/storage boundaries, omit metadata metatables, and retain non-table leaves. Metadata updates and deep merge remain unsupported.</li>
-<li>Hooks are synchronous observers with per-callback domain snapshots. Exception isolation is not latency isolation, sandboxing or durable delivery; ctx stays host-owned.</li>
-<li>Sequential/Base62 numeric limits belong only to the bundled adapters. Generic ports remain representation-agnostic; the host selects compatible pairs.</li>
-<li>Factory-driven conformance runs real reference adapters and labels sequential/interleaving evidence honestly. No real database concurrency, cache invalidation or tenant isolation claim follows from this run.</li>
-<li>Every production Lua file must reach 95% line coverage independently in each supported CI interpreter. No file exclusions or stale statistics may hide a gap.</li>
-</ul>
-<h2 id="adr-012-v02-minimal-api-and-authoritative-writes">ADR-012: v0.2 minimal API and authoritative writes<a class="headerlink" href="#adr-012-v02-minimal-api-and-authoritative-writes" title="Permanent link">&para;</a></h2>
-<p><strong>Status:</strong> Accepted (2026-10-18).</p>
-<p><strong>Context:</strong> Issue #6 and its later architecture supplement seek a coherent public API without expanding SLDS beyond Identity/Lifecycle/Resolution. Core only needs final Code, and a Core pre-read cannot validate the state present at atomic commit time.</p>
-<p><strong>Decision:</strong></p>
-<ul>
-<li>Rename the sole four-operation orchestrator to Interactor. Export named modules rather than flat aliases. Do not add operation containers or managers.</li>
-<li>Expose Repository and optional CodeGenerator as the only Core ports. Keep Generator/Encoder as adapter components, with a small Composed reference adapter; retain their existing numeric limits only in those components.</li>
-<li>Let authoritative Repository validate/commit latest-state sparse writes, with no Interactor update/delete pre-read. Full candidate validation precedes optional can_update. Delete checks target validity and transition. Rule/terminal rejection returns INVALID; genuine conditional-commit conflicts remain CONFLICT.</li>
-<li>Normalize partial Lifecycle functions at construction through one small internal helper. Hard identity, known-status and terminal constraints remain protected.</li>
-<li>Add ResolutionResult.resolvable and expire at expires_at &lt;= now. Keep EXPIRED derived and outside Errors. Errors is exactly NOT_FOUND/CONFLICT/INVALID.</li>
-<li>Reject unknown Patch fields, including metadata. Keep nil expiration unchanged; defer clearing instead of inventing a sentinel contrary to the latest supplement.</li>
-<li>Use point-indexed ordered Hook callbacks with v0.2 signatures. Keep Interactor:use(hook) as a convenience into the same registry. BEFORE covers complete valid use cases and AFTER observes every normal outcome.</li>
-</ul>
-<p><strong>Consequences:</strong> The upgrade is intentionally breaking and has explicit <a href="../../migration-v0.2/">migration notes</a>. No compatibility dispatcher, new runtime dependency, cache/CAS implementation or generic policy/pipeline framework is introduced. Existing table snapshots, pure Lua conventions and per-file coverage/evidence gates remain. <a href="../../validation/">Validation</a> reports actual checks independently of this decision.</p>
+<h1 id="architecture-decisions">Architecture decisions<a class="headerlink" href="#architecture-decisions" title="Permanent link">&para;</a></h1>
+<p>These decisions describe the current 0.1.1 implementation. <a href="../../rfc/RFC-0002/">RFC-0002</a> defines requirements; <a href="../../migration/">migration notes</a> explain changes from 0.1.0. Superseded drafts remain in Git history.</p>
+<h2 id="pure-domain-and-explicit-composition">Pure domain and explicit composition<a class="headerlink" href="#pure-domain-and-explicit-composition" title="Permanent link">&para;</a></h2>
+<p>SLDS defines Identity, Lifecycle and Resolution semantics using portable Lua and zero runtime dependencies. The host owns HTTP, authorization, tenant policy, storage connections, caches and telemetry delivery. Interactor orchestrates four use cases with Repository and optional final-code CodeGenerator, without discovering adapters or dependencies through ctx.</p>
+<p>Generator and Encoder are adapter components, combined by the bundled Composed adapter where useful. Numeric domains and alphabets do not constrain Core. A direct host CodeGenerator needs no internal ID pipeline.</p>
+<h2 id="identity-uniqueness-and-deletion">Identity, uniqueness and deletion<a class="headerlink" href="#identity-uniqueness-and-deletion" title="Permanent link">&para;</a></h2>
+<p>Identity is an ordinary table representing namespace/code, logically immutable by contract. Storage uses unambiguous tuples, including NUL-containing strings. Repository atomically enforces uniqueness; logical deletion reserves identity and cannot be reversed.</p>
+<h2 id="derived-resolution">Derived resolution<a class="headerlink" href="#derived-resolution" title="Permanent link">&para;</a></h2>
+<p>Resolution returns a separate found/resolvable result. EXPIRED is derived at expires_at &lt;= now and never persisted. The host decides whether to use target from resolvable, not found or a status comparison. No background expiry job or target request is needed.</p>
+<h2 id="authoritative-sparse-writes">Authoritative sparse writes<a class="headerlink" href="#authoritative-sparse-writes" title="Permanent link">&para;</a></h2>
+<p>Interactor does not pre-read for update/delete. Repository validates against its latest record and commits only supplied fields atomically. Complete validation precedes its optional synchronous can_update predicate; rejection returns INVALID, while an actual adapter CAS conflict may return CONFLICT. Deletes validate both target state and transition. No universal revision field is added.</p>
+<p>Partial Lifecycle functions are normalized at construction without mutating host configuration. The host supplies consistent functions to Repository and Interactor. Overrides cannot authorize unknown persistent states or revive/resolve DELETED.</p>
+<h2 id="snapshots-and-errors">Snapshots and errors<a class="headerlink" href="#snapshots-and-errors" title="Permanent link">&para;</a></h2>
+<p>Metadata remains opaque, with independent raw-table graph snapshots at ownership boundaries. Table cycles/shared children are supported without transporting metadata metatables. Non-table resources remain host-owned; external serializers may support a narrower set.</p>
+<p>Expected failures return nil,err using NOT_FOUND/CONFLICT/INVALID where applicable. Infrastructure errors pass unchanged. Programming errors and malformed result/error pairs raise exceptions; they are not converted by a whole-operation exception wrapper.</p>
+<h2 id="one-observer-registration-api">One observer registration API<a class="headerlink" href="#one-observer-registration-api" title="Permanent link">&para;</a></h2>
+<p>Hosts register with Hooks:on(point,fn) at startup, then inject Hooks into Interactor. Dense per-point arrays provide FIFO; general BEFORE, specific BEFORE, operation, specific AFTER, general AFTER define fixed phases. No priority, sorter, plugin lifecycle, bulk registration or freeze API is needed. Runtime registration mutation is unsupported.</p>
+<p>Callbacks observe independent payload snapshots. ctx remains shared and read-only by convention. pcall isolates exceptions and ON_ERROR does not recurse, but synchronous callback latency still counts toward operation latency. Reliable or asynchronous event delivery remains outside Core.</p>
+<h2 id="evidence-instead-of-broad-guarantees">Evidence instead of broad guarantees<a class="headerlink" href="#evidence-instead-of-broad-guarantees" title="Permanent link">&para;</a></h2>
+<p>Reusable conformance fixtures exercise real reference adapters. In-process sequential/interleaving tests do not prove external database concurrency, distributed cache invalidation or tenant authorization. Every production file must independently meet 95% line coverage from fresh statistics; aggregate coverage cannot substitute. See <a href="../../validation/">validation</a>.</p>
 
 
 

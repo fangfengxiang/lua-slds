@@ -16,7 +16,7 @@
         <link rel="prev" href="../rfc/conformance-tests/">
       
       
-        <link rel="next" href="../design/design-rationale/">
+        <link rel="next" href="../report/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Validation & Migration - lua-slds</title>
+        <title>Validation - lua-slds</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#v02" class="md-skip">
+        <a href="#validation-for-011" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Validation & Migration
+              Validation
             
           </span>
         </div>
@@ -314,7 +314,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../design/design-rationale/" class="md-tabs__link">
+        <a href="../report/" class="md-tabs__link">
           
   
   
@@ -607,8 +607,6 @@
       
         
       
-        
-      
     
     
     
@@ -699,7 +697,7 @@
   <span class="md-ellipsis">
     
   
-    RFC-0002 (v0.2)
+    RFC-0002 (v0.1.1)
   
 
     
@@ -720,42 +718,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../rfc/RFC-0001/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    RFC-0001 (v0.1 historical)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migration-v0.2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v0.2 Migration
+    v0.1.1 Migration
   
 
     
@@ -820,7 +790,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -838,7 +808,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Migration
+    Validation
   
 
     
@@ -864,10 +834,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#runtime-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        实现范围
+        Runtime matrix
       
     </span>
   </a>
@@ -875,10 +845,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#per-file-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本地测试矩阵
+        Per-file coverage
       
     </span>
   </a>
@@ -886,10 +856,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#reproduce" class="md-nav__link">
     <span class="md-ellipsis">
       
-        逐文件覆盖率
+        Reproduce
       
     </span>
   </a>
@@ -897,10 +867,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#ci-and-release-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        其他本地验证
+        CI and release review
       
     </span>
   </a>
@@ -908,21 +878,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ci" class="md-nav__link">
+  <a href="#evidence-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        远端 CI 与交付
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        证据边界
+        Evidence boundaries
       
     </span>
   </a>
@@ -953,6 +912,8 @@
   
     
     
+      
+        
       
         
       
@@ -1008,6 +969,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Review (Chinese)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1155,10 +1144,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#runtime-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        实现范围
+        Runtime matrix
       
     </span>
   </a>
@@ -1166,10 +1155,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#per-file-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本地测试矩阵
+        Per-file coverage
       
     </span>
   </a>
@@ -1177,10 +1166,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#reproduce" class="md-nav__link">
     <span class="md-ellipsis">
       
-        逐文件覆盖率
+        Reproduce
       
     </span>
   </a>
@@ -1188,10 +1177,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#ci-and-release-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        其他本地验证
+        CI and release review
       
     </span>
   </a>
@@ -1199,21 +1188,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ci" class="md-nav__link">
+  <a href="#evidence-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        远端 CI 与交付
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        证据边界
+        Evidence boundaries
       
     </span>
   </a>
@@ -1240,217 +1218,144 @@
   
 
 
-<h1 id="v02">v0.2 实现与验证记录<a class="headerlink" href="#v02" title="Permanent link">&para;</a></h1>
-<p>日期：2026-10-18。目标：<a href="https://github.com/fangfengxiang/lua-slds/issues/6">issue #6</a>，现行契约见 <a href="../rfc/RFC-0002/">RFC-0002</a>，兼容性变化见<a href="../migration-v0.2/">迁移说明</a>。以下本地结果由本轮实际运行获得，远端结果须按具体提交单独确认。</p>
-<h2 id="_1">实现范围<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li>单一 Interactor 编排 create/resolve/update/delete；Core 只依赖 Repository 与可选 CodeGenerator，零新增运行时依赖。</li>
-<li>Generator/Encoder 从 Core 端口移入 Adapter 组合；Composed 支持有序编码器、空数组、错误短路和最终 Code 校验。现有 Sequential/Base62 数值范围不变。</li>
-<li>Lifecycle 支持构造期部分覆盖，硬身份、三状态和 DELETED 终态约束保留。Resolution 明确 found/resolvable，并在 expires_at &lt;= now 派生 EXPIRED。</li>
-<li>Repository 在最新记录上完成完整实体校验、可选 can_update 和原子提交；Interactor 更新/删除没有预读；删除也检查目标状态有效性。</li>
-<li>Errors 收敛为 NOT_FOUND/CONFLICT/INVALID。未知补丁和 metadata 更新返回 INVALID；不增加过期时间清除哨兵。依赖 nil,nil 或同时返回结果/错误视为编程错误。</li>
-<li>Hooks 使用 HookPoint 有序函数数组、统一 v0.2 签名与独立快照；所有正常返回都触发 AFTER。use(hook) 复用同一注册表。</li>
-<li>保留二层身份映射、metadata 原始图快照、真实适配器合规 fixture 和逐文件门禁。没有新增缓存、数据库、CAS 或通用规则/执行框架。</li>
-</ul>
-<h2 id="_2">本地测试矩阵<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<p>v0.1 基线为 209 项测试、15 个生产文件。v0.2 完整套件为 <strong>253 项测试、17 个生产文件</strong>。每次运行都先清除旧统计，再独立测量，不合并解释器结果代替门槛。</p>
+<h1 id="validation-for-011">Validation for 0.1.1<a class="headerlink" href="#validation-for-011" title="Permanent link">&para;</a></h1>
+<p>This document records the local verification of the consolidated 0.1.1 source tree and the ongoing gates. It replaces intermediate implementation journals; final remote results belong to the commit checks linked from the release PR.</p>
+<h2 id="runtime-matrix">Runtime matrix<a class="headerlink" href="#runtime-matrix" title="Permanent link">&para;</a></h2>
+<p>Each run starts with fresh LuaCov statistics and independently enforces the same per-file gate.</p>
 <table>
 <thead>
 <tr>
-<th>解释器</th>
-<th>实际结果</th>
-<th>每文件覆盖率</th>
+<th>Runtime</th>
+<th>Tests</th>
+<th>Production coverage</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Lua 5.1.5</td>
-<td>253 successes，0 failures/errors/pending</td>
-<td>17/17 文件 100%</td>
+<td>265 passed; 0 failures/errors/pending</td>
+<td>All 17 files: 100%</td>
 </tr>
 <tr>
 <td>Lua 5.3.6</td>
-<td>253 successes，0 failures/errors/pending</td>
-<td>17/17 文件 100%</td>
+<td>265 passed; 0 failures/errors/pending</td>
+<td>All 17 files: 100%</td>
 </tr>
 <tr>
 <td>LuaJIT 2.1.1784360928</td>
-<td>253 successes，0 failures/errors/pending</td>
-<td>17/17 文件 100%</td>
+<td>265 passed; 0 failures/errors/pending</td>
+<td>All 17 files: 100%</td>
 </tr>
 <tr>
-<td>Lua 5.5.0（额外本地环境）</td>
-<td>253 successes，0 failures/errors/pending</td>
-<td>17/17 文件 100%</td>
+<td>Lua 5.5.0 (additional local check)</td>
+<td>265 passed; 0 failures/errors/pending</td>
+<td>All 17 files: 100%</td>
 </tr>
 </tbody>
 </table>
-<p>Domain/Repository、HookPoint/Hooks、CodeGenerator 和 Interactor 的新行为均先建立失败测试，再完成实现。保留原有成功、失败、身份、快照、终态、错误传播和可控交错断言；仅按明确变更的契约迁移预期。</p>
-<h2 id="_3">逐文件覆盖率<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>覆盖全部 src/ 与 adapters/ 下 Lua 生产模块，包含入口、端口和内部辅助函数；未加载模块也参与统计。下表是各解释器独立运行的结果，行计数可能因解释器不同而异。</p>
+<p>The mandatory CI matrix remains Lua 5.1, Lua 5.3 and LuaJIT. A local pass on another runtime does not substitute for a missing supported-runtime result.</p>
+<h2 id="per-file-coverage">Per-file coverage<a class="headerlink" href="#per-file-coverage" title="Permanent link">&para;</a></h2>
+<p>The following modules each reach 100% in every local matrix run; the required minimum stays 95%. Entry points, ports, internal helpers and unloaded production files are included. Coverage cannot be satisfied through aggregate totals, ignored lines, exclusions or stale data.</p>
 <table>
 <thead>
 <tr>
-<th>文件</th>
-<th>Lua 5.1</th>
-<th>Lua 5.3</th>
-<th>LuaJIT</th>
-<th>Lua 5.5</th>
+<th>Production file</th>
+<th>Each runtime</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>adapters/base62/encoder.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>adapters/base62/encoder.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>adapters/composed/code_generator.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>adapters/composed/code_generator.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>adapters/inmemory/repository.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>adapters/inmemory/repository.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>adapters/sequential/generator.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>adapters/sequential/generator.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/domain/errors.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/domain/errors.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/domain/identity.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/domain/identity.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/domain/lifecycle.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/domain/lifecycle.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/domain/resolution.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/domain/resolution.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/domain/short_link.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/domain/short_link.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/hook_point.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/hook_point.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/hooks.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/hooks.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/init.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/init.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/interactor.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/interactor.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/internal/lifecycle.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/internal/lifecycle.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/internal/snapshot.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/internal/snapshot.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/ports/code_generator.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/ports/code_generator.lua</td>
 <td>100%</td>
 </tr>
 <tr>
-<td><code>src/slds/ports/repository.lua</code></td>
-<td>100%</td>
-<td>100%</td>
-<td>100%</td>
+<td>src/slds/ports/repository.lua</td>
 <td>100%</td>
 </tr>
 </tbody>
 </table>
-<p>没有添加覆盖率忽略、排除生产文件、降低阈值或复用旧统计。门禁按原始 hit/miss 比例检查，不能用四舍五入后的 95.00% 掩盖不足 95% 的实际值。</p>
-<h2 id="_4">其他本地验证<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<ul>
-<li>luacheck 检查 44 个 Lua 文件，0 warnings / 0 errors。</li>
-<li>通过 rockspec 安装到独立临时树后，在仓库外执行完整 CRUD 与 Composed 生成流程，通过；新生产模块均登记打包。</li>
-<li>独立实现审查未发现可操作的运行时缺陷；修正 Repository Port 中遗留的旧返回码说明。</li>
-<li>README 与教程的 Lua 代码块在安装后的包、仓库外目录串接执行，通过。</li>
-<li>actionlint 检查全部工作流通过，版本 check/sync 在仓库外运行且重复同步无变化。</li>
-<li>从实际暂存文件导出的干净目录完成联网 MkDocs 严格构建，Mermaid CDN 探测正常；构建未包含用户 report.md 或忽略的 openspec/。</li>
-<li>合规指南的完整 fixture factory 原样提取为 Busted 入口运行，50 项合规测试通过；未使用覆盖率参数，不影响完整矩阵统计。</li>
-</ul>
-<p>持续门禁命令：</p>
+<h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sh<span class="w"> </span>scripts/test.sh
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>luacheck<span class="w"> </span>src/<span class="w"> </span>adapters/<span class="w"> </span>spec/<span class="w"> </span>scripts/check-coverage.lua
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>luarocks<span class="w"> </span>lint<span class="w"> </span>lua-slds-scm-1.rockspec
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>openspec<span class="w"> </span>validate<span class="w"> </span>--all<span class="w"> </span>--strict<span class="w"> </span>--no-interactive
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>bash<span class="w"> </span>scripts/version-manager.sh<span class="w"> </span>check<span class="w"> </span><span class="m">0</span>.1.1
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
 </code></pre></div>
-<p>scripts/test.sh 从脚本位置定位仓库，清除旧统计、执行 Busted、生成 LuaCov 报告，再逐文件检查 &gt;=95%。多解释器环境可用 SLDS_LUA、SLDS_BUSTED 选择匹配的工具链。CI 工具由 Actions 安装并通过 PATH 解析；仓库配置没有写入开发者主目录、Homebrew 或本地验证路径。runner 临时文件使用 RUNNER_TEMP/mktemp。</p>
-<h2 id="ci">远端 CI 与交付<a class="headerlink" href="#ci" title="Permanent link">&para;</a></h2>
-<p>GitHub Actions 在 Lua 5.1、Lua 5.3、LuaJIT 上独立测试并上传同份 LuaCov 报告，逐文件 &gt;=95% 且上传失败视为失败；Codecov project/patch 目标至少 95%、零容差。文档工作流在 PR 上严格构建，在 PR 中不部署站点。发布说明同步两个 Core 端口。</p>
-<p>实现提交 <code>8bc015607850f3952aee438eb840f7204f368602</code> 已通过 <a href="https://github.com/fangfengxiang/lua-slds/actions/runs/39118250350">CI 三解释器与 lint</a> 和 <a href="https://github.com/fangfengxiang/lua-slds/actions/runs/39118250497">Docs 严格构建</a>。三个远端测试作业各 253 项通过，17 个生产文件分别均为 100%。</p>
-<p><a href="https://app.codecov.io/gh/fangfengxiang/lua-slds/commit/8bc015607850f3952aee438eb840f7204f368602">Codecov 对应提交</a> 的公开报告状态为 complete，包含三个上传会话；562/562 行覆盖、0 miss，17/17 文件逐文件 100%，差异覆盖率 100%。已核对报告文件集合与全部 src/adapters Lua 文件完全一致。</p>
-<p>交付为 <a href="https://github.com/fangfengxiang/lua-slds/pull/7">Draft PR #7</a>，不合并 main。此处固定提交证据用于审计；后续文档证据提交的最新检查以 PR checks 为准，不能拿旧提交替代。</p>
-<h2 id="_5">证据边界<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>SLDS_LUA and SLDS_BUSTED may select matching interpreter/toolchains. scripts/test.sh locates the repository relative to itself and removes old coverage files before Busted/reporting/raw-ratio checks. Run the version manager from any working directory; repeated sync to the current version is idempotent.</p>
+<p>Additional verification covers installed-package CRUD, all Lua examples from both READMEs and the tutorial, the reusable conformance factory example, rockspec module registration, workflow lint and strict documentation construction from the actual tracked delivery tree. Luacheck checks 45 Lua files with zero warnings/errors.</p>
+<h2 id="ci-and-release-review">CI and release review<a class="headerlink" href="#ci-and-release-review" title="Permanent link">&para;</a></h2>
+<p>Pushes to main/master and feature-* run CI; pull requests target main/master. Documentation builds on the feature branch and PR, with Pages deployment restricted to main/master. CI installs tools through Actions/PATH, without developer-machine paths. Every supported runtime enforces the per-file minimum before uploading its LuaCov report; upload failure fails the job. Codecov project/patch thresholds are 95%, with zero tolerance.</p>
+<p>Release publishing starts when a maintainer publishes a stable GitHub Release. A manual retry requires its explicit published tag. The workflow checks ancestry on main and exact source version, generates/lints the tagged rockspec, attaches matching assets, and uploads using LUAROCKS_API_KEY in the deploy environment. It does not synchronize or commit source during publication. A missing key or failed upload fails the job.</p>
+<p>Local shell checks execute the workflow run blocks with controlled gh/luarocks substitutes: valid/invalid tags, draft/missing releases, first publication, exact-version numeric revision selection, search failure, rockspec source mapping and lint failure, missing/whitespace credentials, and upload success/failure. These checks do not publish a release or package and do not prove that the remote secret or environment approval is configured. A real publication result must be checked after the maintainer publishes the Release.</p>
+<p>Use the <a href="https://github.com/fangfengxiang/lua-slds/actions?query=branch%3Afeature-v0.1.1">Actions checks for feature-v0.1.1</a> and the final PR to inspect exact-commit CI and Codecov evidence. A local result or an old implementation commit is not evidence for a different remote revision.</p>
+<h2 id="evidence-boundaries">Evidence boundaries<a class="headerlink" href="#evidence-boundaries" title="Permanent link">&para;</a></h2>
 <ul>
-<li>InMemory 原子性限定为单 Lua VM 内不 yield 的操作。顺序测试与可控交错不能证明真实数据库并发或跨进程唯一性。</li>
-<li>ctx 原样传递不代表租户隔离或鉴权。没有缓存实现，所以没有缓存失效证据。外部 CAS、缓存和宿主权限需要自己的集成测试。</li>
-<li>Hook 是同步观察者；pcall 不保证超时、非阻塞、沙箱或持久事件。ctx 和非 table 资源内部状态仍由宿主管理。</li>
-<li>metadata 原始图快照支持环/共享子表，但不承诺外部 JSON/数据库可以序列化相同内容。未知补丁现在返回 INVALID。</li>
-<li>最新补充明确暂不引入清除哨兵，因此 issue #6 的早期 expires_at 清除目标延期，不能声称已经完成。</li>
-<li>OpenSpec 主规范/提案在本地同步并严格校验，但 openspec/ 沿用既有 Git 忽略策略，不包含在 Git 提交中。用户 docs/report.md 保持不修改、不纳入本轮提交。</li>
+<li>InMemory atomicity is limited to non-yielding operations in one Lua VM. Sequential/interleaving tests do not establish external database concurrency, cross-process uniqueness or CAS correctness.</li>
+<li>Three-tier composition tests route all writes through a single in-process authority and clear two front tiers. They do not establish distributed invalidation, external writer coordination or negative caching.</li>
+<li>ctx passthrough does not prove authorization or tenant isolation. The host must test these integrations separately.</li>
+<li>Hooks are synchronous observers: pcall isolates exceptions, not latency, ctx mutation, sandboxing or durable delivery. Metadata snapshots do not isolate internals of non-table resources.</li>
+<li>Raw metadata graphs support cycles/shared children without implying an external serializer can store the same graphs. Metadata updates and expiration clearing remain unsupported.</li>
+<li>Local OpenSpec files remain Git-ignored; tracked RFC/API/migration documents carry the reviewable current contract. The tracked architecture review in report.md reflects the current implementation.</li>
 </ul>
 
 
