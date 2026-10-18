@@ -1,154 +1,89 @@
-# SLDS Conformance Test Specification
+# SLDS conformance tests · v0.1.1
 
-| Field | Value |
-|-------|-------|
-| **Status** | Draft |
-| **Version** | 0.1.0 |
-| **Created** | 2026-10-08 |
+| Field | Scope |
+| --- | --- |
+| Contract | RFC-0002 / v0.1.1 source API |
+| Default implementation | Real InMemory Repository and Composed(Sequential→Base62) CodeGenerator |
+| CI interpreters | Lua 5.1 / Lua 5.3 / LuaJIT |
+| Additional local check | Lua 5.5 |
 
----
+Compatibility requires the applicable behavioral scenarios plus an explicit evidence declaration. Sequential and deterministically interleaved tests do not establish actual external storage concurrency. Optional cache/tenant/CAS features require separate integration evidence.
 
-## 1. Overview
+## Reuse the suites
 
-The SLDS Conformance Test Suite is the **most valuable deliverable** of this project. It is not merely "a set of tests" — it is the specification made executable.
-
-> Any implementation that passes the SLDS Conformance Test is SLDS-compatible.
-
-This means future implementations in Go, Rust, Java, or any other language can claim SLDS compatibility by passing the test suite. This is what elevates SLDS from "another short link library" to a **true specification**.
-
----
-
-## 2. Conformance Levels
-
-SLDS defines four conformance levels. Each level builds on the previous one.
-
-### Level 0 — Core
-
-**MUST pass for any SLDS implementation.**
-
-| Test | Description |
-|------|-------------|
-| `create_basic` | Create a short link with generated code, verify it can be resolved |
-| `create_with_custom_code` | Create with a user-specified code |
-| `resolve_active` | Resolve an active link, verify target |
-| `resolve_not_found` | Resolve a non-existent identity, verify `found = false` |
-| `update_target` | Update the target URL of an existing link |
-| `update_status` | Update the status (ACTIVE → DISABLED) |
-| `delete_basic` | Delete a link, verify it becomes unresolvable |
-| `code_immutability` | Attempting to update code/namespace MUST fail |
-
-### Level 1 — Lifecycle
-
-**SHOULD pass for production-ready implementations.**
-
-| Test | Description |
-|------|-------------|
-| `resolve_disabled` | Disabled link returns `status = DISABLED`, not resolvable |
-| `resolve_deleted` | Deleted link returns `status = DELETED`, not resolvable |
-| `resolve_expired` | Link with `expires_at < now` returns `status = EXPIRED`, not resolvable |
-| `expiration_not_stored` | Verify EXPIRED is derived, not a persistent status |
-| `re_enable_disabled` | DISABLED → ACTIVE transition via update |
-| `delete_is_terminal` | DELETED status cannot transition to any other status |
-| `custom_code_conflict` | Creating with an existing code MUST fail atomically |
-| `deleted_code_not_reused` | Deleted codes MUST NOT be reused by default (RULE-006) |
-
-### Level 2 — Reliability
-
-**SHOULD pass for enterprise-grade implementations.**
-
-| Test | Description |
-|------|-------------|
-| `create_idempotent` | Creating the same identity twice does not corrupt data |
-| `concurrent_create_same_code` | Two concurrent creates with the same code — one wins, one fails |
-| `update_atomic` | Concurrent updates to the same link — no lost updates |
-| `delete_then_resolve` | After delete, resolve consistently returns not-resolvable |
-| `update_then_resolve` | After update, resolve reflects the new state |
-| `code_uniqueness_enforced` | Uniqueness enforced by repository, not by application-level check |
-
-### Level 3 — Extensions
-
-**MAY pass for feature-complete implementations.**
-
-| Test | Description |
-|------|-------------|
-| `metadata_preserved` | Metadata field stored and retrieved without interpretation |
-| `metadata_not_interpreted` | Core MUST NOT expose metadata fields as domain properties |
-| `hook_before_after` | Hooks fire before and after operations |
-| `hook_error_isolation` | Hook failure does not break the operation |
-| `tenant_aware` | Repository can be tenant-aware via context |
-| `cache_not_source_of_truth` | Cache miss falls through to repository |
-| `cache_invalidation_on_update` | Update triggers cache delete, not cache update |
-| `negative_cache_optional` | NOT_FOUND can be negatively cached with short TTL |
-
----
-
-## 3. Test Implementation Guidelines
-
-### 3.1 Test Structure
-
-Conformance tests are organized as BDD specs using `busted`:
-
-```
-spec/conformance/
-├── l0_core_spec.lua        -- Level 0 tests
-├── l1_lifecycle_spec.lua   -- Level 1 tests
-├── l2_reliability_spec.lua  -- Level 2 tests
-└── l3_extensions_spec.lua   -- Level 3 tests
-```
-
-### 3.2 Test Factory Pattern
-
-Each conformance test suite uses a **factory pattern** — the caller provides the implementation to test:
+Register the four reusable suites from a Busted spec file. Replace Repository with the actual adapter being evaluated; keep fresh independent fixture state:
 
 ```lua
--- The conformance suite is parameterized by the implementation
-local function run_conformance_suite(impl)
-    -- impl = { repository, generator, encoder, clock }
-    describe("L0 Core", function()
-        it("create_basic", function()
-            local slds = Slds.new(impl)
-            local ctx = {}
-            local link, err = slds:create(ctx, { target = "https://example.com" })
-            assert.is_nil(err)
-            assert.is_not_nil(link.code)
+local Interactor = require("slds.interactor")
+local Repository = require("slds.adapters.inmemory.repository")
+local Composed = require("slds.adapters.composed.code_generator")
+local Generator = require("slds.adapters.sequential.generator")
+local Encoder = require("slds.adapters.base62.encoder")
 
-            local result = slds:resolve(ctx, Identity.new(link.namespace, link.code))
-            assert.is_true(result.found)
-            assert.equals("https://example.com", result.target)
-        end)
-        -- ...
-    end)
+local function make_fixture(opts)
+    opts = opts or {}
+    local repo = opts.repository or Repository.new({
+        lifecycle = opts.lifecycle, can_update = opts.can_update,
+    })
+    local gen = opts.generator or Generator.new()
+    local enc = opts.encoder or Encoder.new()
+    local code_generator = opts.code_generator
+    if code_generator == nil then
+        code_generator = Composed.new({ generator = gen, encoders = { enc } })
+    end
+    local clock = opts.clock
+    if clock == nil then clock = function() return 1000000 end end
+    local interactor = Interactor.new({
+        repository = repo, code_generator = code_generator,
+        lifecycle = opts.lifecycle, clock = clock, hooks = opts.hooks,
+    })
+    return interactor, repo, code_generator, enc, gen
 end
 
-return run_conformance_suite
+require("spec.conformance.suites.l0_core")(make_fixture)
+require("spec.conformance.suites.l1_lifecycle")(make_fixture)
+require("spec.conformance.suites.l2_reliability")(make_fixture)
+require("spec.conformance.suites.l3_extensions")(make_fixture)
 ```
 
-### 3.3 Level Badge
+Run from a source checkout with its spec modules on package.path and installed adapter modules available. Each call creates fresh state unless a test explicitly supplies a shared Repository. Keep overrides for fault injection. The third return is now the final CodeGenerator, not the internal Generator.
 
-Implementations can claim:
+L2 controlled interleavings wrap the public update method; supply a writable Lua wrapper if your adapter uses userdata. Actual external tests must isolate and clean up records while retaining required identity reservations. The fixture must configure consistent Lifecycle functions at Interactor and Repository.
 
+## Evidence matrix
+
+| Level/scenarios | Contract | Reference evidence |
+| --- | --- | --- |
+| L0 creation, explicit Code, resolution | Four operations, optional final-code generation | Real adapters, sequential |
+| L0 identity immutability | RULE-004 | Public patches reject namespace/code |
+| L1 disabled/deleted/expired | Persistent state, derived expiry and terminal guards | Deterministic clock; no stored EXPIRED |
+| L1 duplicate/reuse rejection | RULE-005/006 | Sequential duplicate rejection and retained tombstones |
+| L2 duplicate creation | Original data survives conflicts | Sequential; no idempotency-key API |
+| L2 same-field commit order | Latest same-field commit wins | Sequential commits, no stale-read detection claim |
+| L2 different-field interleavings | Sparse writes retain unspecified fields | Another commit injected immediately before authoritative update |
+| L2 delete interleavings | DELETED cannot be revived | Delete injected before update; terminal write returns INVALID unchanged |
+| L2 direct Repository uniqueness | RULE-005 | Sequential direct adapter conflict |
+| L3 metadata | Opaque data and ownership boundaries | Actual adapter plus graph/snapshot unit tests |
+| L3 Hooks | Sole startup on registration, FIFO/phase order, exception isolation and snapshots | Observations asserted outside pcall-isolated callbacks |
+| L3 ctx/namespaces | Opaque propagation and tuple partitioning | No tenant authorization claim |
+| L3 repository visibility | Resolve sees committed reference changes | No cache installed or verified |
+| External concurrent create/update | Atomicity across actual clients | Not established by reference tests; adapter-specific integration required |
+| External CAS/cache/tenant extensions | Declared host/adapter contracts | Not bundled; separate applicable tests required |
+| Core dependencies | RULE-001/002/003 | Pure Lua source review and interpreter matrix |
+
+spec/composition_spec.lua additionally exercises Sequential→Base62, URL-derived Code, explicit shared Lifecycle and a test-only three-tier Repository using real InMemory instances. Its tiered checks cover cold/warm hits, independent snapshots, write invalidation, cached entity expiration, tombstones and failure passthrough. All writes route through one authority; no external cache consistency, distributed invalidation or database concurrency is established. Core and the four bundled adapters remain unchanged.
+
+Additional direct tests cover partial Lifecycle defaults, hard invariants, expires_at==now, unsupported patches, validation before can_update, rollback, full delete validation, no Interactor write pre-read, malformed dependency responses, CodeGenerator pipeline boundaries, full normal-error AFTER paths and nonrecursive ON_ERROR. Reference component numeric limits/exhaustion are tested without imposing their domain on Core.
+
+Relevant files include spec/repository_v02_spec.lua, spec/reference_adapters_spec.lua, spec/value_boundaries_spec.lua, spec/interactor_boundaries_spec.lua, spec/v02_interactor_spec.lua, spec/code_generator_spec.lua, spec/hook_points_spec.lua, spec/hook_observation_spec.lua and spec/public_api_spec.lua.
+
+## Coverage and declaration
+
+```sh
+sh scripts/test.sh
+luacheck src/ adapters/ spec/ scripts/check-coverage.lua
 ```
-SLDS L0  -- passes Level 0
-SLDS L1  -- passes L0 + L1
-SLDS L2  -- passes L0 + L1 + L2
-SLDS L3  -- passes all levels
-```
 
----
+Each production file under src/ and adapters/ must reach at least 95% from fresh independent statistics, including unloaded files. CI applies the gate separately per interpreter; aggregate/merged coverage is insufficient.
 
-## 4. Boundary Between Levels
-
-| Concern | Level | Rationale |
-|---------|-------|-----------|
-| create/resolve/update/delete | L0 | Core identity — without these, it's not a short link system |
-| expiration/disabled/custom code | L1 | Lifecycle richness — production needs |
-| idempotency/concurrency/atomicity | L2 | Reliability — enterprise needs |
-| events/cache/metadata/multi-tenant | L3 | Extensions — feature-complete |
-
----
-
-## References
-
-- RFC-0001 §10 (Iron Rules, especially RULE-010)
-- RFC-0001 §4 (Operations)
-- RFC-0001 §3.4 (Resolution semantics)
+Record contract/suite revision, actual Repository/CodeGenerator components, interpreter, exact commands, applicable extensions, pass/failure counts and unresolved evidence. Label evidence sequential, controlled interleaving or actual external concurrency. Do not turn ctx propagation into a tenant-isolation claim or uncached visibility into a cache-invalidation claim. See [validation records](../validation.md).

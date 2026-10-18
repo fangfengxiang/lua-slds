@@ -1,201 +1,116 @@
-# Quick Start Tutorial
+# Quick start tutorial · v0.1.1
 
-This tutorial walks you through using SLDS from installation to a fully working short link service with InMemory adapters.
+Build a complete short link lifecycle using the bundled reference adapters. No server or database is needed. Examples use the v0.1.1 API.
 
-## 1. Install
+## 1. Install the package
 
-```bash
+```sh
 luarocks install lua-slds
 ```
 
-Or clone and add `src/` to `package.path`:
+The package includes the reference adapters under their documented module names.
 
-```bash
-git clone https://github.com/fangfengxiang/lua-slds.git
-export LUA_PATH="$PWD/lua-slds/src/?.lua;$PWD/lua-slds/src/?/init.lua;;$LUA_PATH"
-```
-
-## 2. Wire Up Adapters
-
-SLDS uses hexagonal architecture — the Core depends on **ports** (interfaces), not concrete implementations. You provide the implementations:
+## 2. Assemble the two ports
 
 ```lua
 local slds = require("slds")
+local Repository = require("slds.adapters.inmemory.repository")
+local Composed = require("slds.adapters.composed.code_generator")
+local Sequential = require("slds.adapters.sequential.generator")
+local Base62 = require("slds.adapters.base62.encoder")
 
--- InMemory adapters are bundled for development and testing
-local service = slds.new({
-    repository = require("slds.adapters.inmemory.repository").new(),
-    generator  = require("slds.adapters.sequential.generator").new(),
-    encoder    = require("slds.adapters.base62.encoder").new(),
+local observed, hooks = {}, slds.Hooks.new()
+hooks:on(slds.HookPoint.AFTER_RESOLVE, function(_, point, value, err)
+    observed[#observed + 1] = { point = point, status = value and value.status, err = err }
+end):on(slds.HookPoint.ON_ERROR, function(_, failed_point, hook_err)
+    print("Observer failed:", failed_point, hook_err)
+end)
+local lifecycle = slds.Lifecycle
+local repository = Repository.new({ lifecycle = lifecycle })
+local now = 1000000
+local interactor = slds.new({
+    repository = repository, lifecycle = lifecycle, hooks = hooks,
+    code_generator = Composed.new({
+        generator = Sequential.new(),
+        encoders = { Base62.new() },
+    }),
+    clock = function() return now end,
 })
 ```
 
-| Port | Role | Bundled Adapter |
-|------|------|-----------------|
-| Repository | Persistence (create/get/update/delete) | InMemory |
-| Generator | Internal ID generation | Sequential counter |
-| Encoder | ID → short code transformation | Base62 |
+Repository persists entities. CodeGenerator returns final Code; this adapter composes an instance-local counter with Base62. Core never imports either component. If all callers supply explicit codes, omit code_generator entirely.
 
-## 3. Create a Short Link
+## 3. Create
 
 ```lua
--- Auto-generated code (via Generator + Encoder)
-local link = assert(service:create({}, {
-    target = "https://example.com/long/path?query=1",
-}))
-print(link.namespace)  -- "default"
-print(link.code)       -- e.g., "1"
-print(link.status)     -- "ACTIVE"
+local ctx = {}
+local generated = assert(interactor:create(ctx, { target = "https://example.com/long/path" }))
+print(generated.namespace, generated.code, generated.status) -- default, 1, ACTIVE
 
--- Custom code
-local custom = assert(service:create({}, {
-    code = "promo2026",
-    target = "https://example.com/campaign",
-    expires_at = os.time() + 86400 * 30,  -- 30 days
+local link = assert(interactor:create(ctx, {
+    code = "welcome",
+    target = "https://example.com/welcome",
+    expires_at = now + 60,
+    metadata = { campaign = "launch" },
 }))
+local identity = slds.Identity.new(link.namespace, link.code)
 ```
 
-**Rules:**
+Namespace defaults only when omitted. Explicit Code must be a non-empty string. Omitted Code invokes the generator; invalid Code does not. New links are ACTIVE, so omit status. Target validation rejects empty values and the javascript:, data: and file: schemes; the host supplies any stricter URL policy.
 
-- `target` is required and must be a valid URL (dangerous schemes like `javascript:`, `data:`, `file:` are rejected).
-- `code` is optional. If omitted, the Generator produces an ID and the Encoder transforms it into a short code.
-- `namespace` defaults to `"default"` if not provided.
-- `expires_at` is an optional Unix timestamp. If set and `expires_at < now`, the link is expired at resolution time.
-
-## 4. Resolve
-
-Resolution is the most important operation. It applies domain semantics (status, expiry) — it is **not** just a `Repository.get()` passthrough.
+## 4. Resolve and expire
 
 ```lua
-local identity = slds.Identity.new("default", "promo2026")
-local result = service:resolve({}, identity)
+local result = assert(interactor:resolve(ctx, identity))
+assert(result.found and result.resolvable)
+assert(result.target == "https://example.com/welcome")
 
-if result.found then
-    print("Target:", result.target or "(not resolvable)")
-    print("Status:", result.status)
-    -- Status can be: ACTIVE, DISABLED, DELETED, or EXPIRED
-else
-    print("Not found")
-end
+now = now + 60
+local expired = assert(interactor:resolve(ctx, identity))
+assert(expired.found and not expired.resolvable)
+assert(expired.status == slds.Resolution.EXPIRED)
+assert(expired.target == nil)
 ```
 
-**ResolutionResult fields:**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `found` | boolean | Whether the identity exists in the repository |
-| `namespace` | string | Identity namespace |
-| `code` | string | Identity code |
-| `target` | string\|nil | Present only if resolvable (status=ACTIVE, not expired) |
-| `status` | string | ACTIVE, DISABLED, DELETED, or EXPIRED |
-| `expires_at` | number\|nil | Expiry timestamp if set |
+Equality is already expired: `expires_at <= now`. The stored lifecycle remains ACTIVE. Always test result.resolvable before using target; result.found alone says only that the identity exists.
 
 ## 5. Update
 
-Only mutable fields can be updated: `target`, `status`, `expires_at`. `namespace` and `code` are **immutable** (RULE-004).
+```lua
+assert(interactor:update(ctx, identity, {
+    target = "https://example.com/new", expires_at = now + 3600,
+}))
+assert(interactor:update(ctx, identity, { status = slds.Lifecycle.DISABLED }))
+assert(not assert(interactor:resolve(ctx, identity)).resolvable)
+assert(interactor:update(ctx, identity, { status = slds.Lifecycle.ACTIVE }))
+```
+
+Only target/status/expires_at may be patched. Namespace/code are immutable; metadata and unknown patch fields return INVALID. Nil expiration means unchanged; there is no clearing sentinel. Repository validates and applies the sparse patch against the latest state, preserving unspecified fields.
+
+## 6. Observe operations
 
 ```lua
--- Change target
-local updated = service:update({}, identity, {
-    target = "https://example.com/new-target",
-})
-
--- Disable temporarily
-local disabled = service:update({}, identity, {
-    status = slds.DISABLED,
-})
-
--- Re-enable (DISABLED → ACTIVE is allowed)
-local reactivated = service:update({}, identity, {
-    status = slds.ACTIVE,
-})
-
--- Set expiry
-service:update({}, identity, {
-    expires_at = os.time() + 3600,  -- 1 hour
-})
+-- Observers were registered before operations in step 2.
+assert(interactor:resolve(ctx, identity))
+assert(observed[#observed].point == slds.HookPoint.AFTER_RESOLVE)
 ```
 
-**State transitions:**
+Register only with hooks:on(point,fn) during startup. Do not change registrations while serving operations. Within one point, callbacks execute in registration order; phase order remains fixed. Each callback receives its own domain payload snapshot. ctx stays shared and should be treated as read-only. Observers execute synchronously; exceptions are isolated with pcall, while callback latency remains part of operation latency. AFTER also receives normal failures, so check value before accessing its fields.
 
-```
-         create
-           │
-           ▼
-       ┌────────┐  update  ┌──────────┐
-       │ ACTIVE │ ◄──────► │ DISABLED │
-       └────────┘          └──────────┘
-           │
-           │ delete
-           ▼
-       ┌─────────┐
-       │ DELETED  │  (terminal — no transitions out)
-       └─────────┘
-```
-
-## 6. Delete
-
-Logical deletion sets status to `DELETED` (terminal). The record may remain in the repository for audit, but resolution returns "not resolvable". Deleted codes MUST NOT be reused (RULE-006).
+## 7. Delete and handle failures
 
 ```lua
-local ok, err = service:delete({}, identity)
-if not ok then
-    print("Delete failed:", err)
-end
+assert(interactor:delete(ctx, identity))
+local deleted = assert(interactor:resolve(ctx, identity))
+assert(deleted.found and not deleted.resolvable)
+assert(deleted.status == slds.Lifecycle.DELETED)
+
+local again, err = interactor:delete(ctx, identity)
+assert(again == nil and err == slds.Errors.INVALID)
+local duplicate, conflict = interactor:create(ctx, { code = "welcome", target = "https://example.com" })
+assert(duplicate == nil and conflict == slds.Errors.CONFLICT)
 ```
 
-## 7. Add Hooks
+DELETED is terminal and reserves the identity. Expected failures use nil,err; unknown programming failures raise errors. A missing identity resolves normally to found=false/resolvable=false/status=NOT_FOUND, whereas a Repository connection failure returns nil and its original error.
 
-Hooks extend SLDS for observability without coupling to the Core. They are isolated via `pcall` — a failing hook never blocks the operation.
-
-```lua
-local logger = {
-    after_create = function(ctx, link)
-        print(string.format("[LOG] Created %s/%s -> %s",
-            link.namespace, link.code, link.target))
-    end,
-    after_resolve = function(ctx, result)
-        if result.found then
-            print(string.format("[LOG] Resolved %s/%s status=%s",
-                result.namespace, result.code, result.status))
-        end
-    end,
-    on_error = function(ctx, err, callback_name)
-        print(string.format("[ERROR] Hook %s failed: %s", callback_name, err))
-    end,
-}
-
-service:use(logger)
-```
-
-## 8. Error Handling
-
-SLDS uses three categories of error handling:
-
-| Category | Mechanism | Example |
-|----------|-----------|---------|
-| Runtime errors | `return nil, err` | Repository conflict, not found |
-| Programming errors | `error(msg, 2)` | Invalid argument, immutable field modification |
-| Third-party isolation | `pcall` | User hooks, injected port implementations |
-
-```lua
--- Runtime error — check return value
-local link, err = service:create({}, { target = "https://example.com" })
-if not link then
-    if err == slds.CONFLICT then
-        print("Code already exists — try another")
-    end
-end
-
--- Programming error — will throw
-local ok, err = pcall(function()
-    service:update({}, identity, { code = "new-code" })
-end)
--- err: "slds:update: namespace and code are immutable"
-```
-
-## Next Steps
-
-- [Operations Guide](how-to.md) — production patterns and custom adapters
-- [API Reference](api.md) — full module and function signatures
-- [RFC-0001](rfc/RFC-0001.md) — the 10 iron rules and formal specification
+Continue with the [operations guide](how-to.md), [API reference](api.md) or [v0.1.1 migration guide](migration.md).

@@ -1,83 +1,75 @@
 local Lifecycle = require("slds.domain.lifecycle")
+local Errors = require("slds.domain.errors")
 
-describe("Lifecycle", function()
-    describe("constants", function()
-        it("defines ACTIVE", function()
-            assert.are.equal("ACTIVE", Lifecycle.ACTIVE)
-        end)
-
-        it("defines DISABLED", function()
-            assert.are.equal("DISABLED", Lifecycle.DISABLED)
-        end)
-
-        it("defines DELETED", function()
-            assert.are.equal("DELETED", Lifecycle.DELETED)
-        end)
-
-        it("does NOT define EXPIRED", function()
-            assert.is_nil(Lifecycle.EXPIRED)
-        end)
-
-        it("STATUSES contains exactly 3 values", function()
-            assert.are.equal(3, #Lifecycle.STATUSES)
-        end)
+describe("Lifecycle v0.1.1", function()
+    it("exposes three persistent states and a closed operation error set", function()
+        assert.same({ ACTIVE = "ACTIVE", DISABLED = "DISABLED", DELETED = "DELETED" }, {
+            ACTIVE = Lifecycle.ACTIVE, DISABLED = Lifecycle.DISABLED, DELETED = Lifecycle.DELETED,
+        })
+        assert.is_nil(Lifecycle.EXPIRED)
+        assert.is_nil(Lifecycle.validate_transition)
+        assert.same({ NOT_FOUND = "NOT_FOUND", CONFLICT = "CONFLICT", INVALID = "INVALID" }, Errors)
     end)
 
-    describe("can_transition(from, to)", function()
-        it("allows ACTIVE → DISABLED", function()
-            assert.is_true(Lifecycle.can_transition("ACTIVE", "DISABLED"))
-        end)
-
-        it("allows DISABLED → ACTIVE", function()
-            assert.is_true(Lifecycle.can_transition("DISABLED", "ACTIVE"))
-        end)
-
-        it("allows ACTIVE → DELETED", function()
-            assert.is_true(Lifecycle.can_transition("ACTIVE", "DELETED"))
-        end)
-
-        it("allows DISABLED → DELETED", function()
-            assert.is_true(Lifecycle.can_transition("DISABLED", "DELETED"))
-        end)
-
-        it("rejects DELETED → ACTIVE", function()
-            assert.is_false(Lifecycle.can_transition("DELETED", "ACTIVE"))
-        end)
-
-        it("rejects DELETED → DISABLED", function()
-            assert.is_false(Lifecycle.can_transition("DELETED", "DISABLED"))
-        end)
-
-        it("rejects DELETED → DELETED", function()
-            assert.is_false(Lifecycle.can_transition("DELETED", "DELETED"))
-        end)
+    it("validates only the three persistent states", function()
+        for _, status in ipairs({ "ACTIVE", "DISABLED", "DELETED" }) do
+            assert.is_true(Lifecycle.is_valid(status))
+        end
+        for _, status in ipairs({ "EXPIRED", "UNKNOWN", "", false, {} }) do
+            assert.is_false(Lifecycle.is_valid(status))
+        end
+        assert.is_false(Lifecycle.is_valid(nil))
     end)
 
-    describe("validate_transition(from, to)", function()
-        it("does not error for valid transition", function()
-            assert.has_no_error(function()
-                Lifecycle.validate_transition("ACTIVE", "DISABLED")
-            end)
-        end)
-
-        it("errors for invalid transition", function()
-            assert.has_error(function()
-                Lifecycle.validate_transition("DELETED", "ACTIVE")
-            end)
-        end)
+    it("defines every transition including terminal, same-state and unknown cases", function()
+        local allowed = {
+            ACTIVE = { DISABLED = true, DELETED = true },
+            DISABLED = { ACTIVE = true, DELETED = true },
+            DELETED = {},
+        }
+        for from, targets in pairs(allowed) do
+            for to in pairs(allowed) do
+                assert.equal(targets[to] == true, Lifecycle.can_transition(from, to))
+            end
+        end
+        assert.is_false(Lifecycle.can_transition("UNKNOWN", "ACTIVE"))
+        assert.is_false(Lifecycle.can_transition("ACTIVE", "UNKNOWN"))
+        assert.is_false(Lifecycle.can_transition(nil, nil))
     end)
 
-    describe("is_resolvable(status)", function()
-        it("returns true for ACTIVE", function()
-            assert.is_true(Lifecycle.is_resolvable("ACTIVE"))
-        end)
+    it("resolves only ACTIVE by default", function()
+        assert.is_true(Lifecycle.is_resolvable("ACTIVE"))
+        for _, status in ipairs({ "DISABLED", "DELETED", "EXPIRED", false }) do
+            assert.is_false(Lifecycle.is_resolvable(status))
+        end
+        assert.is_false(Lifecycle.is_resolvable(nil))
+    end)
+end)
 
-        it("returns false for DISABLED", function()
-            assert.is_false(Lifecycle.is_resolvable("DISABLED"))
-        end)
+describe("Internal lifecycle normalization", function()
+    it("fills defaults and retains overrides without changing the host table", function()
+        local resolve = require("slds.internal.lifecycle")
+        local custom = function() return false end
+        local input = { can_transition = custom }
+        local rules = resolve(input)
+        assert.equal(custom, rules.can_transition)
+        assert.equal(Lifecycle.is_valid, rules.is_valid)
+        assert.equal(Lifecycle.is_resolvable, rules.is_resolvable)
+        assert.same({ can_transition = custom }, input)
+        input.can_transition = function() return true end
+        assert.equal(custom, rules.can_transition)
+        assert.equal(Lifecycle.is_valid, resolve().is_valid)
+    end)
 
-        it("returns false for DELETED", function()
-            assert.is_false(Lifecycle.is_resolvable("DELETED"))
-        end)
+    it("rejects invalid containers and any nonfunction override", function()
+        local resolve = require("slds.internal.lifecycle")
+        for _, input in ipairs({ false, "rules", 1 }) do
+            assert.has_error(function() resolve(input) end)
+        end
+        for _, name in ipairs({ "is_valid", "can_transition", "is_resolvable" }) do
+            for _, value in ipairs({ false, "function", {} }) do
+                assert.has_error(function() resolve({ [name] = value }) end)
+            end
+        end
     end)
 end)

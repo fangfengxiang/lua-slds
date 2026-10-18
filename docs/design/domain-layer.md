@@ -1,160 +1,50 @@
-# Domain Layer Architecture
+# Domain layer architecture · v0.1.1
 
-The SLDS domain layer is the heart of the system. It defines *what a short link is* and *how it behaves*, with zero dependency on infrastructure.
+The domain layer defines identity, lifecycle and resolution behavior with no infrastructure I/O. Interactor coordinates four operations; Repository owns the atomic validation/commit boundary for writes.
 
-## Layer Overview
+## Objects and responsibilities
 
-```
-┌──────────────────────────────────────────────────┐
-│                  Domain Layer                      │
-│                                                    │
-│  ┌──────────┐  ┌────────────┐  ┌───────────────┐  │
-│  │ Identity │  │ ShortLink  │  │  Lifecycle    │  │
-│  │ (value)  │  │ (entity)   │  │  (state mch)  │  │
-│  └──────────┘  └────────────┘  └───────────────┘  │
-│        │              │              │             │
-│        └──────────────┼──────────────┘             │
-│                       │                            │
-│                       ▼                            │
-│              ┌────────────────┐                    │
-│              │   Resolution   │                    │
-│              │ (domain logic) │                    │
-│              └────────────────┘                    │
-│                       │                            │
-│              ┌────────────────┐                    │
-│              │    Errors      │                    │
-│              │   (codes)      │                    │
-│              └────────────────┘                    │
-└────────────────────────────────────────────────────┘
-```
+| Module | Responsibility |
+| --- | --- |
+| Identity | Non-empty namespace/code tuple, logical immutability and value equality |
+| ShortLink | Validated entity, sparse patches and independent metadata snapshots |
+| Lifecycle | Three persistent statuses and three default predicates |
+| Resolution | Pure existence/resolvability/expiration decision and result |
+| Errors | NOT_FOUND / CONFLICT / INVALID |
 
-## Domain Objects
+Identity uses ordinary Lua tables with a shared class metatable. Callers must not assign identity fields. No proxy/freeze framework is introduced. The tuple is distinct from host, URL, tenant or storage key.
 
-### Identity — Value Object
+ShortLink contains target/status/expires_at/metadata in addition to identity. Only target/status/expires_at can be patched. Unknown fields including metadata return INVALID; immutable identity patches raise an error. Metadata is opaque raw-table data, captured independently across entity/export/storage boundaries. Cycles and alias relationships inside a snapshot survive; metatables do not. Persistence adapters may support a narrower serializable subset.
 
-An Identity is the **immutable** answer to *"Who is this short link?"*
+## Lifecycle and rules
 
-```
-Identity = { namespace: string, code: string }
-```
+Persistent statuses are ACTIVE, DISABLED and DELETED. Defaults allow ACTIVE↔DISABLED and ACTIVE/DISABLED→DELETED. DELETED has no outgoing transitions and remains reserved. Same-status patches do not invoke the transition predicate.
 
-- Created once, never modified
-- Equality by value: two Identity objects with the same `namespace` and `code` are equal (`__eq`)
-- String representation: `"namespace/code"` (`__tostring`)
+Constructors normalize a partial rule table into is_valid/can_transition/is_resolvable defaults without modifying it. A small internal function shares this normalization; it is not a policy manager or new public API. Direct domain calls may use partial rules. Hosts must configure consistent rules in Interactor and Repository.
 
-**Why a value object, not a plain table?** Type safety and semantic clarity. An Identity is never accidentally confused with a ShortLink or a ResolutionResult. The `__eq` metamethod ensures consistent comparison.
+Custom rules cannot authorize unknown persistent statuses, revival or DELETED resolution. is_valid may restrict states, and can_transition may restrict changes. Custom is_resolvable can permit DISABLED, but expiration and terminal safeguards remain.
 
-### ShortLink — Domain Entity
+## Resolution
 
-A ShortLink is the **mutable** answer to *"What does this Identity currently represent?"*
+Resolution reads no storage and writes nothing. Repository.get supplies an independent ShortLink; Resolution applies absence, DELETED, custom denial, expiration and success in that order.
 
-```
-ShortLink = {
-    namespace:  string,
-    code:       string,
-    target:     string,
-    status:     string,    -- ACTIVE | DISABLED | DELETED
-    expires_at: number?,   -- optional Unix timestamp
-    metadata:   table?,    -- opaque, Core MUST NOT interpret
-}
-```
-
-**Immutability boundary:** `namespace` and `code` are immutable after creation (RULE-004). Only `target`, `status`, and `expires_at` can be modified via `with_patch()`.
-
-**Target validation:** The ShortLink constructor validates the target URL scheme at creation time. Dangerous schemes (`javascript:`, `data:`, `file:`) are rejected (Section 10.1 of RFC-0001).
-
-### Lifecycle — State Machine
-
-Three persistent statuses with a defined transition matrix:
-
-```
-         create
-           |
-           v
-       +--------+  update  +----------+
-       | ACTIVE | <------> | DISABLED |
-       +--------+          +----------+
-           |
-           | delete
-           v
-       +---------+
-       | DELETED |  (terminal)
-       +---------+
-```
-
-**EXPIRED is derived, not persisted.** The Lifecycle module does not define EXPIRED as a status. It is computed at resolution time: `if expires_at and expires_at < now then status = "EXPIRED"`. This is a critical design decision — storing EXPIRED as a persistent status would require background scanning and batch updates, coupling the domain to a scheduler.
-
-### Resolution — Domain Operation
-
-Resolution is a **first-class domain operation**, not an alias for `Repository.get()`. The distinction:
-
-- `Repository.get(ctx, identity)` retrieves raw persisted data (whatever is in storage)
-- `Resolution.resolve(link, identity, now)` applies domain semantics (is it active? expired? disabled? deleted?)
-
-This separation means the domain layer *decides whether a link can be resolved*, while the repository merely *retrieves data*. A repository has no domain authority.
-
-### ResolutionResult — Stable Contract
-
-Resolution returns a `ResolutionResult`, not a `ShortLink`. This prevents domain entity leakage:
-
-```
+```text
 ResolutionResult = {
-    found:      boolean,
-    namespace:  string,
-    code:       string,
-    target:     string?,   -- nil if not resolvable
-    status:     string,    -- ACTIVE | DISABLED | DELETED | EXPIRED
-    expires_at: number?,
+    found, resolvable, namespace, code,
+    target?, status, expires_at?
 }
 ```
 
-If the internal `ShortLink` schema changes (adds fields, renames fields), `ResolutionResult` remains stable. Consumers depend on the contract, not the implementation.
+Target appears only when resolvable. The actual persistent status survives successful custom resolution. `expires_at <= now` derives Resolution.EXPIRED without changing the stored entity; no timer or scheduler is needed. NOT_FOUND is a normal absence result, while infrastructure failure remains nil,err.
 
-## Design Principles
+## Write authority
 
-### 1. Zero Infrastructure Dependency
+The entity defines valid values and transitions. The authoritative Repository must apply those same domain rules to its latest state inside the atomic write boundary. It is responsible for uniqueness, terminal guards, optional can_update and rollback, while Resolution remains responsible for time-dependent read semantics.
 
-The domain layer imports nothing from `ngx`, `redis`, `mysql`, or `cjson`. It uses only pure Lua stdlib: `string`, `table`, `math`, `os`, `pairs`, `ipairs`, `setmetatable`, `error`, `type`.
+Interactor.update/delete do not get first. The repository validates complete candidate fields before can_update; policy observation must not change committed data. Delete also uses full entity/transition validation, including custom validity of DELETED.
 
-This is verified by the dependency graph — all `require()` calls within `src/slds/domain/` point only to other domain modules.
+## Lua implementation
 
-### 2. Error Handling Three-Class System
+Factories use dot notation; instance methods use colon notation; instances share their class metatable. Expected business failures return nil,err, programming errors throw, and only Hook callbacks are exception-isolated. Domain modules depend only on other pure Lua domain/internal helpers. No adapter, ngx, database, JSON or HTTP module is imported.
 
-| Category | Mechanism | Domain Layer Usage |
-|----------|-----------|-------------------|
-| Runtime errors | `return nil, err` | `ShortLink.new` returning `nil, err` for invalid target |
-| Programming errors | `error(msg, 2)` | `Identity.new` for missing namespace |
-| Third-party isolation | `pcall` | Not used in domain layer (no third-party calls) |
-
-The domain layer is pure logic — it has no third-party calls to isolate. `pcall` isolation is used in the service and hooks layers.
-
-### 3. OOP Pattern
-
-All domain objects use the standard Lua class-level shared metatable pattern:
-
-```lua
-local _M = {}
-_M.__index = _M
-
-function _M.new(...)
-    return setmetatable({...}, _M)
-end
-```
-
-Static factory methods use dot notation (`Identity.new()`); instance methods use colon notation (`link:is_expired()`). This follows the Lua ecosystem convention (lua-resty-http, dkjson, lua-MessagePack).
-
-## Module Dependencies
-
-```
-errors.lua          <- zero dependencies (leaf module)
-    ^
-lifecycle.lua       <- depends on nothing (constants only)
-    ^
-identity.lua        <- zero dependencies (leaf module)
-
-short_link.lua      <- depends on errors.lua, lifecycle.lua
-    ^
-resolution.lua      <- depends on errors.lua (for error codes)
-```
-
-The dependency graph is acyclic. `errors.lua` and `lifecycle.lua` are leaf modules with zero dependencies. `short_link.lua` and `resolution.lua` depend on them but not on each other.
+See [RFC-0002](../rfc/RFC-0002.md), [API](../api.md) and [ports/adapters](port-adapter.md).

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, "feature-*"]
   pull_request:
     branches: [main, master]
 
@@ -19,7 +19,7 @@ jobs:
       - name: Install luacheck
         run: luarocks install luacheck
       - name: Run luacheck
-        run: luacheck src/ adapters/ spec/
+        run: luacheck src/ adapters/ spec/ scripts/check-coverage.lua
 
   test:
     name: Test (Lua ${{ matrix.lua }})
@@ -38,13 +38,14 @@ jobs:
         run: |
           luarocks install busted
           luarocks install luacov
-      - name: Run tests with coverage
-        run: busted --coverage --pattern=spec
-      - name: Generate coverage report
-        run: luacov
+      - name: Test and enforce 95% coverage for every production file
+        run: sh scripts/test.sh
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./luacov.report.out
+          disable_search: true
+          fail_ci_if_error: true
           flags: lua-${{ matrix.lua }}
           name: lua-slds-${{ matrix.lua }}
+          token: ${{ secrets.CODECOV_TOKEN }}

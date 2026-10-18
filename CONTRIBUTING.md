@@ -30,13 +30,15 @@ luarocks install luacheck
 busted --pattern=spec
 
 # Run linter
-luacheck src/ adapters/ spec/
+luacheck src/ adapters/ spec/ scripts/check-coverage.lua
 
 # Generate coverage report
-busted --coverage --pattern=spec && luacov
+sh scripts/test.sh
 ```
 
 If all three pass, your environment is ready.
+
+Every production Lua file under `src/` and `adapters/` must independently reach **95% line coverage**. The gate checks raw hit/miss counts, discovers all production files, and fails for missing coverage. Do not exclude production code or reuse previous statistics. The test script resets statistics before each run. Project rules are in [AGENTS.md](AGENTS.md); runtime evidence and migration notes are in [docs/validation.md](docs/validation.md).
 
 ## Code Style
 
@@ -76,7 +78,7 @@ Three categories, never mixed:
 |----------|---------|------|
 | Runtime errors | `return nil, err` | Repository failures, not found, conflicts |
 | Programming errors | `error(msg, 2)` | Invalid arguments, invariant violations |
-| Third-party isolation | `pcall(fn, ...)` | User hooks, injected port implementations |
+| Third-party isolation | `pcall(fn, ...)` | User hook callbacks; expected port failures return nil,err |
 
 ### Comments
 
@@ -98,16 +100,18 @@ end
 
 ### Dependency Constraints
 
-**Core (`src/slds/domain/`)** — zero external dependencies:
+**Core (`src/slds/`)** — zero external runtime dependencies:
 - No `ngx`, `redis`, `mysql`, `cjson`
 - Only pure Lua stdlib: `string`, `table`, `math`, `os`, `pairs`, `ipairs`, `setmetatable`, `error`, `type`
 
 **Ports (`src/slds/ports/`)** — interface definitions only:
-- No implementation, no dependencies
+- Repository and optional CodeGenerator only; no concrete infrastructure implementation
 
 **Adapters (`adapters/`)** — MAY use infrastructure:
 - `resty.redis`, `resty.mysql`, `ngx.shared.dict`, etc.
 - But MUST NOT be imported by Core
+- Generator/Encoder are adapter components; their numeric domains do not belong in generic Core ports
+- Register every new production module in the rockspec
 
 ## Testing
 
@@ -120,7 +124,7 @@ spec/
 |-- short_link_spec.lua
 |-- lifecycle_spec.lua
 |-- resolution_spec.lua
-|-- service_spec.lua
+|-- interactor_spec.lua
 |-- hooks_spec.lua
 `-- conformance/             # L0-L3 Conformance Suite
     |-- l0_core_spec.lua
@@ -130,6 +134,8 @@ spec/
 ```
 
 ### Writing Tests
+
+For behavior changes, first establish a meaningful failing assertion, then implement. Preserve success, failure, boundary and invariant checks. Hook callbacks run under pcall: collect observations inside callbacks and assert after the operation, so a swallowed assertion cannot create a false pass.
 
 Tests use busted BDD style:
 
@@ -151,25 +157,25 @@ end)
 
 ### Conformance Tests
 
-Conformance tests use the InMemory adapter as the reference implementation. If you implement a custom adapter, replace the adapter in `spec/helpers.lua` and run the conformance suite to verify compatibility.
+Conformance tests use the real bundled adapters. For a custom adapter, register the reusable suites with a fresh fixture factory as shown in the [conformance guide](docs/rfc/conformance-tests.md). Declare the evidence scope; deterministic interleavings do not prove external database concurrency.
 
 ## Pull Request Process
 
-1. **Create a branch**: `git checkout -b feature/your-feature`
+1. **Create a branch**: `git checkout -b codex/your-feature`
 2. **Write code**: Follow the code style above
 3. **Write tests**: Add or update tests in `spec/`
 4. **Verify locally**:
    ```bash
-   luacheck src/ adapters/ spec/
-   busted --coverage --pattern=spec
+   luacheck src/ adapters/ spec/ scripts/check-coverage.lua
+   sh scripts/test.sh
    ```
    Both must pass with zero warnings/errors.
 5. **Commit**: Use clear commit messages
    ```
-   feat: add snowflake generator adapter
+   feat: add a compatible code generator adapter
    fix: resolve conflict on custom code creation
    docs: update API reference for Resolution
-   test: add L2 concurrency conformance tests
+   test: cover authoritative sparse-write interleavings
    ```
 6. **Push and open PR**: Reference any related issues
 
@@ -194,7 +200,17 @@ SLDS is a specification, not just a library. Changes to the specification follow
 4. Archive the proposal
 5. Update RFC if needed
 
-See `openspec/` for existing proposals and the `openspec` skill for tooling.
+The repository currently ignores `openspec/`; local specifications/proposals are not automatically part of a commit. Keep tracked RFC/API/migration documentation aligned and state that limitation. Current contracts are in [RFC-0002](docs/rfc/RFC-0002.md), with [migration notes from 0.1.0](docs/migration.md).
+
+## Releasing
+
+1. Prepare the version with `bash scripts/release.sh 0.1.1` when a version bump is needed. Review the commit and migration notes, merge the PR, and confirm CI passes for the merged commit.
+2. Configure `LUAROCKS_API_KEY` as a repository secret or a secret in the `deploy` environment. Any environment approval rules still apply.
+3. In GitHub, create the stable tag (for example `v0.1.1`) at the verified merged commit and **publish a Release**. Pushing a tag alone does not publish the package.
+4. Check the Release workflow: it verifies the tag belongs to main and matches the source version, generates and lints the versioned rockspec, attaches it and the matching source archive to the Release, then uploads to LuaRocks. It never commits version changes to main. Missing credentials or upload failures fail the job.
+5. If publishing fails, fix the cause and manually dispatch the Release workflow with the same published tag. It queries existing revisions and selects the next revision of that exact version; a first publication uses revision 1. Do not move published tags.
+
+Consumers install with `luarocks install lua-slds`. Contributors can validate an unreleased checkout with `luarocks make lua-slds-scm-1.rockspec` in a temporary tree. The scm rockspec is the module/source template; CI generates the tagged versioned rockspec at release time.
 
 ## Questions?
 

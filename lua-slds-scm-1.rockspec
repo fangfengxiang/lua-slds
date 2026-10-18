@@ -1,3 +1,4 @@
+rockspec_format = "3.0"
 package = "lua-slds"
 version = "scm-1"
 
@@ -21,7 +22,7 @@ description = {
         - Identity value object {namespace, code}
         - ShortLink domain entity with lifecycle (ACTIVE/DISABLED/DELETED)
         - Resolution as first-class domain operation (not Repository.get alias)
-        - Ports: Repository, Generator, Encoder (hexagonal architecture)
+        - Ports: Repository and optional final-code CodeGenerator
         - Hooks extension mechanism (Logger/Metrics/Tracer via pcall isolation)
         - Conformance Test Suite L0-L3
    ]],
@@ -39,19 +40,22 @@ build = {
    type = "builtin",
    modules = {
       ["slds"]                           = "src/slds/init.lua",
-      ["slds.service"]                   = "src/slds/service.lua",
+      ["slds.interactor"]                = "src/slds/interactor.lua",
       ["slds.hooks"]                     = "src/slds/hooks.lua",
+      ["slds.hook_point"]                = "src/slds/hook_point.lua",
+      ["slds.internal.snapshot"]         = "src/slds/internal/snapshot.lua",
+      ["slds.internal.lifecycle"]        = "src/slds/internal/lifecycle.lua",
       ["slds.domain.identity"]           = "src/slds/domain/identity.lua",
       ["slds.domain.short_link"]         = "src/slds/domain/short_link.lua",
       ["slds.domain.lifecycle"]          = "src/slds/domain/lifecycle.lua",
       ["slds.domain.resolution"]         = "src/slds/domain/resolution.lua",
       ["slds.domain.errors"]             = "src/slds/domain/errors.lua",
       ["slds.ports.repository"]          = "src/slds/ports/repository.lua",
-      ["slds.ports.generator"]           = "src/slds/ports/generator.lua",
-      ["slds.ports.encoder"]             = "src/slds/ports/encoder.lua",
+      ["slds.ports.code_generator"]      = "src/slds/ports/code_generator.lua",
       ["slds.adapters.inmemory.repository"]   = "adapters/inmemory/repository.lua",
       ["slds.adapters.sequential.generator"]  = "adapters/sequential/generator.lua",
       ["slds.adapters.base62.encoder"]        = "adapters/base62/encoder.lua",
+      ["slds.adapters.composed.code_generator"] = "adapters/composed/code_generator.lua",
    },
    copy_directories = { "docs", "spec" },
 }

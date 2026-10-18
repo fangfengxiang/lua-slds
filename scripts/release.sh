@@ -14,12 +14,10 @@
 #   3. 调用 version-manager.sh check 校验一致性
 #   4. Git 提交
 #
-# CI 自动完成（无需本地操作）:
-#   - prepare job 先跑 version-manager.sh sync 自动补齐（有变更则 commit+push main）
-#   - 从 lua-slds-scm-1.rockspec 生成版本 rockspec
-#   - 查询 luarocks.org 自动确定 revision
-#   - 上传 LuaRocks
-#   - 创建 GitHub Release
+# 合并并通过 CI 后，在 GitHub 发布 v<version> Release。
+# Release workflow 校验标签版本，不修改标签源码或 main；
+# 从该标签生成 rockspec/源码包，附加到 Release，再上传 LuaRocks。
+# deploy 环境或仓库必须配置 LUAROCKS_API_KEY。
 #
 # 防呆设计:
 #   版本号来源清单 .versions 是单一真相源，
@@ -36,6 +34,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/.."
 
 # --- 参数检查 ---
 if [ $# -lt 1 ]; then
@@ -90,13 +89,12 @@ echo "  Tag:          $TAG"
 echo "  版本来源:    .versions (一致性已由 check 验证)"
 echo ""
 echo -e "${GREEN}下一步:${NC}"
-echo "  git push origin main"
-echo "  git tag $TAG"
-echo "  git push origin $TAG"
+echo "  通过 PR 合并到 main，并确认该提交的 CI 全部通过"
+echo "  在 GitHub 为合并后的提交创建 $TAG 标签并发布 Release"
 echo ""
-echo -e "${YELLOW}打 tag 后 CI 自动执行:${NC}"
-echo "  1. version-manager.sh sync 自动补齐版本号 (prepare job)"
-echo "  2. version-manager.sh check 校验一致性"
-echo "  3. 从 scm 生成版本 rockspec（revision 自动确定）"
-echo "  4. 创建 GitHub Release"
-echo "  5. 上传 LuaRocks"
+echo -e "${YELLOW}发布 Release 后 CI 自动执行:${NC}"
+echo "  1. 校验标签属于 main，且源码版本与标签一致（不自动修改 main）"
+echo "  2. 从该标签生成并校验版本 rockspec（revision 自动确定）"
+echo "  3. 将源码包和 rockspec 附加到已有 Release"
+echo "  4. 使用 deploy 环境的 LUAROCKS_API_KEY 上传 LuaRocks"
+echo "  失败后可手动运行 Release workflow，输入已发布的标签重试"
