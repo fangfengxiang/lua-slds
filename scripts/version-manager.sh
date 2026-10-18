@@ -14,7 +14,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-MANIFEST="$SCRIPT_DIR/../.versions"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+MANIFEST="$PROJECT_ROOT/.versions"
 TMPFILE=$(mktemp)
 trap 'rm -f "$TMPFILE"' EXIT
 
@@ -124,7 +126,7 @@ cmd_list() {
 }
 
 usage() {
-  sed -n '2,/^$/s/^# \?//p' "$0"
+  sed -nE '2,/^$/s/^# ?//p' "$SCRIPT_DIR/version-manager.sh"
 }
 
 main() {

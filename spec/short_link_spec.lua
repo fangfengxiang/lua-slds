@@ -140,39 +140,8 @@ describe("ShortLink", function()
         end)
     end)
 
-    describe("is_resolvable(now)", function()
-        it("returns true for ACTIVE and not expired", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "ACTIVE",
-            })
-            assert.is_true(link:is_resolvable(1000))
-        end)
-
-        it("returns false for DISABLED", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "DISABLED",
-            })
-            assert.is_false(link:is_resolvable(1000))
-        end)
-
-        it("returns false for DELETED", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "DELETED",
-            })
-            assert.is_false(link:is_resolvable(1000))
-        end)
-
-        it("returns false for expired ACTIVE", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "ACTIVE",
-                expires_at = 500,
-            })
-            assert.is_false(link:is_resolvable(1000))
-        end)
+    it("leaves resolution decisions to Resolution", function()
+        assert.is_nil(ShortLink.is_resolvable)
     end)
 
     describe("with_patch(patch)", function()
@@ -219,9 +188,9 @@ describe("ShortLink", function()
                 namespace = "default", code = "abc",
                 target = "https://example.com", status = "DELETED",
             })
-            assert.has_error(function()
-                link:with_patch({ status = "ACTIVE" })
-            end)
+            local updated, err = link:with_patch({ status = "ACTIVE" })
+            assert.is_nil(updated)
+            assert.equal("INVALID", err)
         end)
     end)
 
@@ -240,5 +209,89 @@ describe("ShortLink", function()
             assert.are.equal(1000, t.expires_at)
             assert.are.equal("v", t.metadata.k)
         end)
+    end)
+end)
+
+describe("ShortLink lifecycle overrides", function()
+    local function new(status, rules)
+        return ShortLink.new({ namespace = "ns", code = "abc", target = "https://example.com", status = status }, rules)
+    end
+
+    it("uses partial validation overrides including the default ACTIVE state", function()
+        local seen = {}
+        local rules = { is_valid = function(status) seen[#seen + 1] = status; return status ~= "ACTIVE" end }
+        local link, err = new(nil, rules)
+        assert.is_nil(link)
+        assert.equal("INVALID", err)
+        assert.equal("ACTIVE", seen[1])
+        assert.equal("DISABLED", assert(new("DISABLED", rules)).status)
+        assert.is_nil(rules.can_transition)
+    end)
+
+    it("never allows a custom validator to add persistent states", function()
+        local link, err = new("EXPIRED", { is_valid = function() return true end })
+        assert.is_nil(link)
+        assert.equal("INVALID", err)
+    end)
+
+    it("applies custom transition rejection and skips same-state transitions", function()
+        local called = 0
+        local rules = { can_transition = function(from, to)
+            called = called + 1
+            assert.equal("ACTIVE", from)
+            assert.equal("DISABLED", to)
+            return false
+        end }
+        local original = assert(new("ACTIVE"))
+        local updated, err = original:with_patch({ status = "DISABLED", target = "https://changed.com" }, rules)
+        assert.is_nil(updated)
+        assert.equal("INVALID", err)
+        assert.equal("ACTIVE", original.status)
+        assert.equal("https://example.com", original.target)
+        assert.equal("ACTIVE", assert(original:with_patch({ status = "ACTIVE" }, rules)).status)
+        assert.equal(1, called)
+    end)
+
+    it("blocks every mutation of a deleted entity despite permissive overrides", function()
+        local deleted = assert(new("DELETED"))
+        local rules = { is_valid = function() return true end, can_transition = function() return true end }
+        for _, patch in ipairs({ {}, { status = "DELETED" }, { target = "https://new.com" }, { status = "ACTIVE" } }) do
+            local result, err = deleted:with_patch(patch, rules)
+            assert.is_nil(result)
+            assert.equal("INVALID", err)
+        end
+    end)
+
+    it("rejects unsupported patches and retains expiration when nil is omitted", function()
+        local original = assert(new("ACTIVE"))
+        for _, patch in ipairs({ { metadata = {} }, { unknown = true }, { [1] = "bad" } }) do
+            local result, err = original:with_patch(patch)
+            assert.is_nil(result)
+            assert.equal("INVALID", err)
+        end
+        local expiring = assert(original:with_patch({ expires_at = 100 }))
+        assert.equal(100, assert(expiring:with_patch({ expires_at = nil })).expires_at)
+    end)
+end)
+
+describe("ShortLink rule call boundaries", function()
+    local function data()
+        return { namespace = "ns", code = "abc", target = "https://example.com" }
+    end
+
+    it("reports malformed direct rule arguments as programming errors", function()
+        assert.has_error(function() ShortLink.new(data(), false) end)
+        assert.has_error(function() ShortLink.new(data(), { is_valid = false }) end)
+        local original = assert(ShortLink.new(data()))
+        assert.has_error(function() original:with_patch({ status = "DISABLED" }, { can_transition = {} }) end)
+        assert.equal(Lifecycle.ACTIVE, original.status)
+    end)
+
+    it("rejects a malformed source status even when custom transitions allow everything", function()
+        local original = assert(ShortLink.new(data()))
+        original.status = "UNKNOWN"
+        local updated, err = original:with_patch({ status = "ACTIVE" }, { can_transition = function() return true end })
+        assert.is_nil(updated)
+        assert.equal("INVALID", err)
     end)
 end)

@@ -1,136 +1,47 @@
-# lua-slds
+# lua-slds · v0.1.1
 
-> Short Link Domain Specification — a pure Lua domain library.
+**SLDS = Identity + Lifecycle + Resolution Semantics.** This pure Lua library defines short link behavior independently of HTTP, database clients, caches and authorization. Core has zero runtime dependencies and supports Lua 5.1, Lua 5.3 and LuaJIT.
 
-SLDS defines the **identity**, **lifecycle**, and **resolution semantics** of short links, independent of transport, storage, caching, and security policy. The Core layer has zero external dependencies — pure Lua 5.1 / 5.3 / LuaJIT only. Infrastructure adapters (Redis, MySQL, OpenResty) are pluggable via hexagonal ports.
+The host assembles Interactor explicitly with Repository and optional CodeGenerator. Generator/Encoder remain adapter components. See the [Chinese README](https://github.com/fangfengxiang/lua-slds/blob/main/README.zh-CN.md) for the Chinese introduction.
 
-## Why SLDS?
+## Start with an explicit code
 
-Most short link systems couple domain logic (what a short link *is*) with infrastructure (HTTP, Redis, databases). SLDS separates them:
-
-- **Core** = Identity + Lifecycle + Resolution (pure Lua, no I/O)
-- **Ports** = Repository, Generator, Encoder (interface contracts)
-- **Adapters** = InMemory, Redis, MySQL, Base62, Sequential (infrastructure)
-
-This means you can swap the storage layer without touching domain logic, run the same Core in OpenResty or a plain Lua VM, and test domain rules without any external dependencies.
-
-## Quick Start
-
-### Install
-
-```bash
-luarocks install lua-slds
-```
-
-Or use directly by adding `src/` to your `package.path`.
-
-### Minimal Example
+Install the package and bundled adapters with `luarocks install lua-slds`. These examples use the v0.1.1 API:
 
 ```lua
 local slds = require("slds")
-
--- 1. Wire up adapters (ports)
-local service = slds.new({
+local interactor = slds.new({
     repository = require("slds.adapters.inmemory.repository").new(),
-    generator  = require("slds.adapters.sequential.generator").new(),
-    encoder    = require("slds.adapters.base62.encoder").new(),
 })
-
--- 2. Create a short link
-local link = assert(service:create({}, {
-    target = "https://example.com/very/long/path?query=1",
+local link = assert(interactor:create({}, {
+    code = "hello", target = "https://example.com/long/path",
 }))
-print("Code:", link.code)  -- e.g., "1"
-
--- 3. Resolve it
-local result = service:resolve({}, slds.Identity.new("default", link.code))
-print("Target:", result.target)          -- "https://example.com/..."
-print("Status:", result.status)          -- "ACTIVE"
-print("Found:",   result.found)           -- true
-
--- 4. Update target
-local updated = service:update({}, slds.Identity.new("default", link.code), {
-    target = "https://example.com/new",
-})
-
--- 5. Disable
-local disabled = service:update({}, slds.Identity.new("default", link.code), {
-    status = slds.DISABLED,
-})
-
--- 6. Delete (terminal — cannot be restored)
-local ok = service:delete({}, slds.Identity.new("default", link.code))
+local result = assert(interactor:resolve({}, slds.Identity.new(link.namespace, link.code)))
+if result.resolvable then print(result.target) end
 ```
 
-### Custom Code
+## Behavioral boundaries
 
-```lua
-local link = service:create({}, {
-    code = "promo2026",
-    target = "https://example.com/campaign",
-})
-```
+- Identity is a logically immutable `{ namespace, code }` tuple.
+- Lifecycle stores `ACTIVE`, `DISABLED` or terminal `DELETED`; `expires_at <= now` derives `EXPIRED` during resolution.
+- Resolve reports both existence (`found`) and permission to resolve (`resolvable`); errors remain separate.
+- Writes apply sparse patches against the latest authoritative state. Deleted identities remain reserved.
+- Metadata and Hook payloads use independent raw-table snapshots. ctx stays shared and should be read-only.
+- Hooks execute synchronously; callback errors are isolated, callback latency is not.
+- Core does not provide caches, external concurrency coordination, HTTP routing, analytics delivery or authorization.
 
-## Features
+Version 0.1.1 changes public names and Hook signatures relative to 0.1.0. Read the [migration guide](migration.md) before updating an integration.
 
-- **Identity** value object `{ namespace, code }` — immutable, equality by value
-- **ShortLink** domain entity with lifecycle status and optional expiry
-- **Lifecycle** state machine: `ACTIVE` ↔ `DISABLED` → `DELETED` (terminal)
-- **Resolution** as a first-class domain operation — not just `Repository.get()` with extra steps
-- **Ports** (hexagonal): Repository, Generator, Encoder — swap implementations freely
-- **Hooks** extension mechanism for Logger/Metrics/Tracer — isolated via `pcall`, never blocks the critical path
-- **Conformance Tests** L0–L3: any implementation claiming SLDS compatibility must pass
+## Documentation by task
 
-## Architecture
+| Goal | Document |
+| --- | --- |
+| Build a working example | [Quick start tutorial](tutorial.md) |
+| Customize rules, generation or an adapter | [Operations guide](how-to.md) |
+| Check signatures and exact failures | [API reference](api.md) |
+| Review normative contracts | [RFC-0002](rfc/RFC-0002.md) |
+| Run a custom implementation through the suite | [Conformance guide](rfc/conformance-tests.md) |
+| Understand the boundary decisions | [Design rationale](design/design-rationale.md) |
+| Inspect actual test evidence | [Validation records](validation.md) |
 
-```
-┌─────────────────────────────────────────────────────┐
-│                    SLDS Core                         │
-│                                                      │
-│  Identity ─── ShortLink ─── Lifecycle ─── Resolution │
-│                                                      │
-│  Operations: create / resolve / update / delete      │
-│  Extensions: Hooks (Logger/Metrics/Tracer)           │
-│                                                      │
-│  Ports: Repository  Generator  Encoder               │
-└──────────────────┬───────────────────────────────────┘
-                   │
-     ┌─────────────┼──────────────────┐
-     ▼              ▼                  ▼
-┌──────────┐  ┌───────────┐    ┌────────────┐
-│ InMemory │  │ Sequential│    │  Base62    │
-│ (dev/test)│  │ Generator │    │  Encoder   │
-└──────────┘  └───────────┘    └────────────┘
-```
-
-## Documentation
-
-- [Quick Start Tutorial](tutorial.md)
-- [Operations Guide](how-to.md)
-- [API Reference](api.md)
-- [RFC-0001: SLDS v0.1](rfc/RFC-0001.md)
-- [Design Rationale](design/design-rationale.md)
-
-## Testing
-
-```bash
-# Install test dependencies
-luarocks install busted luacov luacheck
-
-# Run tests with coverage
-busted --coverage --pattern=spec
-
-# Lint
-luacheck src/ adapters/ spec/
-
-# Coverage report
-luacov
-```
-
-## License
-
-Apache-2.0. See [LICENSE](LICENSE).
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+Repository [contribution rules](https://github.com/fangfengxiang/lua-slds/blob/main/CONTRIBUTING.md) and [license](https://github.com/fangfengxiang/lua-slds/blob/main/LICENSE) remain available on GitHub.

@@ -63,9 +63,12 @@ nav:
     - Operations Guide: how-to.md
   - Reference:
     - API Reference: api.md
-    - RFC-0001: rfc/RFC-0001.md
+    - RFC-0002 (v0.1.1): rfc/RFC-0002.md
+    - v0.1.1 Migration: migration.md
     - Conformance Tests: rfc/conformance-tests.md
+    - Validation: validation.md
   - Explanation:
+    - Architecture Review (Chinese): report.md
     - Design Rationale: design/design-rationale.md
     - Domain Layer: design/domain-layer.md
     - Ports & Adapters: design/port-adapter.md

@@ -1,0 +1,4 @@
+return {
+    include = { "^src/", "^adapters/" },
+    includeuntestedfiles = { "src", "adapters" },
+}

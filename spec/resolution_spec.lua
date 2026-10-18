@@ -1,128 +1,103 @@
 local Resolution = require("slds.domain.resolution")
 local Identity = require("slds.domain.identity")
 local ShortLink = require("slds.domain.short_link")
+local Lifecycle = require("slds.domain.lifecycle")
 local Errors = require("slds.domain.errors")
 
-describe("Resolution (ResolutionResult)", function()
-    local identity = Identity.new("default", "abc")
+local identity = Identity.new("default", "abc")
+local function link_with(status, expires_at)
+    return assert(ShortLink.new({
+        namespace = identity.namespace, code = identity.code,
+        target = "https://example.com", status = status, expires_at = expires_at,
+    }))
+end
 
-    describe("not_found(identity)", function()
-        it("returns found=false", function()
-            local r = Resolution.not_found(identity)
-            assert.is_false(r.found)
-        end)
-
-        it("includes namespace and code", function()
-            local r = Resolution.not_found(identity)
-            assert.are.equal("default", r.namespace)
-            assert.are.equal("abc", r.code)
-        end)
-
-        it("has nil target", function()
-            local r = Resolution.not_found(identity)
-            assert.is_nil(r.target)
-        end)
-
-        it("has NOT_FOUND status", function()
-            local r = Resolution.not_found(identity)
-            assert.are.equal(Errors.NOT_FOUND, r.status)
-        end)
+describe("Resolution v0.1.1", function()
+    it("returns an independent complete missing result", function()
+        local result = Resolution.not_found(identity)
+        assert.same({ found = false, resolvable = false, namespace = "default", code = "abc",
+            status = Errors.NOT_FOUND }, result)
+        result.code = "changed"
+        assert.equal("abc", identity.code)
+        assert.same(Resolution.not_found(identity), Resolution.resolve(nil, identity, 100))
     end)
 
-    describe("not_resolvable(link, status)", function()
-        local link = ShortLink.new({
-            namespace = "default", code = "abc",
-            target = "https://example.com", status = "DISABLED",
+    it("constructs blocked and resolvable results with explicit boolean flags", function()
+        local link = link_with(Lifecycle.DISABLED, 200)
+        local denied = Resolution.not_resolvable(link, Lifecycle.DISABLED)
+        assert.is_true(denied.found)
+        assert.is_false(denied.resolvable)
+        assert.is_nil(denied.target)
+        assert.equal("DISABLED", denied.status)
+        assert.equal(200, denied.expires_at)
+        local permitted = Resolution.resolvable(link)
+        assert.is_true(permitted.found)
+        assert.is_true(permitted.resolvable)
+        assert.equal("DISABLED", permitted.status)
+        assert.equal("https://example.com", permitted.target)
+        assert.equal(200, permitted.expires_at)
+        permitted.target = "changed"
+        assert.equal("https://example.com", link.target)
+    end)
+
+    it("rejects deleted first even with an override allowing everything", function()
+        local called = false
+        local link = link_with(Lifecycle.DELETED, 50)
+        local result = Resolution.resolve(link, identity, 100, {
+            is_resolvable = function() called = true; return true end,
         })
-
-        it("returns found=true", function()
-            local r = Resolution.not_resolvable(link, Errors.DISABLED)
-            assert.is_true(r.found)
-        end)
-
-        it("has nil target", function()
-            local r = Resolution.not_resolvable(link, Errors.DISABLED)
-            assert.is_nil(r.target)
-        end)
-
-        it("has the passed status", function()
-            local r = Resolution.not_resolvable(link, Errors.DISABLED)
-            assert.are.equal(Errors.DISABLED, r.status)
-        end)
+        assert.is_true(result.found)
+        assert.is_false(result.resolvable)
+        assert.equal(Lifecycle.DELETED, result.status)
+        assert.is_nil(result.target)
+        assert.is_false(called)
+        assert.equal(Lifecycle.DELETED, link.status)
     end)
 
-    describe("resolvable(link)", function()
-        local link = ShortLink.new({
-            namespace = "default", code = "abc",
-            target = "https://example.com", status = "ACTIVE",
-        })
-
-        it("returns found=true", function()
-            local r = Resolution.resolvable(link)
-            assert.is_true(r.found)
-        end)
-
-        it("has the target", function()
-            local r = Resolution.resolvable(link)
-            assert.are.equal("https://example.com", r.target)
-        end)
-
-        it("has ACTIVE status", function()
-            local r = Resolution.resolvable(link)
-            assert.are.equal("ACTIVE", r.status)
-        end)
+    it("applies custom rejection before expiration and keeps the persistent status", function()
+        local link = link_with(Lifecycle.ACTIVE, 50)
+        local result = Resolution.resolve(link, identity, 100, { is_resolvable = function(status)
+            assert.equal(Lifecycle.ACTIVE, status)
+            return false
+        end })
+        assert.is_false(result.resolvable)
+        assert.equal(Lifecycle.ACTIVE, result.status)
+        assert.is_nil(result.target)
+        assert.equal(Lifecycle.DISABLED, Resolution.resolve(link_with(Lifecycle.DISABLED, 50), identity, 100).status)
     end)
 
-    describe("resolve(link, identity, now)", function()
-        it("returns not_found when link is nil", function()
-            local r = Resolution.resolve(nil, identity, 1000)
-            assert.is_false(r.found)
-            assert.are.equal(Errors.NOT_FOUND, r.status)
-        end)
+    it("allows a custom resolvable nonterminal state without rewriting its status", function()
+        local link = link_with(Lifecycle.DISABLED, 200)
+        local result = Resolution.resolve(link, identity, 100, { is_resolvable = function() return true end })
+        assert.is_true(result.resolvable)
+        assert.equal(Lifecycle.DISABLED, result.status)
+        assert.equal(link.target, result.target)
+        assert.equal(Lifecycle.DISABLED, link.status)
+    end)
 
-        it("returns DELETED for deleted link", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "DELETED",
-            })
-            local r = Resolution.resolve(link, identity, 1000)
-            assert.is_true(r.found)
-            assert.are.equal(Errors.DELETED, r.status)
-            assert.is_nil(r.target)
-        end)
+    it("derives EXPIRED at the equal boundary without mutating persistent state", function()
+        assert.equal("EXPIRED", Resolution.EXPIRED)
+        local link = link_with(Lifecycle.ACTIVE, 100)
+        for _, now in ipairs({ 100, 101 }) do
+            local result = Resolution.resolve(link, identity, now)
+            assert.is_true(result.found)
+            assert.is_false(result.resolvable)
+            assert.equal(Resolution.EXPIRED, result.status)
+            assert.is_nil(result.target)
+            assert.equal(100, result.expires_at)
+        end
+        assert.equal(Lifecycle.ACTIVE, link.status)
+        assert.is_true(Resolution.resolve(link, identity, 99).resolvable)
+        assert.is_true(Resolution.resolve(link_with(Lifecycle.ACTIVE), identity, 100).resolvable)
+    end)
+end)
 
-        it("returns DISABLED for disabled link", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "DISABLED",
-            })
-            local r = Resolution.resolve(link, identity, 1000)
-            assert.is_true(r.found)
-            assert.are.equal(Errors.DISABLED, r.status)
-            assert.is_nil(r.target)
-        end)
-
-        it("returns EXPIRED for expired link", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "ACTIVE",
-                expires_at = 500,
-            })
-            local r = Resolution.resolve(link, identity, 1000)
-            assert.is_true(r.found)
-            assert.are.equal(Errors.EXPIRED, r.status)
-            assert.is_nil(r.target)
-        end)
-
-        it("returns resolvable for active non-expired link", function()
-            local link = ShortLink.new({
-                namespace = "default", code = "abc",
-                target = "https://example.com", status = "ACTIVE",
-            })
-            local r = Resolution.resolve(link, identity, 1000)
-            assert.is_true(r.found)
-            assert.are.equal("ACTIVE", r.status)
-            assert.are.equal("https://example.com", r.target)
-        end)
+describe("Resolution rule call boundaries", function()
+    it("rejects invalid direct rule inputs and validates the clock before success", function()
+        local link = link_with(Lifecycle.ACTIVE)
+        assert.has_error(function() Resolution.resolve(link, identity, 100, false) end)
+        assert.has_error(function() Resolution.resolve(link, identity, 100, { is_resolvable = false }) end)
+        assert.has_error(function() Resolution.resolve(link, identity, math.huge) end)
+        assert.equal(Lifecycle.ACTIVE, link.status)
     end)
 end)

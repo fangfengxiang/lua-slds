@@ -2,7 +2,7 @@ local helpers = require("spec.helpers")
 local Identity = require("slds.domain.identity")
 local Errors = require("slds.domain.errors")
 
-describe("Service", function()
+describe("Interactor", function()
     local svc
 
     before_each(function()
@@ -42,10 +42,10 @@ describe("Service", function()
             assert.are.equal(Errors.CONFLICT, err)
         end)
 
-        it("errors on missing target", function()
-            assert.has_error(function()
-                svc:create({}, { code = "abc" })
-            end)
+        it("rejects missing target as INVALID", function()
+            local value, err = svc:create({}, { code = "abc" })
+            assert.is_nil(value)
+            assert.equal(Errors.INVALID, err)
         end)
 
         it("errors on non-table ctx", function()
@@ -117,7 +117,7 @@ describe("Service", function()
             svc:delete({}, Identity.new("default", "abc"))
             local result = svc:resolve({}, Identity.new("default", "abc"))
             assert.is_true(result.found)
-            assert.are.equal(Errors.DELETED, result.status)
+            assert.are.equal("DELETED", result.status)
             assert.is_nil(result.target)
         end)
 
@@ -132,63 +132,30 @@ describe("Service", function()
             svc:delete({}, Identity.new("default", "abc"))
             local ok, err = svc:delete({}, Identity.new("default", "abc"))
             assert.is_nil(ok)
-            assert.are.equal("already deleted", err)
+            assert.are.equal(Errors.INVALID, err)
         end)
     end)
 
-    describe("resolve() — internal error propagation", function()
-        it("returns nil, err when repository has internal error", function()
-            local broken_repo = {
-                get = function(self, ctx, identity)
-                    return nil, "connection refused"
-                end,
-            }
-            local Service = require("slds.service")
-            local svc2 = Service.new({
-                repository = broken_repo,
-                generator  = helpers.mock_generator(),
-                encoder    = helpers.mock_encoder(),
-                clock      = helpers.fake_clock(1000000),
-            })
-            local result, err = svc2:resolve({}, Identity.new("default", "anything"))
-            assert.is_nil(result)
-            assert.are.equal("connection refused", err)
-        end)
-
-        it("returns not-found result for NOT_FOUND error", function()
-            local notfound_repo = {
-                get = function(self, ctx, identity)
-                    return nil, Errors.NOT_FOUND
-                end,
-            }
-            local Service = require("slds.service")
-            local svc2 = Service.new({
-                repository = notfound_repo,
-                generator  = helpers.mock_generator(),
-                encoder    = helpers.mock_encoder(),
-                clock      = helpers.fake_clock(1000000),
-            })
-            local result = svc2:resolve({}, Identity.new("default", "anything"))
-            assert.is_false(result.found)
-            assert.are.equal(Errors.NOT_FOUND, result.status)
-        end)
-
-        it("returns not-found result for nil err (link not found)", function()
-            local silent_repo = {
-                get = function(self, ctx, identity)
-                    return nil, nil
-                end,
-            }
-            local Service = require("slds.service")
-            local svc2 = Service.new({
-                repository = silent_repo,
-                generator  = helpers.mock_generator(),
-                encoder    = helpers.mock_encoder(),
-                clock      = helpers.fake_clock(1000000),
-            })
-            local result = svc2:resolve({}, Identity.new("default", "anything"))
-            assert.is_false(result.found)
-            assert.are.equal(Errors.NOT_FOUND, result.status)
+    describe("resolve() — repository outcomes", function()
+        for _, outcome in ipairs({ Errors.NOT_FOUND, "connection refused" }) do
+            it("distinguishes " .. outcome .. " from other outcomes", function()
+                local another, repo = helpers.fixture()
+                repo.get = function() return nil, outcome end
+                local result, err = another:resolve({}, Identity.new("anything"))
+                if outcome == Errors.NOT_FOUND then
+                    assert.is_nil(err)
+                    assert.is_false(result.found)
+                    assert.is_false(result.resolvable)
+                else
+                    assert.is_nil(result)
+                    assert.equal("connection refused", err)
+                end
+            end)
+        end
+        it("rejects missing error rather than treating it as NOT_FOUND", function()
+            local another, repo = helpers.fixture()
+            repo.get = function() return nil, nil end
+            assert.has_error(function() another:resolve({}, Identity.new("anything")) end)
         end)
     end)
 
@@ -199,8 +166,52 @@ describe("Service", function()
             svc2:create({}, { code = "exp", target = "https://x.com", expires_at = 1000 })
             local result = svc2:resolve({}, Identity.new("default", "exp"))
             assert.is_true(result.found)
-            assert.are.equal(Errors.EXPIRED, result.status)
+            assert.are.equal("EXPIRED", result.status)
             assert.is_nil(result.target)
         end)
     end)
+    for _, operation in ipairs({ "create", "resolve", "update", "delete" }) do
+        it("dispatches general and specific phases around the actual " .. operation, function()
+            local slds = require("slds")
+            local hooks, order, observed, ctx = slds.Hooks.new(), {}, {}, {}
+            local function record(label)
+                return function(received_ctx, point)
+                    order[#order + 1] = label
+                    observed[#observed + 1] = { same_ctx = rawequal(ctx, received_ctx), point = point }
+                end
+            end
+            local before, after = "before_" .. operation, "after_" .. operation
+            hooks:on(slds.HookPoint.AFTER, record("general-after-A"))
+                :on(after, record("specific-after"))
+                :on(before, record("specific-before-A"))
+                :on(slds.HookPoint.BEFORE, record("general-before"))
+                :on(before, record("specific-before-B"))
+                :on(slds.HookPoint.AFTER, record("general-after-B"))
+            local interactor, repo = helpers.fixture({ hooks = hooks })
+            local id = Identity.new("one")
+            if operation ~= "create" then
+                assert(repo:create(ctx, assert(slds.ShortLink.new({
+                    namespace = id.namespace, code = id.code, target = "https://example.com",
+                }))))
+            end
+            local method = operation == "resolve" and "get" or operation
+            local execute = repo[method]
+            repo[method] = function(self, ...)
+                order[#order + 1] = "operation"
+                return execute(self, ...)
+            end
+            if operation == "create" then
+                assert(interactor:create(ctx, { code = "one", target = "https://example.com" }))
+            else
+                assert(interactor[operation](interactor, ctx, id, { target = "https://example.org" }))
+            end
+            assert.same({ "general-before", "specific-before-A", "specific-before-B", "operation",
+                "specific-after", "general-after-A", "general-after-B" }, order)
+            for index, value in ipairs(observed) do
+                assert.is_true(value.same_ctx)
+                assert.equal(index <= 3 and before or after, value.point)
+            end
+        end)
+    end
+
 end)

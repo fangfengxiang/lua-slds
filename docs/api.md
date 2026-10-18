@@ -1,288 +1,160 @@
-# API Reference
+# API Reference · v0.1.1
 
-## Module: `slds`
+## Root module
 
-The main entry point, exported by `require("slds")`.
+`require("slds")` exports:
 
-### Constants
-
-| Constant | Value | Description |
-|----------|-------|-------------|
-| `slds.VERSION` | `"0.1.0"` | Library version |
-| `slds.ACTIVE` | `"ACTIVE"` | Lifecycle status |
-| `slds.DISABLED` | `"DISABLED"` | Lifecycle status |
-| `slds.DELETED` | `"DELETED"` | Lifecycle status (terminal) |
-| `slds.NOT_FOUND` | `"NOT_FOUND"` | Error code |
-| `slds.EXPIRED` | `"EXPIRED"` | Error code |
-| `slds.CONFLICT` | `"CONFLICT"` | Error code |
-| `slds.INVALID` | `"INVALID"` | Error code |
-
-### Exported Modules
-
-| Field | Module |
-|-------|--------|
+| Field | Value / module |
+| --- | --- |
+| `slds.VERSION` | `"0.1.1"` |
+| `slds.new` | Factory equivalent to `Interactor.new` |
+| `slds.Interactor` | `slds.interactor` |
 | `slds.Identity` | `slds.domain.identity` |
 | `slds.ShortLink` | `slds.domain.short_link` |
 | `slds.Lifecycle` | `slds.domain.lifecycle` |
 | `slds.Resolution` | `slds.domain.resolution` |
 | `slds.Errors` | `slds.domain.errors` |
 | `slds.Hooks` | `slds.hooks` |
+| `slds.HookPoint` | `slds.hook_point` |
 
-### `slds.new(opts) -> Service`
+There are no flat status/error aliases, `Service`, or adapter exports. Require adapters explicitly. Factories use dot notation; instance methods use colon notation.
 
-Static factory (dot notation). Creates a new SLDS service instance.
+## Interactor
 
-**Parameters:**
+### `slds.new(opts) -> Interactor`
 
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `opts.repository` | table | yes | Repository port implementation |
-| `opts.generator` | table | yes | Generator port implementation |
-| `opts.encoder` | table | yes | Encoder port implementation |
-| `opts.clock` | function | no | Function returning current timestamp (default: `os.time`) |
-| `opts.hooks` | Hooks | no | Pre-configured Hooks instance (default: new) |
+| Option | Required | Contract |
+| --- | --- | --- |
+| `repository` | yes | Table with create/get/update/delete methods |
+| `code_generator` | no | Table with generate(ctx,input); returns final Code |
+| `lifecycle` | no | Partial table of is_valid/can_transition/is_resolvable functions |
+| `clock` | no | Function returning a finite number; defaults to os.time |
+| `hooks` | no | Hooks-compatible table with before/after; defaults to empty Hooks |
 
-**Returns:** `Service`
+Construction checks method types and fills missing Lifecycle predicates with defaults without mutating the host's table. Supply the same effective Lifecycle functions to the authoritative Repository. ctx must be a table; Core passes the same reference through, without interpreting it.
 
-**Errors:** `error(msg, 2)` if any required port is missing or wrong type (programming error).
+### `interactor:create(ctx,input) -> ShortLink | nil,err`
 
----
+| Input field | Contract |
+| --- | --- |
+| `namespace` | Non-empty string; defaults to `"default"` only when nil |
+| `code` | Optional non-empty string; only nil invokes CodeGenerator |
+| `target` | Non-empty string; rejects javascript:, data: and file: schemes after whitespace/case normalization |
+| `expires_at` | Optional finite number |
+| `metadata` | Optional opaque table, captured as an independent raw-table graph |
+| `status` | Must be omitted; Interactor creates ACTIVE |
 
-## Module: `slds.Identity`
+Core does not fetch or fully parse target URLs. Host URL policy may be stricter. Empty/wrong-type Code returns INVALID without generation. Missing Code without CodeGenerator returns INVALID. Generation receives the original ctx and an independent input snapshot. Generated Code must be a non-empty string; Core does not coerce or retry. Repository enforces uniqueness, including deleted identities.
 
-### `Identity.new(namespace, code) -> Identity`
+### `interactor:resolve(ctx,identity) -> ResolutionResult | nil,err`
 
-Creates an immutable Identity value object.
+Captures identity, reads Repository once, then applies Resolution and the injected clock. Repository NOT_FOUND becomes a normal result with `found=false,resolvable=false,status=NOT_FOUND`; infrastructure errors remain `nil,err`. Resolution never writes storage.
 
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `namespace` | string | yes | Non-empty logical partition |
-| `code` | string | yes | Non-empty short code |
+### `interactor:update(ctx,identity,patch) -> ShortLink | nil,err`
 
-**Errors:** `error(msg, 2)` if namespace or code is empty/missing.
+Captures identity/patch and calls Repository.update directly, without a preliminary get. Only target/status/expires_at are allowed. Unknown keys, including metadata, return INVALID. Namespace/code patches raise a programming error. Missing record returns NOT_FOUND; terminal records, invalid fields, rejected rules or can_update return INVALID. Unspecified fields remain unchanged.
 
-### Metamethods
+`expires_at=nil` means no change. No clearing sentinel is defined; false returns INVALID.
 
-- `__eq` — value equality: two identities are equal if `namespace` and `code` match.
-- `__tostring` — `"namespace/code"` format.
+### `interactor:delete(ctx,identity) -> true | nil,err`
 
----
+Calls Repository.delete without a preliminary get. Logical deletion validates the latest record, target state and transition, then retains the identity. Repeat deletion returns INVALID; missing identity returns NOT_FOUND.
 
-## Module: `slds.ShortLink`
+## Identity
 
-### `ShortLink.new(opts) -> ShortLink | nil, err`
+`Identity.new(namespace,code)` requires two non-empty strings. `Identity.new(code)` uses `Identity.DEFAULT_NAMESPACE`, `"default"`. Shared metatable methods provide value equality and `tostring(identity)` as `namespace:code`.
 
-Creates a ShortLink domain entity.
+Identity is an ordinary table with logical immutability: callers must not rewrite fields. The string representation is for display; it is not a collision-free storage key. Store the tuple unambiguously, including strings containing NUL.
 
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `opts.namespace` | string | yes | Logical partition |
-| `opts.code` | string | yes | Short code |
-| `opts.target` | string | yes | Destination URL (must be safe scheme) |
-| `opts.status` | string | no | Lifecycle status (default: `ACTIVE`) |
-| `opts.expires_at` | number | no | Expiry Unix timestamp |
-| `opts.metadata` | table | no | Opaque metadata (Core MUST NOT interpret) |
+## ShortLink
 
-**Returns:** `ShortLink` or `nil, err` (runtime error if target has dangerous scheme).
+`ShortLink.new(data,lifecycle?) -> ShortLink | nil,INVALID` accepts namespace/code, target, optional status (defaults ACTIVE), expires_at and metadata. Invalid/missing identity fields or a non-table container are programming errors; invalid target/status/expiration/metadata returns INVALID.
 
-**Errors:** `error(msg, 2)` for programming errors (wrong types, missing required fields).
+`link:with_patch(patch,lifecycle?) -> ShortLink | nil,INVALID` creates a new validated entity. Only explicit target/status/expires_at fields are applied; unknown keys are rejected, immutable keys raise an error, and DELETED cannot be updated. Same-status patches do not invoke the transition predicate.
 
-### `ShortLink:is_expired(now) -> boolean`
+`link:is_expired(now) -> boolean` requires finite now and compares `expires_at <= now`.
 
-Returns `true` if `expires_at` is set and `expires_at < now`.
+`link:to_table() -> table` exports plain data with independent metadata. Construction, patch and export copy raw table graphs, retaining cycles/shared children and table keys without transporting or invoking metadata metatables. Non-table leaves retain their original values; host resource internals are not isolated. There is no ShortLink:is_resolvable method; use Resolution.
 
-### `ShortLink:is_resolvable(now) -> boolean`
+## Lifecycle
 
-Returns `true` if status is `ACTIVE` and not expired.
+| Member | Meaning |
+| --- | --- |
+| ACTIVE / DISABLED / DELETED | The only persistent statuses |
+| `is_valid(status)` | Default accepts those three statuses |
+| `can_transition(from,to)` | Default permits ACTIVE↔DISABLED and ACTIVE/DISABLED→DELETED |
+| `is_resolvable(status)` | Default true only for ACTIVE |
 
-### `ShortLink:with_patch(patch) -> ShortLink | nil, err`
+A partial override provides only the predicates being changed; each must be a pure synchronous function. Rules may restrict allowed states/transitions. Custom resolvability may permit DISABLED, but DELETED is never resolvable and expired records remain denied. Unknown persistent statuses and terminal revival cannot be authorized by an override. No STATUSES array or validate_transition helper is exported.
 
-Creates a new ShortLink with updated fields (immutable copy).
+## Resolution
 
-| Patch Field | Allowed |
-|-------------|---------|
-| `target` | yes |
-| `status` | yes (must be valid transition) |
-| `expires_at` | yes |
-| `namespace` | **no** (immutable, RULE-004) |
-| `code` | **no** (immutable, RULE-004) |
+`Resolution.resolve(link,identity,now,lifecycle?) -> ResolutionResult` evaluates, in order: absence → DELETED → lifecycle denial → expiration → success. `Resolution.not_found(identity)` constructs absence; `Resolution.not_resolvable(link,status)` and `Resolution.resolvable(link)` construct result snapshots. The latter helpers construct results only; callers wanting decisions must use resolve.
 
-### `ShortLink:to_table() -> table`
+| Field | Contract |
+| --- | --- |
+| `found` | Whether the identity exists |
+| `resolvable` | Whether the host may resolve it now |
+| `namespace`, `code` | Identity |
+| `target` | Present only when resolvable |
+| `status` | Actual lifecycle status, `Resolution.EXPIRED`, or `Errors.NOT_FOUND` |
+| `expires_at` | Stored optional expiration |
 
-Returns a plain table representation for repository storage.
+Custom rules permitting DISABLED resolution preserve DISABLED in the result. Expiration is derived at `expires_at <= now`, never persisted. ResolutionResult is independent of the entity and has the shared Resolution metatable.
 
----
+## Errors and dependency responses
 
-## Module: `slds.Lifecycle`
+| Error | Expected use |
+| --- | --- |
+| Errors.NOT_FOUND | Missing Repository identity |
+| Errors.CONFLICT | Duplicate create or adapter-declared conditional commit conflict |
+| Errors.INVALID | Invalid business fields, transitions, terminal writes or policy rejection |
 
-### Constants
+Expected failures return `nil,err`, without added prefixes. Infrastructure errors retain their original values. Success returns `result,nil`; delete success must be true. Dependency `nil,nil`, result plus non-nil error, wrong record type or wrong delete success type is a programming error. Unexpected exceptions propagate. Programming errors are not guaranteed AFTER callbacks.
 
-| Constant | Value |
-|----------|-------|
-| `Lifecycle.ACTIVE` | `"ACTIVE"` |
-| `Lifecycle.DISABLED` | `"DISABLED"` |
-| `Lifecycle.DELETED` | `"DELETED"` |
-| `Lifecycle.STATUSES` | `{ "ACTIVE", "DISABLED", "DELETED" }` |
+## Hooks and HookPoint
 
-### `Lifecycle.can_transition(from, to) -> boolean`
+`Hooks.new()` creates an empty registry. `hooks:on(point,fn)` is the only registration API; Interactor only dispatches observers. Complete registration during application startup, before operations begin. Changing registrations while operations are running is unsupported; no freeze/lock API is provided. `hooks:on(point,fn)` appends a callback and returns the registry. Points are BEFORE, AFTER, BEFORE_CREATE/AFTER_CREATE, BEFORE_RESOLVE/AFTER_RESOLVE, BEFORE_UPDATE/AFTER_UPDATE, BEFORE_DELETE/AFTER_DELETE and ON_ERROR. Their values are lower-case strings such as `"before_create"`.
 
-Checks if a state transition is valid.
+Same-point callbacks execute in FIFO registration order; no priorities or sorting are defined. Order: general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER. Each point preserves registration order. BEFORE follows argument-container/identity checks and input capture, preceding generation and business validation. Every normal return, including INVALID/CONFLICT and infrastructure errors, reaches AFTER.
 
-| From | To | Allowed |
-|------|-----|---------|
-| ACTIVE | DISABLED | yes |
-| ACTIVE | DELETED | yes |
-| DISABLED | ACTIVE | yes |
-| DISABLED | DELETED | yes |
-| DELETED | * | **no** (terminal) |
+| Point | Callback |
+| --- | --- |
+| BEFORE_CREATE | fn(ctx,point,input) |
+| BEFORE_RESOLVE / BEFORE_DELETE | fn(ctx,point,identity) |
+| BEFORE_UPDATE | fn(ctx,point,identity,patch) |
+| AFTER_CREATE / AFTER_UPDATE | fn(ctx,point,link,err) |
+| AFTER_RESOLVE | fn(ctx,point,result,err) |
+| AFTER_DELETE | fn(ctx,point,ok,err) |
+| ON_ERROR | fn(ctx,failed_point,hook_err) |
 
-### `Lifecycle.validate_transition(from, to)`
+General observers receive the actual operation point and corresponding arguments. ON_ERROR's second argument is the failed point; its own exceptions are isolated without recursion. Each callback gets independent domain payload snapshots, preserved root domain methods and nil argument positions. ctx is shared, read-only by convention. Callback returns are ignored; pcall isolates exceptions, not latency, mutation of ctx or event durability.
 
-Throws `error(msg, 2)` if the transition is invalid.
+Dispatcher methods `hooks:before(ctx,specific_before_point,...)` and `hooks:after(ctx,specific_after_point,...)` reject incorrect points. Hosts normally register observers and let Interactor dispatch.
 
-### `Lifecycle.is_resolvable(status) -> boolean`
+## Core ports
 
-Returns `true` only for `ACTIVE`.
+`require("slds.ports.repository")` and `require("slds.ports.code_generator")` document interfaces; their stub methods raise errors. Implementations use duck typing, with no inheritance requirement.
 
----
+| Method | Success / failure |
+| --- | --- |
+| repository:create(ctx,link) | Independent ShortLink / nil,err; atomic identity uniqueness |
+| repository:get(ctx,identity) | Independent ShortLink / nil,NOT_FOUND or infrastructure error |
+| repository:update(ctx,identity,patch) | Updated independent ShortLink / nil,err; latest-state atomic validation/commit |
+| repository:delete(ctx,identity) | true / nil,err; terminal logical deletion |
+| code_generator:generate(ctx,input) | Final non-empty string / nil,err |
 
-## Module: `slds.Resolution`
+Repository updates validate a complete candidate using the raw sparse patch before calling an optional `can_update(current,patch)`. This authoritative pure, synchronous, non-yielding boolean predicate is injected only into the Repository. False returns INVALID; exception or non-boolean is a programming error and must leave storage unchanged. Its arguments must not affect committed data if mutated. Delete uses the same full entity/transition validation, without calling can_update. Atomicity must be implemented by the actual storage adapter, not by a Core pre-read.
 
-### `Resolution.resolve(link, identity, now) -> ResolutionResult`
+## Bundled adapters
 
-Applies domain resolution semantics to a ShortLink.
+| Module / constructor | Scope |
+| --- | --- |
+| `slds.adapters.inmemory.repository.new({lifecycle?,can_update?})` | Nested namespace/code map; independent snapshots; atomic non-yielding methods within one Lua VM |
+| `slds.adapters.composed.code_generator.new({generator,encoders?})` | Inner generate(ctx), then ordered encoder:encode(previous); final Code validation |
+| `slds.adapters.sequential.generator.new(start?)` | Exact integer start in [0,9007199254740991], default 1 only for nil; uniqueness only within that instance |
+| `slds.adapters.base62.encoder.new()` | Pure deterministic alphabet 0–9,A–Z,a–z; exact integers in [0,9007199254740991] |
 
-**Logic:**
+Composed captures a dense encoder array at construction; holes/non-encoder entries are programming errors. Empty arrays are valid when the inner generator already returns Code. Intermediate values are opaque; only nil means failure. First failure stops the pipeline and passes its error unchanged. Nil,nil or value+error is a programming error. Final empty/non-string output returns INVALID. The input argument is unused by this reference adapter.
 
-1. If link is nil → `not_found(identity)`
-2. If status is DELETED → found=true, status=DELETED, target=nil
-3. If status is DISABLED → found=true, status=DISABLED, target=nil
-4. If expired → found=true, status=EXPIRED, target=nil
-5. If ACTIVE and not expired → found=true, status=ACTIVE, target=link.target
-
-### `Resolution.not_found(identity) -> ResolutionResult`
-
-Creates a "not found" result.
-
-### ResolutionResult Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `found` | boolean | Identity exists in repository |
-| `namespace` | string | Identity namespace |
-| `code` | string | Identity code |
-| `target` | string\|nil | Destination URL (only if resolvable) |
-| `status` | string | ACTIVE / DISABLED / DELETED / EXPIRED |
-| `expires_at` | number\|nil | Expiry timestamp |
-
----
-
-## Module: `slds.domain.errors`
-
-### Error Codes
-
-| Constant | Value | When |
-|----------|-------|------|
-| `NOT_FOUND` | `"NOT_FOUND"` | Identity not in repository |
-| `EXPIRED` | `"EXPIRED"` | Link expired at resolution time |
-| `DISABLED` | `"DISABLED"` | Link disabled |
-| `DELETED` | `"DELETED"` | Link deleted |
-| `CONFLICT` | `"CONFLICT"` | Code already exists on create |
-| `INVALID` | `"INVALID"` | Invalid input (bad target, bad status) |
-
----
-
-## Module: `slds.Hooks`
-
-### `Hooks.new() -> Hooks`
-
-Creates a new hooks registry.
-
-### `Hooks:use(hook) -> Hooks`
-
-Registers a hook table. Chainable.
-
-Hook table callbacks (all optional):
-
-```lua
-{
-    before_create  = function(ctx, input) end,
-    after_create   = function(ctx, link) end,
-    before_resolve = function(ctx, identity) end,
-    after_resolve  = function(ctx, result) end,
-    before_update  = function(ctx, identity, patch) end,
-    after_update   = function(ctx, link) end,
-    before_delete  = function(ctx, identity) end,
-    after_delete   = function(ctx) end,
-    on_error       = function(ctx, err, callback_name) end,
-}
-```
-
-Hooks are isolated via `pcall`. A failing hook triggers `on_error` callbacks but never blocks the operation (RULE-007, RULE-008).
-
----
-
-## Port: `slds.ports.repository`
-
-Interface contract. Direct use throws `error()`.
-
-### `repository:create(ctx, link) -> link, err`
-
-Create a new short link. MUST enforce code uniqueness atomically (RULE-005).
-
-### `repository:get(ctx, identity) -> link, err`
-
-Retrieve a short link by identity.
-
-### `repository:update(ctx, identity, patch) -> link, err`
-
-Apply a patch to an existing short link.
-
-### `repository:delete(ctx, identity) -> boolean, err`
-
-Logical delete (set status to DELETED). Deleted codes MUST NOT be reused (RULE-006).
-
----
-
-## Port: `slds.ports.generator`
-
-### `generator:generate(ctx) -> id, err`
-
-Produce an internal unique identifier. This is **not** the short code — the Encoder transforms it.
-
----
-
-## Port: `slds.ports.encoder`
-
-### `encoder:encode(id) -> code`
-
-Pure transformation from internal ID to short code string. No I/O, no side effects, deterministic.
-
----
-
-## Bundled Adapters
-
-### `slds.adapters.inmemory.repository`
-
-In-memory Repository for development and testing.
-
-```lua
-local repo = require("slds.adapters.inmemory.repository").new()
-```
-
-### `slds.adapters.sequential.generator`
-
-Sequential counter generator.
-
-```lua
-local gen = require("slds.adapters.sequential.generator").new(1)  -- start at 1
-```
-
-### `slds.adapters.base62.encoder`
-
-Base62 encoder (0-9, A-Z, a-z).
-
-```lua
-local enc = require("slds.adapters.base62.encoder").new()
-print(enc:encode(12345))  -- "3d7"
-```
+Sequential returns the maximum once, then persistently returns `nil,"generator exhausted"`. Invalid starts or unsupported Base62 inputs raise errors. Base62's range does not support full uint64; do not use tonumber to coerce large string IDs. External generators/encoders must agree on representation and range; Repository remains the uniqueness authority. No external Redis/Postgres/cache adapter is bundled.

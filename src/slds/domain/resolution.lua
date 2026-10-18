@@ -1,87 +1,66 @@
--- resolution.lua — ResolutionResult struct + resolution logic
--- 解析结果结构体，ResolutionResult = { found, namespace, code, target, status, expires_at }
--- 解析是一级领域操作，不是 Repository.get() 别名。
-
+-- Pure resolution decisions; no persistence writes or target requests.
 local errors = require("slds.domain.errors")
 local lifecycle = require("slds.domain.lifecycle")
 
-local _M = {}
-_M.__index = _M
+local Resolution = { EXPIRED = "EXPIRED" }
+Resolution.__index = Resolution
 
---- Create a "not found" result.
--- 创建未找到结果。
--- @param identity Identity
--- @return ResolutionResult
-function _M.not_found(identity)
+function Resolution.not_found(identity)
     return setmetatable({
-        found      = false,
-        namespace  = identity.namespace,
-        code       = identity.code,
-        target     = nil,
-        status     = errors.NOT_FOUND,
+        found = false,
+        resolvable = false,
+        namespace = identity.namespace,
+        code = identity.code,
+        target = nil,
+        status = errors.NOT_FOUND,
         expires_at = nil,
-    }, _M)
+    }, Resolution)
 end
 
---- Create a "found but not resolvable" result.
--- 创建找到但不可解析结果。
--- @param link ShortLink
--- @param effective_status string (DISABLED, DELETED, or EXPIRED)
--- @return ResolutionResult
-function _M.not_resolvable(link, effective_status)
+function Resolution.not_resolvable(link, effective_status)
     return setmetatable({
-        found      = true,
-        namespace  = link.namespace,
-        code       = link.code,
-        target     = nil,
-        status     = effective_status,
+        found = true,
+        resolvable = false,
+        namespace = link.namespace,
+        code = link.code,
+        target = nil,
+        status = effective_status,
         expires_at = link.expires_at,
-    }, _M)
+    }, Resolution)
 end
 
---- Create a "resolvable" result.
--- 创建可解析结果。
--- @param link ShortLink
--- @return ResolutionResult
-function _M.resolvable(link)
+function Resolution.resolvable(link)
     return setmetatable({
-        found      = true,
-        namespace  = link.namespace,
-        code       = link.code,
-        target     = link.target,
-        status     = lifecycle.ACTIVE,
+        found = true,
+        resolvable = true,
+        namespace = link.namespace,
+        code = link.code,
+        target = link.target,
+        status = link.status,
         expires_at = link.expires_at,
-    }, _M)
+    }, Resolution)
 end
 
---- Resolve an identity against a link, applying domain logic.
--- 解析身份，应用领域逻辑（状态、过期检查）。
--- @param link ShortLink|nil
--- @param identity Identity
--- @param now number current timestamp
--- @return ResolutionResult
-function _M.resolve(link, identity, now)
-    if not link then
-        return _M.not_found(identity)
-    end
-
-    -- 检查 DELETED 状态（终端态，不可解析）
+function Resolution.resolve(link, identity, now, rules)
+    if not link then return Resolution.not_found(identity) end
     if link.status == lifecycle.DELETED then
-        return _M.not_resolvable(link, errors.DELETED)
+        return Resolution.not_resolvable(link, lifecycle.DELETED)
     end
-
-    -- 检查 DISABLED 状态
-    if link.status == lifecycle.DISABLED then
-        return _M.not_resolvable(link, errors.DISABLED)
+    if rules ~= nil and type(rules) ~= "table" then
+        error("resolution: lifecycle must be a table", 2)
     end
-
-    -- 检查过期（派生态，非持久状态）
+    local is_resolvable = rules and rules.is_resolvable
+    if is_resolvable == nil then is_resolvable = lifecycle.is_resolvable end
+    if type(is_resolvable) ~= "function" then
+        error("resolution: lifecycle.is_resolvable must be a function", 2)
+    end
+    if is_resolvable(link.status) ~= true then
+        return Resolution.not_resolvable(link, link.status)
+    end
     if link:is_expired(now) then
-        return _M.not_resolvable(link, errors.EXPIRED)
+        return Resolution.not_resolvable(link, Resolution.EXPIRED)
     end
-
-    -- ACTIVE 且未过期 → 可解析
-    return _M.resolvable(link)
+    return Resolution.resolvable(link)
 end
 
-return _M
+return Resolution
