@@ -1,18 +1,32 @@
--- hooks.lua — Hooks extension mechanism
--- 钩子扩展机制，Hook registration and dispatch with error isolation.
--- Hook 失败不能阻断主操作（RULE-007, RULE-008）。
-
-local _M = {}
-_M.__index = _M
-
+-- Ordered synchronous observers. Each callback receives its own payload snapshot.
+local HookPoint = require("slds.hook_point")
 local snapshot = require("slds.internal.snapshot")
 local Identity = require("slds.domain.identity")
 local ShortLink = require("slds.domain.short_link")
 local Resolution = require("slds.domain.resolution")
 local unpack_args = unpack or rawget(table, "unpack")
 
-local function copy_argument(value)
-    local copied = snapshot(value)
+local _M = {}
+_M.__index = _M
+
+local valid_points = {}
+for _, point in pairs(HookPoint) do valid_points[point] = true end
+
+local before_points = {
+    [HookPoint.BEFORE_CREATE] = true,
+    [HookPoint.BEFORE_RESOLVE] = true,
+    [HookPoint.BEFORE_UPDATE] = true,
+    [HookPoint.BEFORE_DELETE] = true,
+}
+local after_points = {
+    [HookPoint.AFTER_CREATE] = true,
+    [HookPoint.AFTER_RESOLVE] = true,
+    [HookPoint.AFTER_UPDATE] = true,
+    [HookPoint.AFTER_DELETE] = true,
+}
+
+local function copy_argument(value, seen)
+    local copied = snapshot(value, seen)
     local class = getmetatable(value)
     if class == Identity or class == ShortLink or class == Resolution then
         setmetatable(copied, class)
@@ -20,74 +34,60 @@ local function copy_argument(value)
     return copied
 end
 
---- Create a new hooks registry.
--- 创建钩子注册表。
--- @return Hooks
-function _M.new()
-    return setmetatable({
-        hooks = {},
-    }, _M)
+local function dispatch(self, registered_point, ctx, actual_point, ...)
+    local handlers = self.handlers[registered_point]
+    if not handlers then return end
+    local count = select("#", ...)
+    for index = 1, #handlers do
+        local args, seen = {}, {}
+        for argument = 1, count do
+            args[argument] = copy_argument(select(argument, ...), seen)
+        end
+        local ok, err = pcall(handlers[index], ctx, actual_point, unpack_args(args, 1, count))
+        if not ok and registered_point ~= HookPoint.ON_ERROR then
+            dispatch(self, HookPoint.ON_ERROR, ctx, actual_point, err)
+        end
+    end
 end
 
---- Register a hook.
--- 注册钩子，按注册顺序调用。
--- @param hook table with optional before_*/after_*/on_error callbacks
--- @return Hooks (chainable)
-function _M:use(hook)
-    if type(hook) ~= "table" then
-        error("hooks: hook must be a table", 2)
+--- Construct an empty registry using the shared Hooks class.
+function _M.new()
+    return setmetatable({ handlers = {} }, _M)
+end
+
+--- Append a callback to one documented point. Returns the registry for chaining.
+function _M:on(point, fn)
+    if not valid_points[point] then
+        error("hooks: point must be a HookPoint value", 2)
     end
-    table.insert(self.hooks, hook)
+    if type(fn) ~= "function" then
+        error("hooks: callback must be a function", 2)
+    end
+    local handlers = self.handlers[point]
+    if not handlers then
+        handlers = {}
+        self.handlers[point] = handlers
+    end
+    handlers[#handlers + 1] = fn
     return self
 end
 
---- Fire before_* callbacks for an event.
--- 触发 before 回调，pcall 隔离错误。
--- @param event string e.g. "before_create"
--- @param ctx table context
--- @param ... additional args
-function _M:fire_before(event, ctx, ...)
-    self:_fire("before_" .. event, ctx, ...)
-end
-
---- Fire after_* callbacks for an event.
--- 触发 after 回调，pcall 隔离错误。
--- @param event string e.g. "after_create"
--- @param ctx table context
--- @param ... additional args
-function _M:fire_after(event, ctx, ...)
-    self:_fire("after_" .. event, ctx, ...)
-end
-
---- Internal fire method — iterates hooks in order, pcall isolates each.
--- 内部触发方法——按序遍历钩子，每个用 pcall 隔离。
-function _M:_fire(callback_name, ctx, ...)
-    for _, hook in ipairs(self.hooks) do
-        local fn = hook[callback_name]
-        if type(fn) == "function" then
-            local args = {}
-            local count = select("#", ...)
-            for index = 1, count do
-                args[index] = copy_argument(select(index, ...))
-            end
-            local ok, err = pcall(fn, ctx, unpack_args(args, 1, count))
-            if not ok then
-                -- 尝试触发 on_error 回调（本身也隔离）
-                self:_fire_error(ctx, err, callback_name)
-            end
-        end
+--- Observe a specific BEFORE point, with general BEFORE observers first.
+function _M:before(ctx, point, ...)
+    if not before_points[point] then
+        error("hooks: before requires a specific BEFORE HookPoint", 2)
     end
+    dispatch(self, HookPoint.BEFORE, ctx, point, ...)
+    dispatch(self, point, ctx, point, ...)
 end
 
---- Fire on_error callback, isolated with pcall (double isolation).
--- 触发错误回调，双重 pcall 隔离。
-function _M:_fire_error(ctx, err, callback_name)
-    for _, hook in ipairs(self.hooks) do
-        local fn = hook.on_error
-        if type(fn) == "function" then
-            pcall(fn, ctx, err, callback_name)
-        end
+--- Observe a specific AFTER point, with general AFTER observers last.
+function _M:after(ctx, point, ...)
+    if not after_points[point] then
+        error("hooks: after requires a specific AFTER HookPoint", 2)
     end
+    dispatch(self, point, ctx, point, ...)
+    dispatch(self, HookPoint.AFTER, ctx, point, ...)
 end
 
 return _M

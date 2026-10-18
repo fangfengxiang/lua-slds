@@ -54,11 +54,11 @@ describe("Conformance L3 — Extensions", function()
             local svc = make_fixture()
             local fired = {}
             svc:use({
-                before_create = function(ctx, input)
-                    table.insert(fired, "before_create")
+                before_create = function(ctx, point, input)
+                    table.insert(fired, point)
                 end,
-                after_create = function(ctx, link)
-                    table.insert(fired, "after_create")
+                after_create = function(ctx, point, link)
+                    table.insert(fired, point)
                 end,
             })
             svc:create({}, { code = "hooked", target = "https://x.com" })
@@ -70,11 +70,11 @@ describe("Conformance L3 — Extensions", function()
             local fired = {}
             svc:create({}, { code = "hooked", target = "https://x.com" })
             svc:use({
-                before_resolve = function(ctx, identity)
-                    table.insert(fired, "before_resolve")
+                before_resolve = function(ctx, point, identity)
+                    table.insert(fired, point)
                 end,
-                after_resolve = function(ctx, result)
-                    table.insert(fired, "after_resolve")
+                after_resolve = function(ctx, point, result)
+                    table.insert(fired, point)
                 end,
             })
             svc:resolve({}, Identity.new("default", "hooked"))
@@ -86,11 +86,11 @@ describe("Conformance L3 — Extensions", function()
             local fired = {}
             svc:create({}, { code = "hooked", target = "https://x.com" })
             svc:use({
-                before_update = function(ctx, identity, patch)
-                    table.insert(fired, "before_update")
+                before_update = function(ctx, point, identity, patch)
+                    table.insert(fired, point)
                 end,
-                after_update = function(ctx, link)
-                    table.insert(fired, "after_update")
+                after_update = function(ctx, point, link)
+                    table.insert(fired, point)
                 end,
             })
             svc:update({}, Identity.new("default", "hooked"), { target = "https://y.com" })
@@ -102,11 +102,11 @@ describe("Conformance L3 — Extensions", function()
             local fired = {}
             svc:create({}, { code = "hooked", target = "https://x.com" })
             svc:use({
-                before_delete = function(ctx, identity)
-                    table.insert(fired, "before_delete")
+                before_delete = function(ctx, point, identity)
+                    table.insert(fired, point)
                 end,
-                after_delete = function(ctx)
-                    table.insert(fired, "after_delete")
+                after_delete = function(ctx, point, ok, err)
+                    table.insert(fired, point)
                 end,
             })
             svc:delete({}, Identity.new("default", "hooked"))
@@ -149,10 +149,10 @@ describe("Conformance L3 — Extensions", function()
                 end
             end
             local generate = gen.generate
-            gen.generate = function(self, received)
+            gen.generate = function(self, received, input)
                 assert.is_true(rawequal(ctx, received))
                 called.generate = true
-                return generate(self, received)
+                return generate(self, received, input)
             end
             local link = assert(svc:create(ctx, { target = "https://x.com" }))
             local id = Identity.new(link.namespace, link.code)
@@ -211,7 +211,7 @@ describe("Conformance L3 — Extensions", function()
             svc:delete({}, Identity.new("default", "cache2"))
             -- Second resolve must reflect DELETED, not stale ACTIVE
             local r2 = svc:resolve({}, Identity.new("default", "cache2"))
-            assert.are.equal(Errors.DELETED, r2.status)
+            assert.are.equal("DELETED", r2.status)
             assert.is_nil(r2.target)
         end)
 
@@ -225,7 +225,7 @@ describe("Conformance L3 — Extensions", function()
             svc:update({}, Identity.new("default", "cache3"), { status = "DISABLED" })
             -- Second resolve must reflect DISABLED, not stale ACTIVE
             local r2 = svc:resolve({}, Identity.new("default", "cache3"))
-            assert.are.equal(Errors.DISABLED, r2.status)
+            assert.are.equal("DISABLED", r2.status)
             assert.is_nil(r2.target)
         end)
     end)
@@ -235,12 +235,8 @@ describe("Conformance L3 — Extensions", function()
         -- Repository internal errors (non-NOT_FOUND) should propagate to caller
         it("resolve returns nil, err when repository has internal error", function()
             -- 构造一个会返回内部错误的 mock repository
-            local broken_repo = {
-                get = function(self, ctx, identity)
-                    return nil, "connection refused"
-                end,
-            }
-            local svc = make_fixture({ repository = broken_repo })
+            local svc, broken_repo = make_fixture()
+            broken_repo.get = function() return nil, "connection refused" end
             local result, err = svc:resolve({}, Identity.new("default", "anything"))
             assert.is_nil(result)
             assert.are.equal("connection refused", err)

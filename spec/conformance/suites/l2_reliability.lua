@@ -54,7 +54,7 @@ describe("Conformance L2 — Reliability", function()
             -- Multiple resolves should all return DELETED
             for _ = 1, 5 do
                 local r = svc:resolve({}, Identity.new("default", "abc"))
-                assert.are.equal(Errors.DELETED, r.status)
+                assert.are.equal("DELETED", r.status)
             end
         end)
     end)
@@ -119,7 +119,7 @@ describe("Conformance L2 — Deterministic interleaving", function()
             end
             local updated, err = svc:update({}, id, patch)
             assert.is_nil(updated)
-            assert.equal(Errors.DELETED, err)
+            assert.equal(Errors.INVALID, err)
             local stored = assert(repo:get({}, id))
             assert.equal("DELETED", stored.status)
             assert.equal("https://old.com", stored.target)
@@ -148,8 +148,8 @@ describe("Conformance L2 — Port boundaries", function()
         assert(repo:delete({}, id))
         local value, err = repo:update({}, id, { status = "ACTIVE" })
         assert.is_nil(value)
-        assert.equal(Errors.DELETED, err)
-        assert.equal(Errors.DELETED, svc:resolve({}, id).status)
+        assert.equal(Errors.INVALID, err)
+        assert.equal("DELETED", svc:resolve({}, id).status)
     end)
 end)
 end

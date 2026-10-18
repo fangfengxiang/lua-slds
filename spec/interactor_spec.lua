@@ -2,7 +2,7 @@ local helpers = require("spec.helpers")
 local Identity = require("slds.domain.identity")
 local Errors = require("slds.domain.errors")
 
-describe("Service", function()
+describe("Interactor", function()
     local svc
 
     before_each(function()
@@ -42,10 +42,10 @@ describe("Service", function()
             assert.are.equal(Errors.CONFLICT, err)
         end)
 
-        it("errors on missing target", function()
-            assert.has_error(function()
-                svc:create({}, { code = "abc" })
-            end)
+        it("rejects missing target as INVALID", function()
+            local value, err = svc:create({}, { code = "abc" })
+            assert.is_nil(value)
+            assert.equal(Errors.INVALID, err)
         end)
 
         it("errors on non-table ctx", function()
@@ -117,7 +117,7 @@ describe("Service", function()
             svc:delete({}, Identity.new("default", "abc"))
             local result = svc:resolve({}, Identity.new("default", "abc"))
             assert.is_true(result.found)
-            assert.are.equal(Errors.DELETED, result.status)
+            assert.are.equal("DELETED", result.status)
             assert.is_nil(result.target)
         end)
 
@@ -132,63 +132,30 @@ describe("Service", function()
             svc:delete({}, Identity.new("default", "abc"))
             local ok, err = svc:delete({}, Identity.new("default", "abc"))
             assert.is_nil(ok)
-            assert.are.equal("already deleted", err)
+            assert.are.equal(Errors.INVALID, err)
         end)
     end)
 
-    describe("resolve() — internal error propagation", function()
-        it("returns nil, err when repository has internal error", function()
-            local broken_repo = {
-                get = function(self, ctx, identity)
-                    return nil, "connection refused"
-                end,
-            }
-            local Service = require("slds.service")
-            local svc2 = Service.new({
-                repository = broken_repo,
-                generator  = helpers.mock_generator(),
-                encoder    = helpers.mock_encoder(),
-                clock      = helpers.fake_clock(1000000),
-            })
-            local result, err = svc2:resolve({}, Identity.new("default", "anything"))
-            assert.is_nil(result)
-            assert.are.equal("connection refused", err)
-        end)
-
-        it("returns not-found result for NOT_FOUND error", function()
-            local notfound_repo = {
-                get = function(self, ctx, identity)
-                    return nil, Errors.NOT_FOUND
-                end,
-            }
-            local Service = require("slds.service")
-            local svc2 = Service.new({
-                repository = notfound_repo,
-                generator  = helpers.mock_generator(),
-                encoder    = helpers.mock_encoder(),
-                clock      = helpers.fake_clock(1000000),
-            })
-            local result = svc2:resolve({}, Identity.new("default", "anything"))
-            assert.is_false(result.found)
-            assert.are.equal(Errors.NOT_FOUND, result.status)
-        end)
-
-        it("returns not-found result for nil err (link not found)", function()
-            local silent_repo = {
-                get = function(self, ctx, identity)
-                    return nil, nil
-                end,
-            }
-            local Service = require("slds.service")
-            local svc2 = Service.new({
-                repository = silent_repo,
-                generator  = helpers.mock_generator(),
-                encoder    = helpers.mock_encoder(),
-                clock      = helpers.fake_clock(1000000),
-            })
-            local result = svc2:resolve({}, Identity.new("default", "anything"))
-            assert.is_false(result.found)
-            assert.are.equal(Errors.NOT_FOUND, result.status)
+    describe("resolve() — repository outcomes", function()
+        for _, outcome in ipairs({ Errors.NOT_FOUND, "connection refused" }) do
+            it("distinguishes " .. outcome .. " from other outcomes", function()
+                local another, repo = helpers.fixture()
+                repo.get = function() return nil, outcome end
+                local result, err = another:resolve({}, Identity.new("anything"))
+                if outcome == Errors.NOT_FOUND then
+                    assert.is_nil(err)
+                    assert.is_false(result.found)
+                    assert.is_false(result.resolvable)
+                else
+                    assert.is_nil(result)
+                    assert.equal("connection refused", err)
+                end
+            end)
+        end
+        it("rejects missing error rather than treating it as NOT_FOUND", function()
+            local another, repo = helpers.fixture()
+            repo.get = function() return nil, nil end
+            assert.has_error(function() another:resolve({}, Identity.new("anything")) end)
         end)
     end)
 
@@ -199,7 +166,7 @@ describe("Service", function()
             svc2:create({}, { code = "exp", target = "https://x.com", expires_at = 1000 })
             local result = svc2:resolve({}, Identity.new("default", "exp"))
             assert.is_true(result.found)
-            assert.are.equal(Errors.EXPIRED, result.status)
+            assert.are.equal("EXPIRED", result.status)
             assert.is_nil(result.target)
         end)
     end)

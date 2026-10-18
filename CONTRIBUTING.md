@@ -100,16 +100,18 @@ end
 
 ### Dependency Constraints
 
-**Core (`src/slds/domain/`)** — zero external dependencies:
+**Core (`src/slds/`)** — zero external runtime dependencies:
 - No `ngx`, `redis`, `mysql`, `cjson`
 - Only pure Lua stdlib: `string`, `table`, `math`, `os`, `pairs`, `ipairs`, `setmetatable`, `error`, `type`
 
 **Ports (`src/slds/ports/`)** — interface definitions only:
-- No implementation, no dependencies
+- Repository and optional CodeGenerator only; no concrete infrastructure implementation
 
 **Adapters (`adapters/`)** — MAY use infrastructure:
 - `resty.redis`, `resty.mysql`, `ngx.shared.dict`, etc.
 - But MUST NOT be imported by Core
+- Generator/Encoder are adapter components; their numeric domains do not belong in generic Core ports
+- Register every new production module in the rockspec
 
 ## Testing
 
@@ -122,7 +124,7 @@ spec/
 |-- short_link_spec.lua
 |-- lifecycle_spec.lua
 |-- resolution_spec.lua
-|-- service_spec.lua
+|-- interactor_spec.lua
 |-- hooks_spec.lua
 `-- conformance/             # L0-L3 Conformance Suite
     |-- l0_core_spec.lua
@@ -132,6 +134,8 @@ spec/
 ```
 
 ### Writing Tests
+
+For behavior changes, first establish a meaningful failing assertion, then implement. Preserve success, failure, boundary and invariant checks. Hook callbacks run under pcall: collect observations inside callbacks and assert after the operation, so a swallowed assertion cannot create a false pass.
 
 Tests use busted BDD style:
 
@@ -157,7 +161,7 @@ Conformance tests use the real bundled adapters. For a custom adapter, register 
 
 ## Pull Request Process
 
-1. **Create a branch**: `git checkout -b feature/your-feature`
+1. **Create a branch**: `git checkout -b codex/your-feature`
 2. **Write code**: Follow the code style above
 3. **Write tests**: Add or update tests in `spec/`
 4. **Verify locally**:
@@ -168,10 +172,10 @@ Conformance tests use the real bundled adapters. For a custom adapter, register 
    Both must pass with zero warnings/errors.
 5. **Commit**: Use clear commit messages
    ```
-   feat: add snowflake generator adapter
+   feat: add a compatible code generator adapter
    fix: resolve conflict on custom code creation
    docs: update API reference for Resolution
-   test: add L2 concurrency conformance tests
+   test: cover authoritative sparse-write interleavings
    ```
 6. **Push and open PR**: Reference any related issues
 
@@ -196,7 +200,7 @@ SLDS is a specification, not just a library. Changes to the specification follow
 4. Archive the proposal
 5. Update RFC if needed
 
-See `openspec/` for existing proposals and the `openspec` skill for tooling.
+The repository currently ignores `openspec/`; local specifications/proposals are not automatically part of a commit. Keep tracked RFC/API/migration documentation aligned and state that limitation. Current contracts are in [RFC-0002](docs/rfc/RFC-0002.md), with [v0.2 migration notes](docs/migration-v0.2.md).
 
 ## Questions?
 

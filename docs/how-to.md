@@ -1,268 +1,114 @@
-# Operations Guide
+# Operations guide · v0.2
 
-This guide covers production patterns, custom adapters, and operational considerations when using SLDS.
+## Supply a direct CodeGenerator
 
-## Writing a Custom Repository Adapter
-
-The Repository port defines four methods. Any implementation must satisfy the contract:
+Implement one method returning final Code. Use this when the host already has its own identifier service or code algorithm:
 
 ```lua
-local _M = {}
-_M.__index = _M
-
-function _M.new()
-    return setmetatable({}, _M)
-end
-
-function _M:create(ctx, link)
-    -- MUST enforce uniqueness atomically (RULE-005)
-    -- Return: link, nil on success | nil, err on conflict
-end
-
-function _M:get(ctx, identity)
-    -- Return: ShortLink, nil on found | nil, Errors.NOT_FOUND on miss
-end
-
-function _M:update(ctx, identity, patch)
-    -- Atomically validate and apply supplied fields to the latest record
-    -- Preserve unspecified fields; reject DELETED; never partially commit
-    -- Return: updated ShortLink | nil, err
-end
-
-function _M:delete(ctx, identity)
-    -- Logical delete: set status = DELETED (RULE-006)
-    -- Return: true, nil | nil, Errors.NOT_FOUND
-end
-
-return _M
-```
-
-### Redis Integration Considerations
-
-SLDS does not ship a Redis adapter. A host implementation needs an unambiguous encoding of the namespace/code tuple, a serializer for its supported metadata values, connection/error handling, and atomic write operations. Concatenating arbitrary identity fields with a delimiter can collide. A Lua table cannot be passed directly as a Redis value, and a `SETNX` result of `0` means conflict even though `0` is truthy in Lua.
-
-Use transactions or an equivalent server-side commit mechanism for sparse updates against the latest record. Do not implement an update as an unprotected get/modify/set sequence. Retain a tombstone after deletion so the identity remains reserved; expiring the uniqueness key would violate RULE-006.
-
-**Key rules for adapter implementations:**
-
-1. Code uniqueness MUST be atomic (use `SETNX`, `INSERT ... ON CONFLICT`, etc.)
-2. Delete is logical (set status = DELETED), not physical removal
-3. Deleted codes MUST NOT be reusable (keep the record, reject re-creation)
-4. Repository MAY use `ctx` for tenant-aware queries
-5. Updates validate domain transitions and values atomically against the latest record; failures leave it unchanged
-6. Input, returned and exported metadata table snapshots must not alias stored state
-
-## Writing a Custom Generator
-
-```lua
--- Snowflake-style generator
-local _M = {}
-_M.__index = _M
-
-function _M.new(worker_id)
-    return setmetatable({
-        worker_id = worker_id or 1,
-        sequence = 0,
-        last_ts = 0,
-    }, _M)
-end
-
-function _M:generate(ctx)
-    -- Implement snowflake logic here
-    -- Return: id (number or string), nil
-end
-
-return _M
-```
-
-The Generator produces an **internal ID**, not the short code. Declare its uniqueness scope and pair it with an Encoder that accepts its ID representation and range. The bundled Base62 accepts only integers in [0, 2^53-1]; a 64-bit or string Snowflake implementation needs a compatible encoder and must not coerce IDs to inexact Lua numbers.
-
-## Writing a Custom Encoder
-
-```lua
--- Pass through IDs from a generator that already emits unique URL-safe strings.
-local _M = {}
-_M.__index = _M
-
-function _M:encode(id)
-    if type(id) ~= "string" or not id:match("^[A-Za-z0-9_-]+$") then
-        error("encoder: expected a non-empty URL-safe string ID", 2)
-    end
-    return id
-end
-
-return _M
-```
-
-The Encoder MUST be a pure transformation:
-
-- No I/O (no database, no network, no `ngx`)
-- No side effects
-- Deterministic (same input always produces same output)
-- A non-empty URL-safe string output for the supported ID domain
-
-If an encoder can map different IDs to the same code, Repository still enforces uniqueness and returns CONFLICT. The host decides whether to retry; a truncated hash does not guarantee a collision-free mapping.
-
-## Multi-Namespace Usage
-
-Namespaces partition the short link space. Each namespace has its own code pool.
-
-```lua
-local service = slds.new({ ... })
-
--- Marketing namespace
-service:create({ tenant = "acme" }, {
-    namespace = "marketing",
-    code = "bf2026",
-    target = "https://shop.example.com/black-friday",
+local generator = {
+    generate = function(self, ctx, input)
+        return "campaign-" .. input.metadata.campaign
+    end,
+}
+local slds = require("slds")
+local interactor = slds.new({
+    repository = require("slds.adapters.inmemory.repository").new(),
+    code_generator = generator,
 })
+local link = assert(interactor:create({}, {
+    target = "https://example.com", metadata = { campaign = "spring" },
+}))
+```
 
--- Internal namespace
-service:create({ tenant = "acme" }, {
-    namespace = "internal",
-    code = "bf2026",  -- same code, different namespace -- no conflict
-    target = "https://wiki.example.com/black-friday-plan",
+The example intentionally produces a deterministic Code: repeated creation conflicts, rather than becoming an idempotency API. Repository enforces uniqueness. Core passes unchanged ctx and an independent input snapshot. Return nil,err for expected failures; nil,nil is a programming error. Core performs no automatic retry or numeric coercion.
+
+For internal Generator/Encoder composition, use the [bundled Composed adapter](api.md#bundled-adapters). Its encoder array is dense and ordered; an empty array is valid if the inner generator already returns Code. The current Base62 accepts only exact integers in [0,2^53-1]; full uint64/string identifiers need a compatible external encoder. Do not coerce them with tonumber.
+
+## Customize Lifecycle and authoritative update policy
+
+Supply the same rules to Interactor and Repository. Missing predicates use defaults; the original table is not modified:
+
+```lua
+local slds = require("slds")
+local Repository = require("slds.adapters.inmemory.repository")
+local rules = {
+    can_transition = function(from, to)
+        return slds.Lifecycle.can_transition(from, to)
+            and not (from == slds.Lifecycle.DISABLED and to == slds.Lifecycle.ACTIVE)
+    end,
+}
+local repo = Repository.new({
+    lifecycle = rules,
+    can_update = function(current, patch)
+        return patch.target == nil or patch.target == current.target
+    end,
+})
+local interactor = slds.new({ repository = repo, lifecycle = rules })
+```
+
+This example prevents re-enabling a disabled link and prevents changing target. Invalid field values are rejected before can_update executes. The predicate receives the latest entity and raw sparse patch; false returns INVALID, while a thrown error or non-boolean is a programming error. It must be pure, synchronous and non-yielding. It does not run for delete. Its mutation cannot become committed data.
+
+No override can admit an unknown persistent status, revive DELETED, resolve DELETED or bypass expiration. A custom is_resolvable may allow DISABLED, in which case the result retains status DISABLED. The host should use result.resolvable.
+
+## Implement an authoritative Repository
+
+Provide create/get/update/delete; see [exact signatures](api.md#core-ports). No inheritance is needed. On success return an independent ShortLink, except delete returns true. Missing identity returns nil,Errors.NOT_FOUND, never nil,nil. Pass infrastructure errors unchanged.
+
+For update, perform the following inside the adapter's atomic commit mechanism:
+
+1. Read the latest record and reject missing/DELETED state.
+2. Build a complete candidate using `current:with_patch(patch,lifecycle)`, validating fields, allowed keys and transitions.
+3. Evaluate optional can_update on isolated current/patch observations.
+4. Commit only after all checks succeed, preserving unspecified fields.
+
+Delete must apply full entity and transition validation with status=DELETED before committing. Repeated deletion returns INVALID. Identity uniqueness remains reserved, including after expiration and deletion.
+
+Store `{ namespace, code }` without delimiter collisions; namespace/code can contain NUL. Declare the serializer's supported metadata types: Core's raw cyclic-table snapshots do not imply that JSON or a database can serialize those graphs. Input and returned values must not alias storage.
+
+An external storage adapter needs real transactions, locking, CAS or an equivalent atomic mechanism. Unprotected get/modify/set does not satisfy the contract; Interactor performs no update/delete pre-read. InMemory's guarantee is limited to non-yielding operations within one Lua VM.
+
+### Conditional commits and caching
+
+can_update rejection is INVALID; it is not automatic stale-read detection. An external adapter may support host-specific opaque ctx conditions and return CONFLICT on a CAS mismatch. Core adds no revision field or conditional-update framework. Test and document that optional capability separately.
+
+A cache decorator implements the same Repository port. It owns invalidation, negative entries, stale refill races and post-commit invalidation failures. Caching entities lets Resolution recompute expiration from the current clock. Core provides no cache implementation or consistency guarantee; cache/real concurrency claims need adapter integration evidence.
+
+## Register observers
+
+```lua
+local slds = require("slds")
+local hooks = slds.Hooks.new()
+hooks:on(slds.HookPoint.AFTER, function(ctx, point, value, err)
+    -- Send to the host's bounded telemetry path; handle value=nil on failures.
+    print(point, value ~= nil, err)
+end)
+hooks:on(slds.HookPoint.ON_ERROR, function(ctx, failed_point, hook_err)
+    print("Hook failure", failed_point, hook_err)
+end)
+local interactor = slds.new({
+    repository = require("slds.adapters.inmemory.repository").new(), hooks = hooks,
 })
 ```
 
-The `ctx` table is passed to all port methods. Repositories MAY use it for tenant-aware data isolation.
+General BEFORE runs before operation-specific BEFORE; specific AFTER runs before general AFTER. Registration order applies within each point. Callbacks get the actual operation point and v0.2 arguments. All normal returns, including repository/generator errors, reach AFTER. Programming errors may propagate before AFTER.
 
-## Hooks in Production
+Each observer receives an independent payload snapshot retaining domain methods and nil gaps. ctx retains its reference and should be read-only. Hooks cannot transform operations. pcall isolates exceptions, not latency; use host-managed delivery for durable or asynchronous events. ON_ERROR failure does not recurse.
 
-### Logger Hook
-
-```lua
-local function LoggerHook(prefix)
-    prefix = prefix or "[SLDS]"
-    return {
-        after_create = function(ctx, link)
-            io.write(string.format("%s created %s/%s\n", prefix, link.namespace, link.code))
-        end,
-        after_resolve = function(ctx, result)
-            if result.found and result.status == "ACTIVE" then
-                io.write(string.format("%s resolved %s/%s -> %s\n",
-                    prefix, result.namespace, result.code, result.target))
-            end
-        end,
-        on_error = function(ctx, err, name)
-            io.write(string.format("%s hook %s error: %s\n", prefix, name, err))
-        end,
-    }
-end
-
-service:use(LoggerHook("[APP]"))
-```
-
-### Metrics Hook
+## Resolve in a host
 
 ```lua
-local function MetricsHook(metrics)
-    return {
-        after_resolve = function(ctx, result)
-            metrics:increment("slds.resolve", {
-                found = tostring(result.found),
-                status = result.status,
-            })
-        end,
-    }
-end
-```
-
-Hooks are synchronous observers. SLDS isolates callback exceptions with `pcall`, while slow callbacks still add latency. Treat ctx as read-only and use the host's non-blocking telemetry path when needed. Measure complete operation latency in the host wrapper so repository errors are measured too; successful after_resolve callbacks do not run on infrastructure failure.
-
-## Error Handling Patterns
-
-### Create with Conflict Retry
-
-```lua
-local function create_with_retry(service, input, max_retries)
-    max_retries = max_retries or 3
-    for i = 1, max_retries do
-        local link, err = service:create({}, input)
-        if link then return link end
-        if err ~= slds.CONFLICT then
-            return nil, err  -- non-conflict error, do not retry
-        end
-        -- Conflict -- try again (Generator will produce a new code)
-        input.code = nil  -- clear custom code, let Generator produce
-    end
-    return nil, "max retries exceeded"
-end
-```
-
-### Resolve with Fallback
-
-```lua
-local function resolve_or_fallback(service, identity, fallback_url)
-    local result, err = service:resolve({}, identity)
+local function resolve_or_fallback(interactor, ctx, identity, fallback_url)
+    local result, err = interactor:resolve(ctx, identity)
     if not result then return nil, err end
-    if result.found and result.status == "ACTIVE" then
-        return result.target
-    end
+    if result.resolvable then return result.target end
     return fallback_url
 end
 ```
 
-## Testing with Fake Clock
+The host maps result.resolvable to redirects or application behavior, maps infrastructure errors to its own failure response, and performs authorization before calling Core. Namespace is a logical identity partition, not tenant authorization. ctx propagation alone proves no access isolation.
 
-SLDS accepts a `clock` function for deterministic expiry testing:
+In OpenResty, construct a worker-local Interactor in the host and acquire connections in a phase supported by the chosen client. Core has no ngx dependency. A Lua Interactor cannot be stored in ngx.shared; cross-worker persistence/uniqueness belongs to the selected adapters.
 
-```lua
-local fake_now = 1000000
-local service = slds.new({
-    repository = require("slds.adapters.inmemory.repository").new(),
-    generator  = require("slds.adapters.sequential.generator").new(),
-    encoder    = require("slds.adapters.base62.encoder").new(),
-    clock = function() return fake_now end,
-})
+## Verify an integration
 
--- Create a link that expires in 60s
-local link = service:create({}, {
-    target = "https://example.com",
-    expires_at = fake_now + 60,
-})
-
--- Before expiry -- resolvable
-local r1 = service:resolve({}, slds.Identity.new("default", link.code))
-assert(r1.found and r1.status == "ACTIVE")
-
--- Advance time past expiry
-fake_now = fake_now + 61
-
--- After expiry -- not resolvable
-local r2 = service:resolve({}, slds.Identity.new("default", link.code))
-assert(r2.found and r2.status == "EXPIRED")  -- derived, not persisted
-```
-
-## Integration with OpenResty
-
-SLDS Core has zero `ngx` dependency. Integration happens in the host layer:
-
-```nginx
-location /s/:code {
-    content_by_lua_block {
-        local slds = require("slds")
-        local service = require("app.slds_service")  -- host module returns a configured worker-local instance
-
-        local identity = slds.Identity.new("default", ngx.var.code)
-        local result, err = service:resolve({}, identity)
-
-        if not result then
-            ngx.log(ngx.ERR, "SLDS resolve failed: ", err)
-            ngx.exit(503)
-        elseif result.found and result.status == "ACTIVE" then
-            ngx.redirect(result.target, 302)
-        else
-            ngx.exit(404)
-        end
-    }
-}
-```
-
-The host's `app.slds_service` module configures a worker-local Service with suitable adapters. Lua service objects cannot be stored in `ngx.shared`; cross-worker persistence and uniqueness belong to the repository/generator implementation. Network connections must be acquired in a phase supported by the chosen client.
-
-## Conformance Testing
-
-If you are implementing a custom adapter and want to claim SLDS compatibility, run the Conformance Test Suite against your implementation:
-
-Register the reusable suites from a Busted spec using a fresh fixture factory. The [Conformance Tests guide](rfc/conformance-tests.md) provides a complete factory example, the L0-L3 matrix, and the additional evidence required for real concurrency or optional host extensions (RULE-010).
+Use a deterministic clock to test expiration just before, at and after the timestamp. Run the reusable [conformance suites](rfc/conformance-tests.md) against fresh real adapter fixtures. Declare which evidence is sequential, deterministically interleaved or actually concurrent. Run the [per-file coverage gate](validation.md) from fresh statistics; never substitute aggregate coverage.

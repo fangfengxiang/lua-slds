@@ -2,31 +2,31 @@ local helpers = require("spec.helpers")
 local slds = require("slds")
 
 describe("Public API and port contracts", function()
-    it("exports working domain objects and a usable service factory", function()
-        local _, repo, gen, enc = helpers.fixture()
-        local service = slds.new({ repository = repo, generator = gen, encoder = enc })
-        local link = assert(service:create({}, { target = "https://example.com" }))
+    it("exports working domain objects and a usable Interactor factory", function()
+        local _, repo, gen = helpers.fixture()
+        local interactor = slds.new({ repository = repo, code_generator = gen })
+        local link = assert(interactor:create({}, { target = "https://example.com" }))
         local id = slds.Identity.new(link.namespace, link.code)
-        local result = service:resolve({}, id)
-        assert.equal(slds.ACTIVE, result.status)
+        local result = interactor:resolve({}, id)
+        assert.equal(slds.Lifecycle.ACTIVE, result.status)
         assert.equal(slds.Resolution, getmetatable(result))
         assert.equal(slds.ShortLink, getmetatable(link))
         assert.matches("^%d+%.%d+%.%d+", slds.VERSION)
-        assert.equal(slds.Lifecycle.DISABLED, slds.DISABLED)
-        assert.equal(slds.Lifecycle.DELETED, slds.DELETED)
-        assert.equal(slds.Errors.CONFLICT, slds.CONFLICT)
-        assert.equal(slds.Errors.INVALID, slds.INVALID)
+        assert.equal(slds.Interactor, getmetatable(interactor))
+        assert.is_true(result.resolvable)
+        for _, removed in ipairs({ "Service", "ACTIVE", "DISABLED", "DELETED", "NOT_FOUND", "CONFLICT", "INVALID" }) do
+            assert.is_nil(slds[removed])
+        end
         local observed = false
-        assert.is_table(slds.Hooks.new().hooks)
-        assert.equal(service, service:use({ after_resolve = function() observed = true end }))
-        service:resolve({}, id)
+        assert.is_table(slds.Hooks.new().handlers)
+        assert.equal(interactor, interactor:use({ after_resolve = function() observed = true end }))
+        interactor:resolve({}, id)
         assert.is_true(observed)
     end)
 
     for name, methods in pairs({
         repository = { "create", "get", "update", "delete" },
-        generator = { "generate" },
-        encoder = { "encode" },
+        code_generator = { "generate" },
     }) do
         it(name .. " interface fails fast when used without an implementation", function()
             local port = require("slds.ports." .. name)

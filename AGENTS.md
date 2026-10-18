@@ -4,19 +4,22 @@
 
 - SLDS = Identity + Lifecycle + Resolution Semantics。改动先说明修复的契约或真实需求；非必要不新增依赖、领域概念、端口和框架。
 - Core 只使用兼容 Lua 5.1 / 5.3 / LuaJIT 的纯 Lua，不引入 ngx、HTTP、数据库、缓存、JSON 库或 Target 网络请求。
-- 保留现有四个操作和三个端口。鉴权、租户策略、分析、缓存和调度由宿主实现。
+- 保留四个操作；v0.2 Core 只有 Repository 和可选 CodeGenerator 两个端口。内部 Generator/Encoder 由 Adapter 组合。鉴权、租户策略、分析、缓存和调度由宿主实现。
 - 通用端口描述行为，不绑定 Sequential、Base62、数字位数或具体存储。参考适配器的范围和限制写在适配器规范、文档及单元测试里。
 
 ## 领域与实现
 
 - namespace/code 在公开更新 API 中不可变。普通 Lua table 的逻辑不可变由调用者遵守，不引入通用冻结/代理体系。
-- DELETED 是终态；删除身份默认不可复用。EXPIRED 只在解析时由 expires_at < now 派生，等值未过期，不持久化 EXPIRED。
+- DELETED 是终态；删除身份默认不可复用。EXPIRED 只在解析时由 expires_at <= now 派生，等值已过期，不持久化 EXPIRED。
 - 唯一性和更新原子性由 Repository 保证。更新仅提交显式补丁，在最新记录上验证并提交；不得用旧快照覆盖未指定字段或复活删除记录。
 - Resolution 返回独立结果，区分未找到和基础设施失败；解析不得写存储。
 - metadata 不解释业务键，不新增深合并语义；table 内容在存储/返回边界形成独立快照。
+- v0.2 不支持 metadata 更新或未知 Patch 字段，均返回 INVALID；nil expires_at 表示不修改，暂不引入清除哨兵。Errors 仅有 NOT_FOUND/CONFLICT/INVALID；解析状态归 Lifecycle/Resolution。
+- Lifecycle 支持部分函数覆盖，构造期补齐默认且不修改用户表；硬身份、三状态及终态约束不能被自定义函数放宽。can_update 只在权威 Repository 执行，完整字段校验先于谓词，拒绝返回 INVALID。
+- Interactor 的 update/delete 不预读；Repository 删除也复用完整实体/转换校验。Hooks 使用 HookPoint 与有序函数数组，正常成功/失败均触发 AFTER；use(hook) 仅为同一注册表的便利入口，回调统一使用 v0.2 签名。
 - Hook 是同步观察者，领域 payload 按回调隔离；ctx 原样传递。pcall 只隔离异常，不承诺超时、非阻塞或持久事件交付。
 - 使用共享类元表、静态工厂点号和实例方法冒号。运行时失败返回 nil,err；编程错误抛 error(msg,2)；Hook 回调用 pcall 隔离。
-- 新内部模块必须登记 rockspec；不得为整理文件或行数而拆分 Service。
+- 新内部模块必须登记 rockspec；不得为整理文件或行数而拆分 Interactor。规则解析只用小型内部函数，不引入容器或管理器。
 
 ## 测试与覆盖率
 

@@ -1,24 +1,28 @@
 local helpers = require("spec.helpers")
-local Service = require("slds.service")
+local Interactor = require("slds.interactor")
 local Identity = require("slds.domain.identity")
 local Errors = require("slds.domain.errors")
 
-describe("Service boundaries", function()
+describe("Interactor boundaries", function()
     it("rejects missing ports, invalid options, and invalid clock configuration", function()
-        assert.has_error(function() Service.new(false) end)
-        local _, repo, gen, enc = helpers.fixture()
-        for _, field in ipairs({ "repository", "generator", "encoder", "clock" }) do
-            local opts = { repository = repo, generator = gen, encoder = enc }
+        assert.has_error(function() Interactor.new(false) end)
+        local _, repo, gen = helpers.fixture()
+        for _, field in ipairs({ "repository", "code_generator", "clock", "hooks", "lifecycle" }) do
+            local opts = { repository = repo, code_generator = gen }
             opts[field] = false
-            assert.has_error(function() Service.new(opts) end)
+            assert.has_error(function() Interactor.new(opts) end)
         end
     end)
 
     it("validates operation containers and identity fields before accessing ports", function()
         local svc = helpers.fixture()
         assert.has_error(function() svc:create({}, false) end)
-        assert.has_error(function() svc:create({}, { target = "https://x.com", code = false }) end)
-        assert.has_error(function() svc:create({}, { target = "https://x.com", namespace = false }) end)
+        local value, err = svc:create({}, { target = "https://x.com", code = false })
+        assert.is_nil(value)
+        assert.equal(Errors.INVALID, err)
+        value, err = svc:create({}, { target = "https://x.com", namespace = false })
+        assert.is_nil(value)
+        assert.equal(Errors.INVALID, err)
         for _, operation in ipairs({ "resolve", "update", "delete" }) do
             assert.has_error(function() svc[operation](svc, false, Identity.new("abc"), {}) end)
             assert.has_error(function() svc[operation](svc, {}, false, {}) end)
@@ -28,25 +32,27 @@ describe("Service boundaries", function()
         assert.has_error(function() svc:update({}, Identity.new("abc"), false) end)
     end)
 
-    it("reports generation failures and skips successful after callbacks", function()
+    it("observes generation failures through AFTER callbacks", function()
         local after = false
         local svc = helpers.fixture({ generator = { generate = function() return nil, "offline" end } })
         svc:use({ after_create = function() after = true end })
         local link, err = svc:create({}, { target = "https://x.com" })
         assert.is_nil(link)
-        assert.equal("generator: offline", err)
-        assert.is_false(after)
+        assert.equal("offline", err)
+        assert.is_true(after)
     end)
 
-    it("rejects invalid encoder output and preserves empty-code generation behavior", function()
+    it("rejects invalid encoder output and explicit empty codes", function()
         for _, output in ipairs({ false, "", 123 }) do
             local svc = helpers.fixture({ encoder = { encode = function() return output end } })
             local link, err = svc:create({}, { target = "https://x.com" })
             assert.is_nil(link)
-            assert.equal("encoder: produced empty code", err)
+            assert.equal(Errors.INVALID, err)
         end
         local svc = helpers.fixture()
-        assert.equal("1", svc:create({}, { target = "https://x.com", code = "" }).code)
+        local value, err = svc:create({}, { target = "https://x.com", code = "" })
+        assert.is_nil(value)
+        assert.equal(Errors.INVALID, err)
     end)
 
     it("keeps opaque string IDs and adapter-specific code lengths", function()
@@ -62,7 +68,7 @@ describe("Service boundaries", function()
         assert.equal("https://x.com", svc:resolve({}, Identity.new(created.code)).target)
     end)
 
-    it("returns domain and repository failures without firing success hooks", function()
+    it("observes domain and repository failures through AFTER callbacks", function()
         local svc, repo = helpers.fixture()
         local fired = false
         svc:use({ after_create = function() fired = true end })
@@ -73,7 +79,7 @@ describe("Service boundaries", function()
         local failed, write_err = svc:create({}, { code = "abc", target = "https://x.com" })
         assert.is_nil(failed)
         assert.equal("write failed", write_err)
-        assert.is_false(fired)
+        assert.is_true(fired)
     end)
 
     it("does not persist invalid updates and propagates failed commits", function()
@@ -89,11 +95,11 @@ describe("Service boundaries", function()
         local failed, update_err = svc:update({}, id, { target = "https://new.com" })
         assert.is_nil(failed)
         assert.equal("update failed", update_err)
-        assert.is_false(updated_after)
+        assert.is_true(updated_after)
         assert.equal("https://old.com", svc:resolve({}, id).target)
     end)
 
-    it("propagates deletion failures without firing successful after_delete", function()
+    it("observes deletion failures through AFTER callbacks", function()
         local svc, repo = helpers.fixture()
         svc:create({}, { code = "abc", target = "https://x.com" })
         local deleted_after = false
@@ -102,16 +108,15 @@ describe("Service boundaries", function()
         local ok, err = svc:delete({}, Identity.new("abc"))
         assert.is_nil(ok)
         assert.equal("delete failed", err)
-        assert.is_false(deleted_after)
+        assert.is_true(deleted_after)
         assert.equal("ACTIVE", svc:resolve({}, Identity.new("abc")).status)
     end)
 
-    it("preserves legacy missing results for update and delete", function()
-        local svc = helpers.fixture({ repository = { get = function() return nil end } })
+    it("rejects missing result/error pairs for update and delete", function()
+        local svc, repo = helpers.fixture()
         for _, operation in ipairs({ "update", "delete" }) do
-            local result, err = svc[operation](svc, {}, Identity.new("missing"), {})
-            assert.is_nil(result)
-            assert.equal(Errors.NOT_FOUND, err)
+            repo[operation] = function() return nil, nil end
+            assert.has_error(function() svc[operation](svc, {}, Identity.new("missing"), {}) end)
         end
     end)
 
@@ -124,7 +129,7 @@ describe("Service boundaries", function()
         local svc, repo = helpers.fixture({ clock = helpers.fake_clock(2000) })
         local id = Identity.new("abc")
         svc:create({}, { code = "abc", target = "https://x.com", expires_at = 2000 })
-        assert.equal("ACTIVE", svc:resolve({}, id).status)
+        assert.equal("EXPIRED", svc:resolve({}, id).status)
         svc:update({}, id, { expires_at = 1000 })
         assert.equal("EXPIRED", svc:resolve({}, id).status)
         assert.equal("ACTIVE", repo:get({}, id).status)
@@ -134,13 +139,47 @@ describe("Service boundaries", function()
         assert.equal("DELETED", svc:resolve({}, id).status)
     end)
 
-    it("does not call after_resolve when the repository fails", function()
-        local svc = helpers.fixture({ repository = { get = function() return nil, "offline" end } })
+    it("calls after_resolve when the repository fails", function()
+        local svc, repo = helpers.fixture()
+        repo.get = function() return nil, "offline" end
         local fired = false
         svc:use({ after_resolve = function() fired = true end })
         local result, err = svc:resolve({}, Identity.new("abc"))
         assert.is_nil(result)
         assert.equal("offline", err)
-        assert.is_false(fired)
+        assert.is_true(fired)
+    end)
+end)
+
+
+describe("Interactor dependency shapes", function()
+    it("requires complete repository, code generator and hook methods", function()
+        for _, name in ipairs({ "create", "get", "update", "delete" }) do
+            local _, repo = helpers.fixture()
+            repo[name] = false
+            assert.has_error(function() Interactor.new({ repository = repo }) end)
+        end
+        local _, repo = helpers.fixture()
+        assert.has_error(function() Interactor.new({ repository = repo, code_generator = {} }) end)
+        assert.has_error(function() Interactor.new({ repository = repo, hooks = {} }) end)
+    end)
+
+    it("rejects invalid record and deletion success responses", function()
+        for _, operation in ipairs({ "create", "update", "resolve", "delete" }) do
+            local svc, repo = helpers.fixture()
+            local method = operation == "resolve" and "get" or operation
+            local function invoke()
+                if operation == "create" then
+                    return svc:create({}, { code = "one", target = "https://x.com" })
+                end
+                return svc[operation](svc, {}, Identity.new("one"), {})
+            end
+            for _, bad in ipairs({ false, 42, "record" }) do
+                repo[method] = function() return bad end
+                assert.has_error(invoke)
+            end
+            repo[method] = function() return {}, "offline" end
+            assert.has_error(invoke)
+        end
     end)
 end)
