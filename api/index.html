@@ -1,0 +1,2607 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Short Link Domain Specification — a pure Lua domain library for short link identity, lifecycle, and resolution semantics.">
+      
+      
+      
+        <link rel="canonical" href="https://fangfengxiang.github.io/lua-slds/api/">
+      
+      
+        <link rel="prev" href="../how-to/">
+      
+      
+        <link rel="next" href="../rfc/RFC-0001/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>API Reference - lua-slds</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="lua-slds" class="md-header__button md-logo" aria-label="lua-slds" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            lua-slds
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fangfengxiang/lua-slds" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fangfengxiang/lua-slds
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../tutorial/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../how-to/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../design/design-rationale/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="lua-slds" class="md-nav__button md-logo" aria-label="lua-slds" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    lua-slds
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fangfengxiang/lua-slds" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fangfengxiang/lua-slds
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-slds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exported-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exported Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sldsnewopts-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.new(opts) -&gt; Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsidentity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identitynewnamespace-code-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity.new(namespace, code) -&gt; Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metamethods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metamethods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsshortlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.ShortLink
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.ShortLink">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shortlinknewopts-shortlink-nil-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink.new(opts) -&gt; ShortLink | nil, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkis_expirednow-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:is_expired(now) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkis_resolvablenow-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:is_resolvable(now) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkwith_patchpatch-shortlink-nil-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:with_patch(patch) -&gt; ShortLink | nil, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkto_table-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:to_table() -&gt; table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldslifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constants_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecyclecan_transitionfrom-to-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle.can_transition(from, to) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecyclevalidate_transitionfrom-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle.validate_transition(from, to)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecycleis_resolvablestatus-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle.is_resolvable(status) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsresolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Resolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolutionresolvelink-identity-now-resolutionresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution.resolve(link, identity, now) -&gt; ResolutionResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolutionnot_foundidentity-resolutionresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution.not_found(identity) -&gt; ResolutionResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolutionresult-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResolutionResult Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsdomainerrors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.domain.errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.domain.errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldshooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hooksnew-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks.new() -&gt; Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hooksusehook-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks:use(hook) -&gt; Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-sldsportsrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port: slds.ports.repository
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Port: slds.ports.repository">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repositorycreatectx-link-link-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:create(ctx, link) -&gt; link, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositorygetctx-identity-link-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:get(ctx, identity) -&gt; link, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositoryupdatectx-identity-patch-link-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:update(ctx, identity, patch) -&gt; link, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositorydeletectx-identity-boolean-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:delete(ctx, identity) -&gt; boolean, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-sldsportsgenerator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port: slds.ports.generator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Port: slds.ports.generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generatorgeneratectx-id-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generator:generate(ctx) -&gt; id, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-sldsportsencoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port: slds.ports.encoder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Port: slds.ports.encoder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#encoderencodeid-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        encoder:encode(id) -&gt; code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bundled Adapters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bundled Adapters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sldsadaptersinmemoryrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.adapters.inmemory.repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sldsadapterssequentialgenerator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.adapters.sequential.generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sldsadaptersbase62encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.adapters.base62.encoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rfc/RFC-0001/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-0001
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rfc/conformance-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance Tests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation & Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/design-rationale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Rationale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/domain-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain Layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/port-adapter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ports & Adapters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-slds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exported-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exported Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sldsnewopts-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.new(opts) -&gt; Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsidentity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identitynewnamespace-code-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity.new(namespace, code) -&gt; Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metamethods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metamethods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsshortlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.ShortLink
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.ShortLink">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shortlinknewopts-shortlink-nil-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink.new(opts) -&gt; ShortLink | nil, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkis_expirednow-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:is_expired(now) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkis_resolvablenow-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:is_resolvable(now) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkwith_patchpatch-shortlink-nil-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:with_patch(patch) -&gt; ShortLink | nil, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortlinkto_table-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShortLink:to_table() -&gt; table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldslifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constants_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecyclecan_transitionfrom-to-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle.can_transition(from, to) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecyclevalidate_transitionfrom-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle.validate_transition(from, to)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecycleis_resolvablestatus-boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle.is_resolvable(status) -&gt; boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsresolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Resolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolutionresolvelink-identity-now-resolutionresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution.resolve(link, identity, now) -&gt; ResolutionResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolutionnot_foundidentity-resolutionresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution.not_found(identity) -&gt; ResolutionResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolutionresult-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResolutionResult Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldsdomainerrors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.domain.errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.domain.errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-sldshooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module: slds.Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module: slds.Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hooksnew-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks.new() -&gt; Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hooksusehook-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks:use(hook) -&gt; Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-sldsportsrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port: slds.ports.repository
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Port: slds.ports.repository">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repositorycreatectx-link-link-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:create(ctx, link) -&gt; link, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositorygetctx-identity-link-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:get(ctx, identity) -&gt; link, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositoryupdatectx-identity-patch-link-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:update(ctx, identity, patch) -&gt; link, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositorydeletectx-identity-boolean-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        repository:delete(ctx, identity) -&gt; boolean, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-sldsportsgenerator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port: slds.ports.generator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Port: slds.ports.generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generatorgeneratectx-id-err" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generator:generate(ctx) -&gt; id, err
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-sldsportsencoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port: slds.ports.encoder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Port: slds.ports.encoder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#encoderencodeid-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        encoder:encode(id) -&gt; code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bundled Adapters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bundled Adapters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sldsadaptersinmemoryrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.adapters.inmemory.repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sldsadapterssequentialgenerator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.adapters.sequential.generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sldsadaptersbase62encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slds.adapters.base62.encoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="module-slds">Module: <code>slds</code><a class="headerlink" href="#module-slds" title="Permanent link">&para;</a></h2>
+<p>The main entry point, exported by <code>require("slds")</code>.</p>
+<h3 id="constants">Constants<a class="headerlink" href="#constants" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>slds.VERSION</code></td>
+<td><code>"0.1.0"</code></td>
+<td>Library version</td>
+</tr>
+<tr>
+<td><code>slds.ACTIVE</code></td>
+<td><code>"ACTIVE"</code></td>
+<td>Lifecycle status</td>
+</tr>
+<tr>
+<td><code>slds.DISABLED</code></td>
+<td><code>"DISABLED"</code></td>
+<td>Lifecycle status</td>
+</tr>
+<tr>
+<td><code>slds.DELETED</code></td>
+<td><code>"DELETED"</code></td>
+<td>Lifecycle status (terminal)</td>
+</tr>
+<tr>
+<td><code>slds.Errors.NOT_FOUND</code></td>
+<td><code>"NOT_FOUND"</code></td>
+<td>Error code</td>
+</tr>
+<tr>
+<td><code>slds.Errors.EXPIRED</code></td>
+<td><code>"EXPIRED"</code></td>
+<td>Error code</td>
+</tr>
+<tr>
+<td><code>slds.CONFLICT</code></td>
+<td><code>"CONFLICT"</code></td>
+<td>Error code</td>
+</tr>
+<tr>
+<td><code>slds.INVALID</code></td>
+<td><code>"INVALID"</code></td>
+<td>Error code</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exported-modules">Exported Modules<a class="headerlink" href="#exported-modules" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>slds.Identity</code></td>
+<td><code>slds.domain.identity</code></td>
+</tr>
+<tr>
+<td><code>slds.ShortLink</code></td>
+<td><code>slds.domain.short_link</code></td>
+</tr>
+<tr>
+<td><code>slds.Lifecycle</code></td>
+<td><code>slds.domain.lifecycle</code></td>
+</tr>
+<tr>
+<td><code>slds.Resolution</code></td>
+<td><code>slds.domain.resolution</code></td>
+</tr>
+<tr>
+<td><code>slds.Errors</code></td>
+<td><code>slds.domain.errors</code></td>
+</tr>
+<tr>
+<td><code>slds.Hooks</code></td>
+<td><code>slds.hooks</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="sldsnewopts-service"><code>slds.new(opts) -&gt; Service</code><a class="headerlink" href="#sldsnewopts-service" title="Permanent link">&para;</a></h3>
+<p>Static factory (dot notation). Creates a new SLDS service instance.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>opts.repository</code></td>
+<td>table</td>
+<td>yes</td>
+<td>Repository port implementation</td>
+</tr>
+<tr>
+<td><code>opts.generator</code></td>
+<td>table</td>
+<td>yes</td>
+<td>Generator port implementation</td>
+</tr>
+<tr>
+<td><code>opts.encoder</code></td>
+<td>table</td>
+<td>yes</td>
+<td>Encoder port implementation</td>
+</tr>
+<tr>
+<td><code>opts.clock</code></td>
+<td>function</td>
+<td>no</td>
+<td>Function returning current timestamp (default: <code>os.time</code>)</td>
+</tr>
+<tr>
+<td><code>opts.hooks</code></td>
+<td>Hooks</td>
+<td>no</td>
+<td>Pre-configured Hooks instance (default: new)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>Service</code></p>
+<p><strong>Errors:</strong> <code>error(msg, 2)</code> if any required port is missing/wrong type or clock is not a function. The clock must return a finite number. Expected port failures return nil,err; unexpected port programming errors propagate. Resolve returns a not-found result for NOT_FOUND (and legacy nil,nil absence), but propagates other repository errors without firing successful after_resolve.</p>
+<hr />
+<h2 id="module-sldsidentity">Module: <code>slds.Identity</code><a class="headerlink" href="#module-sldsidentity" title="Permanent link">&para;</a></h2>
+<h3 id="identitynewnamespace-code-identity"><code>Identity.new(namespace, code) -&gt; Identity</code><a class="headerlink" href="#identitynewnamespace-code-identity" title="Permanent link">&para;</a></h3>
+<p>Creates a logically immutable Identity value object using an ordinary Lua table. Callers must not assign namespace/code directly; operations capture identity values and never rewrite the caller object. Update APIs reject identity changes.</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>namespace</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Non-empty logical partition</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Non-empty short code</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Errors:</strong> <code>error(msg, 2)</code> if namespace or code is empty/missing.</p>
+<h3 id="metamethods">Metamethods<a class="headerlink" href="#metamethods" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>__eq</code> — value equality: two identities are equal if <code>namespace</code> and <code>code</code> match.</li>
+<li><code>__tostring</code> — <code>"namespace:code"</code> format.</li>
+</ul>
+<hr />
+<h2 id="module-sldsshortlink">Module: <code>slds.ShortLink</code><a class="headerlink" href="#module-sldsshortlink" title="Permanent link">&para;</a></h2>
+<h3 id="shortlinknewopts-shortlink-nil-err"><code>ShortLink.new(opts) -&gt; ShortLink | nil, err</code><a class="headerlink" href="#shortlinknewopts-shortlink-nil-err" title="Permanent link">&para;</a></h3>
+<p>Creates a ShortLink domain entity.</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>opts.namespace</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Logical partition</td>
+</tr>
+<tr>
+<td><code>opts.code</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Short code</td>
+</tr>
+<tr>
+<td><code>opts.target</code></td>
+<td>string</td>
+<td>yes</td>
+<td>Destination URL (must be safe scheme)</td>
+</tr>
+<tr>
+<td><code>opts.status</code></td>
+<td>string</td>
+<td>no</td>
+<td>Lifecycle status (default: <code>ACTIVE</code>)</td>
+</tr>
+<tr>
+<td><code>opts.expires_at</code></td>
+<td>number</td>
+<td>no</td>
+<td>Finite Unix timestamp; equality with now is not expired</td>
+</tr>
+<tr>
+<td><code>opts.metadata</code></td>
+<td>table</td>
+<td>no</td>
+<td>Opaque raw-table snapshot (Core MUST NOT interpret)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>ShortLink</code> or <code>nil, err</code> with an INVALID-prefixed error for invalid target/status/expires_at/metadata. Metadata must be nil or a table; expiration must be nil or a finite number.</p>
+<p><strong>Errors:</strong> <code>error(msg, 2)</code> for programming errors (wrong types, missing required fields).</p>
+<h3 id="shortlinkis_expirednow-boolean"><code>ShortLink:is_expired(now) -&gt; boolean</code><a class="headerlink" href="#shortlinkis_expirednow-boolean" title="Permanent link">&para;</a></h3>
+<p>Returns <code>true</code> if <code>expires_at</code> is set and <code>expires_at &lt; now</code>.</p>
+<h3 id="shortlinkis_resolvablenow-boolean"><code>ShortLink:is_resolvable(now) -&gt; boolean</code><a class="headerlink" href="#shortlinkis_resolvablenow-boolean" title="Permanent link">&para;</a></h3>
+<p>Returns <code>true</code> if status is <code>ACTIVE</code> and not expired.</p>
+<h3 id="shortlinkwith_patchpatch-shortlink-nil-err"><code>ShortLink:with_patch(patch) -&gt; ShortLink | nil, err</code><a class="headerlink" href="#shortlinkwith_patchpatch-shortlink-nil-err" title="Permanent link">&para;</a></h3>
+<p>Creates a new ShortLink with independent metadata table contents. Only non-nil target/status/expires_at fields are patched. Unsupported fields, including metadata, are ignored; nil expiration retains the previous value, and false is invalid rather than a clearing marker.</p>
+<table>
+<thead>
+<tr>
+<th>Patch Field</th>
+<th>Allowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>yes (must be valid transition)</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>namespace</code></td>
+<td><strong>no</strong> (immutable, RULE-004)</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td><strong>no</strong> (immutable, RULE-004)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="shortlinkto_table-table"><code>ShortLink:to_table() -&gt; table</code><a class="headerlink" href="#shortlinkto_table-table" title="Permanent link">&para;</a></h3>
+<p>Returns a plain table representation with independent nested metadata tables. Construction, patching and export copy raw table graphs, including cycles and table keys; metadata metatables are omitted without invoking them. Non-table leaves retain their values; internal mutable state of functions/userdata/threads remains host-owned.</p>
+<hr />
+<h2 id="module-sldslifecycle">Module: <code>slds.Lifecycle</code><a class="headerlink" href="#module-sldslifecycle" title="Permanent link">&para;</a></h2>
+<h3 id="constants_1">Constants<a class="headerlink" href="#constants_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Lifecycle.ACTIVE</code></td>
+<td><code>"ACTIVE"</code></td>
+</tr>
+<tr>
+<td><code>Lifecycle.DISABLED</code></td>
+<td><code>"DISABLED"</code></td>
+</tr>
+<tr>
+<td><code>Lifecycle.DELETED</code></td>
+<td><code>"DELETED"</code></td>
+</tr>
+<tr>
+<td><code>Lifecycle.STATUSES</code></td>
+<td><code>{ "ACTIVE", "DISABLED", "DELETED" }</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="lifecyclecan_transitionfrom-to-boolean"><code>Lifecycle.can_transition(from, to) -&gt; boolean</code><a class="headerlink" href="#lifecyclecan_transitionfrom-to-boolean" title="Permanent link">&para;</a></h3>
+<p>Checks if a state transition is valid.</p>
+<table>
+<thead>
+<tr>
+<th>From</th>
+<th>To</th>
+<th>Allowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACTIVE</td>
+<td>DISABLED</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>ACTIVE</td>
+<td>DELETED</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>DISABLED</td>
+<td>ACTIVE</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>DISABLED</td>
+<td>DELETED</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>DELETED</td>
+<td>*</td>
+<td><strong>no</strong> (terminal)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lifecyclevalidate_transitionfrom-to"><code>Lifecycle.validate_transition(from, to)</code><a class="headerlink" href="#lifecyclevalidate_transitionfrom-to" title="Permanent link">&para;</a></h3>
+<p>Throws <code>error(msg, 2)</code> if the transition is invalid.</p>
+<h3 id="lifecycleis_resolvablestatus-boolean"><code>Lifecycle.is_resolvable(status) -&gt; boolean</code><a class="headerlink" href="#lifecycleis_resolvablestatus-boolean" title="Permanent link">&para;</a></h3>
+<p>Returns <code>true</code> only for <code>ACTIVE</code>.</p>
+<hr />
+<h2 id="module-sldsresolution">Module: <code>slds.Resolution</code><a class="headerlink" href="#module-sldsresolution" title="Permanent link">&para;</a></h2>
+<h3 id="resolutionresolvelink-identity-now-resolutionresult"><code>Resolution.resolve(link, identity, now) -&gt; ResolutionResult</code><a class="headerlink" href="#resolutionresolvelink-identity-now-resolutionresult" title="Permanent link">&para;</a></h3>
+<p>Applies domain resolution semantics to a ShortLink.</p>
+<p><strong>Logic:</strong></p>
+<ol>
+<li>If link is nil → <code>not_found(identity)</code></li>
+<li>If status is DELETED → found=true, status=DELETED, target=nil</li>
+<li>If status is DISABLED → found=true, status=DISABLED, target=nil</li>
+<li>If expired → found=true, status=EXPIRED, target=nil</li>
+<li>If ACTIVE and not expired → found=true, status=ACTIVE, target=link.target</li>
+</ol>
+<h3 id="resolutionnot_foundidentity-resolutionresult"><code>Resolution.not_found(identity) -&gt; ResolutionResult</code><a class="headerlink" href="#resolutionnot_foundidentity-resolutionresult" title="Permanent link">&para;</a></h3>
+<p>Creates a "not found" result.</p>
+<h3 id="resolutionresult-fields">ResolutionResult Fields<a class="headerlink" href="#resolutionresult-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>found</code></td>
+<td>boolean</td>
+<td>Identity exists in repository</td>
+</tr>
+<tr>
+<td><code>namespace</code></td>
+<td>string</td>
+<td>Identity namespace</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>string</td>
+<td>Identity code</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td>string|nil</td>
+<td>Destination URL (only if resolvable)</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td>ACTIVE / DISABLED / DELETED / EXPIRED</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>number|nil</td>
+<td>Expiry timestamp</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="module-sldsdomainerrors">Module: <code>slds.domain.errors</code><a class="headerlink" href="#module-sldsdomainerrors" title="Permanent link">&para;</a></h2>
+<h3 id="error-codes">Error Codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NOT_FOUND</code></td>
+<td><code>"NOT_FOUND"</code></td>
+<td>Identity not in repository</td>
+</tr>
+<tr>
+<td><code>EXPIRED</code></td>
+<td><code>"EXPIRED"</code></td>
+<td>Link expired at resolution time</td>
+</tr>
+<tr>
+<td><code>DISABLED</code></td>
+<td><code>"DISABLED"</code></td>
+<td>Link disabled</td>
+</tr>
+<tr>
+<td><code>DELETED</code></td>
+<td><code>"DELETED"</code></td>
+<td>Link deleted</td>
+</tr>
+<tr>
+<td><code>CONFLICT</code></td>
+<td><code>"CONFLICT"</code></td>
+<td>Code already exists on create</td>
+</tr>
+<tr>
+<td><code>INVALID</code></td>
+<td><code>"INVALID"</code></td>
+<td>Invalid input (bad target, bad status)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="module-sldshooks">Module: <code>slds.Hooks</code><a class="headerlink" href="#module-sldshooks" title="Permanent link">&para;</a></h2>
+<h3 id="hooksnew-hooks"><code>Hooks.new() -&gt; Hooks</code><a class="headerlink" href="#hooksnew-hooks" title="Permanent link">&para;</a></h3>
+<p>Creates a new hooks registry.</p>
+<h3 id="hooksusehook-hooks"><code>Hooks:use(hook) -&gt; Hooks</code><a class="headerlink" href="#hooksusehook-hooks" title="Permanent link">&para;</a></h3>
+<p>Registers a hook table. Chainable.</p>
+<p>Hook table callbacks (all optional):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nv">before_create</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">input</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nv">after_create</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nv">before_resolve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nv">after_resolve</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">result</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nv">before_update</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">,</span><span class="w"> </span><span class="nv">patch</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nv">after_update</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">link</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nv">before_delete</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">identity</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nv">after_delete</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nv">on_error</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="nv">ctx</span><span class="p">,</span><span class="w"> </span><span class="nv">err</span><span class="p">,</span><span class="w"> </span><span class="nv">callback_name</span><span class="p">)</span><span class="w"> </span><span class="kr">end</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>Hooks run synchronously in registration order. Each callback receives an independent domain payload snapshot retaining domain methods; mutations cannot affect the operation, stored data, caller objects or subsequent callbacks. ctx retains its original reference and must be treated as read-only. Exceptions trigger isolated on_error callbacks without failing the operation (RULE-007/008); elapsed callback time still adds latency. This is not a timeout, execution sandbox or durable event mechanism.</p>
+<hr />
+<h2 id="port-sldsportsrepository">Port: <code>slds.ports.repository</code><a class="headerlink" href="#port-sldsportsrepository" title="Permanent link">&para;</a></h2>
+<p>Interface contract. Direct use throws <code>error()</code>.</p>
+<h3 id="repositorycreatectx-link-link-err"><code>repository:create(ctx, link) -&gt; link, err</code><a class="headerlink" href="#repositorycreatectx-link-link-err" title="Permanent link">&para;</a></h3>
+<p>Create a new short link. MUST enforce code uniqueness atomically (RULE-005).</p>
+<h3 id="repositorygetctx-identity-link-err"><code>repository:get(ctx, identity) -&gt; link, err</code><a class="headerlink" href="#repositorygetctx-identity-link-err" title="Permanent link">&para;</a></h3>
+<p>Retrieve a short link by identity.</p>
+<h3 id="repositoryupdatectx-identity-patch-link-err"><code>repository:update(ctx, identity, patch) -&gt; link, err</code><a class="headerlink" href="#repositoryupdatectx-identity-patch-link-err" title="Permanent link">&para;</a></h3>
+<p>Atomically apply supplied non-nil target/status/expires_at fields to the latest stored record, using domain validation before commit. Unspecified fields remain unchanged. Different-field updates preserve both changes; same-field updates follow commit order. A record DELETED at commit returns nil,"DELETED" unchanged. Validation failure must not partially write. Identity patches raise a programming error. A service pre-read alone does not satisfy this contract.</p>
+<h3 id="repositorydeletectx-identity-boolean-err"><code>repository:delete(ctx, identity) -&gt; boolean, err</code><a class="headerlink" href="#repositorydeletectx-identity-boolean-err" title="Permanent link">&para;</a></h3>
+<p>Logical delete (set status to DELETED). Deleted codes MUST NOT be reused (RULE-006).</p>
+<hr />
+<h2 id="port-sldsportsgenerator">Port: <code>slds.ports.generator</code><a class="headerlink" href="#port-sldsportsgenerator" title="Permanent link">&para;</a></h2>
+<h3 id="generatorgeneratectx-id-err"><code>generator:generate(ctx) -&gt; id, err</code><a class="headerlink" href="#generatorgeneratectx-id-err" title="Permanent link">&para;</a></h3>
+<p>Produce an internal unique identifier. This is <strong>not</strong> the short code — the Encoder transforms it.</p>
+<hr />
+<h2 id="port-sldsportsencoder">Port: <code>slds.ports.encoder</code><a class="headerlink" href="#port-sldsportsencoder" title="Permanent link">&para;</a></h2>
+<h3 id="encoderencodeid-code"><code>encoder:encode(id) -&gt; code</code><a class="headerlink" href="#encoderencodeid-code" title="Permanent link">&para;</a></h3>
+<p>Pure transformation from internal ID to non-empty URL-safe code. No I/O, no side effects, deterministic. The host selects a compatible Generator/Encoder pair; Core imposes no numeric ID domain, alphabet or maximum length.</p>
+<hr />
+<h2 id="bundled-adapters">Bundled Adapters<a class="headerlink" href="#bundled-adapters" title="Permanent link">&para;</a></h2>
+<h3 id="sldsadaptersinmemoryrepository"><code>slds.adapters.inmemory.repository</code><a class="headerlink" href="#sldsadaptersinmemoryrepository" title="Permanent link">&para;</a></h3>
+<p>In-memory Repository for development and testing. Stores data as data[namespace][code], preserving all valid identity tuples, including embedded NULs. Methods do not yield and are atomic within one Lua VM; this is not cross-process concurrency support. Input/returned metadata tables do not alias stored data.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">repo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.inmemory.repository"</span><span class="p">).</span><span class="nf">new</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="sldsadapterssequentialgenerator"><code>slds.adapters.sequential.generator</code><a class="headerlink" href="#sldsadapterssequentialgenerator" title="Permanent link">&para;</a></h3>
+<p>Sequential counter generator. Accepts integer start in [0, 9007199254740991], defaults to 1 only for nil, and guarantees increasing values only within one instance. The maximum is returned once, followed by persistent nil,"generator exhausted". Invalid starts raise a programming error.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">gen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.sequential.generator"</span><span class="p">).</span><span class="nf">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">  </span><span class="c1">-- start at 1</span>
+</code></pre></div>
+<h3 id="sldsadaptersbase62encoder"><code>slds.adapters.base62.encoder</code><a class="headerlink" href="#sldsadaptersbase62encoder" title="Permanent link">&para;</a></h3>
+<p>Base62 encoder (0-9, A-Z, a-z). Accepts only finite integers in [0, 9007199254740991]; invalid IDs raise a programming error. This range belongs to this reference adapter, not the generic port.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">local</span><span class="w"> </span><span class="nv">enc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">"slds.adapters.base62.encoder"</span><span class="p">).</span><span class="nf">new</span><span class="p">()</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">print</span><span class="p">(</span><span class="nv">enc</span><span class="p">:</span><span class="nf">encode</span><span class="p">(</span><span class="mi">12345</span><span class="p">))</span><span class="w">  </span><span class="c1">-- "3D7"</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
