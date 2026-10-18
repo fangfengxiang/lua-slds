@@ -170,4 +170,48 @@ describe("Interactor", function()
             assert.is_nil(result.target)
         end)
     end)
+    for _, operation in ipairs({ "create", "resolve", "update", "delete" }) do
+        it("dispatches general and specific phases around the actual " .. operation, function()
+            local slds = require("slds")
+            local hooks, order, observed, ctx = slds.Hooks.new(), {}, {}, {}
+            local function record(label)
+                return function(received_ctx, point)
+                    order[#order + 1] = label
+                    observed[#observed + 1] = { same_ctx = rawequal(ctx, received_ctx), point = point }
+                end
+            end
+            local before, after = "before_" .. operation, "after_" .. operation
+            hooks:on(slds.HookPoint.AFTER, record("general-after-A"))
+                :on(after, record("specific-after"))
+                :on(before, record("specific-before-A"))
+                :on(slds.HookPoint.BEFORE, record("general-before"))
+                :on(before, record("specific-before-B"))
+                :on(slds.HookPoint.AFTER, record("general-after-B"))
+            local interactor, repo = helpers.fixture({ hooks = hooks })
+            local id = Identity.new("one")
+            if operation ~= "create" then
+                assert(repo:create(ctx, assert(slds.ShortLink.new({
+                    namespace = id.namespace, code = id.code, target = "https://example.com",
+                }))))
+            end
+            local method = operation == "resolve" and "get" or operation
+            local execute = repo[method]
+            repo[method] = function(self, ...)
+                order[#order + 1] = "operation"
+                return execute(self, ...)
+            end
+            if operation == "create" then
+                assert(interactor:create(ctx, { code = "one", target = "https://example.com" }))
+            else
+                assert(interactor[operation](interactor, ctx, id, { target = "https://example.org" }))
+            end
+            assert.same({ "general-before", "specific-before-A", "specific-before-B", "operation",
+                "specific-after", "general-after-A", "general-after-B" }, order)
+            for index, value in ipairs(observed) do
+                assert.is_true(value.same_ctx)
+                assert.equal(index <= 3 and before or after, value.point)
+            end
+        end)
+    end
+
 end)

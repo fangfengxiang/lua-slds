@@ -22,7 +22,7 @@ Repository provides create/get/update/delete. Get retrieves an independent entit
 
 Interactor performs no update/delete pre-read. The repository validates a complete candidate, then optional can_update, then commits under the storage's atomic mechanism. can_update=false is INVALID. Delete validates both target-state validity and transition. External storage needs its own transaction/lock/CAS implementation; Core cannot make an unprotected get/modify/set atomic.
 
-The bundled InMemory adapter uses a nested namespace/code map, independent metadata snapshots and non-yielding writes within one Lua VM. It proves neither cross-process uniqueness nor concurrent database behavior. External cache decorators implement the same port and own their consistency model.
+The four bundled adapters are ready-to-use general building blocks, not driver stubs. InMemory data is scoped to its object and Lua VM, with no restart durability or cross-worker sharing. The bundled InMemory adapter uses a nested namespace/code map, independent metadata snapshots and non-yielding writes within one Lua VM. It proves neither cross-process uniqueness nor concurrent database behavior. External cache decorators implement the same port and own their consistency model.
 
 ## CodeGenerator
 
@@ -30,7 +30,9 @@ CodeGenerator.generate(ctx,input) returns final Code. Code is the only represent
 
 Composed is a reference adapter, not a new Core framework. It calls generator.generate(ctx), followed by an ordered dense array of encoder.encode(value). Intermediate values remain opaque. Empty encoder arrays work when the generator already returns Code. Failure stops immediately; final output must be a non-empty string.
 
-Sequential and Base62 remain replaceable components inside that adapter. Their exact integer domain [0,2^53-1] and Sequential's instance-local uniqueness/exhaustion do not constrain generic CodeGenerator. Full uint64 or string identifiers need compatible external components without lossy tonumber coercion.
+Sequential and Base62 remain replaceable components inside that adapter. Their exact integer domain [0,2^53-1] and Sequential's instance-local uniqueness/exhaustion do not constrain generic CodeGenerator. Full uint64 or string identifiers need compatible external components without lossy tonumber coercion. Sequential counters are independent per instance and reset when reconstructed; Repository is still the uniqueness authority.
+
+The two ports also support a host CodeGenerator deriving Code from a URL, and a Repository decorator with two read fronts plus one authoritative tier. These are composition choices, not new Core modes. The executable cases in spec/composition_spec.lua cover cold/warm reads, write invalidation, tombstones and failures using in-process storage only; they do not establish external cache consistency or database concurrency.
 
 ## Keep integrations outside Core
 

@@ -113,17 +113,25 @@ describe("v0.2 Interactor contract", function()
         assert.has_error(function() svc:create({}, { target = "https://example.com" }) end)
     end)
 
-    it("registers use(hook) callbacks on the same v0.2 registry", function()
-        local svc = slds.new(dependencies())
-        local received
-        assert.equal(svc, svc:use({ after_create = function(_, point, link, err)
+    it("registers observers only on explicitly assembled Hooks", function()
+        local hooks, received = slds.Hooks.new(), nil
+        hooks:on(slds.HookPoint.AFTER_CREATE, function(_, point, link, err)
             received = { point = point, code = link.code, err = err }
-        end }))
+        end)
+        local svc = slds.new(dependencies({ hooks = hooks }))
+        assert.is_nil(svc.use)
         assert(svc:create({}, { code = "one", target = "https://example.com" }))
         assert.same({ point = "after_create", code = "one" }, received)
-        assert.has_error(function() svc:use({ unknown = function() end }) end)
-        assert.has_error(function() svc:use({ before_create = false }) end)
-        assert.has_error(function() svc:use(false) end)
+    end)
+
+    it("requires only the hook dispatch methods used by Interactor", function()
+        local observed = {}
+        local svc = slds.new(dependencies({ hooks = {
+            before = function(_, _, point) observed[#observed + 1] = point end,
+            after = function(_, _, point) observed[#observed + 1] = point end,
+        } }))
+        assert(svc:create({}, { code = "one", target = "https://example.com" }))
+        assert.same({ "before_create", "after_create" }, observed)
     end)
 
     it("does not create a record with an implicit ignored initial status", function()

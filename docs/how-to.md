@@ -24,6 +24,12 @@ The example intentionally produces a deterministic Code: repeated creation confl
 
 For internal Generator/Encoder composition, use the [bundled Composed adapter](api.md#bundled-adapters). Its encoder array is dense and ordered; an empty array is valid if the inner generator already returns Code. The current Base62 accepts only exact integers in [0,2^53-1]; full uint64/string identifiers need a compatible external encoder. Do not coerce them with tonumber.
 
+## Choose bundled building blocks
+
+InMemory, Sequential, Base62 and Composed are ready to assemble through their documented constructors. InMemory state belongs to its Lua instance/VM and is lost on restart. Sequential counters are instance-local and restart when recreated; independent counters can produce the same ID. Use a host-selected authoritative Repository for durable storage and cross-process uniqueness.
+
+The three executable compositions in spec/composition_spec.lua use unchanged Core ports: Sequential→Base62, URL-derived Code and a three-tier Repository. A URL generator must define collisions and still let Repository return CONFLICT; deterministic generation does not imply idempotency. The tiered test routes all writes through its third tier and invalidates both fronts; external writers, distributed invalidation and cache products require their own integration contracts. No new production adapter is added.
+
 ## Customize Lifecycle and authoritative update policy
 
 Supply the same rules to Interactor and Repository. Missing predicates use defaults; the original table is not modified:
@@ -89,6 +95,8 @@ local interactor = slds.new({
     repository = require("slds.adapters.inmemory.repository").new(), hooks = hooks,
 })
 ```
+
+Finish all hooks:on registrations at application startup, before operations. Changing the registry during dispatch is unsupported. Register multiple functions by repeated on calls or a host loop; no bulk, priority or lifecycle APIs are needed.
 
 General BEFORE runs before operation-specific BEFORE; specific AFTER runs before general AFTER. Registration order applies within each point. Callbacks get the actual operation point and v0.2 arguments. All normal returns, including repository/generator errors, reach AFTER. Programming errors may propagate before AFTER.
 

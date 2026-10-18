@@ -21,9 +21,17 @@ local Composed = require("slds.adapters.composed.code_generator")
 local Sequential = require("slds.adapters.sequential.generator")
 local Base62 = require("slds.adapters.base62.encoder")
 
+local observed, hooks = {}, slds.Hooks.new()
+hooks:on(slds.HookPoint.AFTER_RESOLVE, function(_, point, value, err)
+    observed[#observed + 1] = { point = point, status = value and value.status, err = err }
+end):on(slds.HookPoint.ON_ERROR, function(_, failed_point, hook_err)
+    print("Observer failed:", failed_point, hook_err)
+end)
+local lifecycle = slds.Lifecycle
+local repository = Repository.new({ lifecycle = lifecycle })
 local now = 1000000
 local interactor = slds.new({
-    repository = Repository.new(),
+    repository = repository, lifecycle = lifecycle, hooks = hooks,
     code_generator = Composed.new({
         generator = Sequential.new(),
         encoders = { Base62.new() },
@@ -84,20 +92,12 @@ Only target/status/expires_at may be patched. Namespace/code are immutable; meta
 ## 6. Observe operations
 
 ```lua
-local observed = {}
-interactor:use({
-    [slds.HookPoint.AFTER_RESOLVE] = function(callback_ctx, point, value, err)
-        observed[#observed + 1] = { point = point, status = value and value.status, err = err }
-    end,
-    [slds.HookPoint.ON_ERROR] = function(callback_ctx, failed_point, hook_err)
-        print("Observer failed:", failed_point, hook_err)
-    end,
-})
+-- Observers were registered before operations in step 2.
 assert(interactor:resolve(ctx, identity))
-assert(observed[1].point == slds.HookPoint.AFTER_RESOLVE)
+assert(observed[#observed].point == slds.HookPoint.AFTER_RESOLVE)
 ```
 
-Each callback receives its own domain payload snapshot. ctx stays shared and should be treated as read-only. Observers execute synchronously; exceptions are isolated with pcall, while callback latency remains part of operation latency. AFTER also receives normal failures, so check value before accessing its fields.
+Register only with hooks:on(point,fn) during startup. Do not change registrations while serving operations. Within one point, callbacks execute in registration order; phase order remains fixed. Each callback receives its own domain payload snapshot. ctx stays shared and should be treated as read-only. Observers execute synchronously; exceptions are isolated with pcall, while callback latency remains part of operation latency. AFTER also receives normal failures, so check value before accessing its fields.
 
 ## 7. Delete and handle failures
 

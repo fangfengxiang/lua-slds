@@ -18,13 +18,17 @@ The examples describe the v0.2 source API. Install this checkout, including the 
 luarocks make lua-slds-scm-1.rockspec
 ```
 
-Explicit codes need only a Repository:
+Explicit codes need only a Repository. This example also assembles optional Hooks and a shared Lifecycle explicitly, before any operations:
 
 ```lua
 local slds = require("slds")
-local interactor = slds.new({
-    repository = require("slds.adapters.inmemory.repository").new(),
-})
+local hooks, observed = slds.Hooks.new(), {}
+hooks:on(slds.HookPoint.AFTER, function(_, point)
+    observed[#observed + 1] = point
+end)
+local lifecycle = slds.Lifecycle -- Defaults; a partial override table can be used here.
+local repository = require("slds.adapters.inmemory.repository").new({ lifecycle = lifecycle })
+local interactor = slds.new({ repository = repository, lifecycle = lifecycle, hooks = hooks })
 local ctx = {}
 local link = assert(interactor:create(ctx, {
     code = "hello",
@@ -46,8 +50,8 @@ local code_generator = require("slds.adapters.composed.code_generator").new({
     encoders = { require("slds.adapters.base62.encoder").new() },
 })
 local automatic = slds.new({
-    repository = require("slds.adapters.inmemory.repository").new(),
-    code_generator = code_generator,
+    repository = require("slds.adapters.inmemory.repository").new({ lifecycle = lifecycle }),
+    code_generator = code_generator, lifecycle = lifecycle, hooks = hooks,
 })
 local generated = assert(automatic:create({}, { target = "https://example.com" }))
 print(generated.code)
@@ -62,14 +66,14 @@ print(generated.code)
 - Resolve returns `found` and `resolvable`; infrastructure failures remain `nil, err`.
 - Repository applies sparse patches atomically against the latest record. Unknown fields and metadata patches return `INVALID`; identity changes are programming errors.
 - Partial Lifecycle overrides can restrict valid statuses/transitions or customize resolvability; hard identity and deletion constraints remain enforced.
-- Hooks are synchronous observers with ordered point registrations, independent payload snapshots and `pcall` exception isolation. ctx remains shared and should be read-only.
+- Register Hooks only with `hooks:on(point, fn)` during application startup. Same-point callbacks run in FIFO order; cross-point stages are fixed. Hooks are synchronous observers with independent payload snapshots and `pcall` exception isolation; ctx stays shared and read-only by convention.
 - Errors are exactly `NOT_FOUND`, `CONFLICT`, `INVALID`. Infrastructure errors pass through unchanged; programming errors propagate.
 
 ## 项目定位与迁移
 
 SLDS 只解决短链的身份、生命周期与解析语义。v0.2 让 Core 索取最终 Code，把 Generator/Encoder 留在 Adapter 内组合；更新和删除直接交由权威 Repository 校验并提交。没有新增运行时依赖、缓存实现、规则引擎或通用执行框架。
 
-这是破坏性 API 升级：`Service` 改为 `Interactor`，状态从 `slds.Lifecycle` 访问，Hooks 使用 `HookPoint` 和新回调签名。`expires_at == now` 已过期；未知补丁返回 `INVALID`；所有正常成功/失败返回都触发 AFTER。`nil` 过期时间仍表示不修改，本轮不增加清除哨兵。请先阅读[迁移说明](docs/migration-v0.2.md)。
+这是破坏性 API 升级：`Service` 改为 `Interactor`，状态从 `slds.Lifecycle` 访问，Hooks 仅通过启动期的 `hooks:on(point, fn)` 注册，使用 `HookPoint` 和新回调签名。`expires_at == now` 已过期；未知补丁返回 `INVALID`；所有正常成功/失败返回都触发 AFTER。`nil` 过期时间仍表示不修改，本轮不增加清除哨兵。请先阅读[迁移说明](docs/migration-v0.2.md)。
 
 ## Architecture
 
@@ -81,7 +85,7 @@ Host constructs Interactor
   └─ CodeGenerator? ← Composed(Generator → Encoder array)
 ```
 
-Core never imports an adapter. InMemory, Sequential, Base62 and Composed are bundled reference adapters; Redis/Postgres/OpenResty integration belongs to the host. Sequential/Base62's `[0, 2^53-1]` domain is an adapter limitation, not a Core restriction.
+Core never imports an adapter. InMemory, Sequential, Base62 and Composed are bundled, ready-to-use general building blocks; Redis/Postgres/OpenResty integration belongs to the host. Sequential/Base62's `[0, 2^53-1]` domain is an adapter limitation, not a Core restriction. InMemory data lives only in its Lua object/VM and is lost on restart; each Sequential instance has its own counter and cannot coordinate workers. Durable storage and cross-process uniqueness require a suitable host-selected adapter.
 
 The ten iron rules remain: no HTTP/database dependency or target fetching in Core; immutable identities; atomic uniqueness; reserved deleted identities; resolution independent of external telemetry success; host authorization; applicable conformance evidence. See [RFC-0002](docs/rfc/RFC-0002.md).
 

@@ -1,3 +1,4 @@
+local Hooks = require("slds.hooks")
 -- L3 Extensions Conformance Tests
 -- SLDS L3: metadata, hooks, context propagation, and repository visibility.
 
@@ -51,64 +52,60 @@ describe("Conformance L3 — Extensions", function()
 
     describe("hook_before_after", function()
         it("hooks fire before and after create", function()
-            local svc = make_fixture()
+            local hooks = Hooks.new()
+            local svc = make_fixture({ hooks = hooks })
             local fired = {}
-            svc:use({
-                before_create = function(ctx, point, input)
+            hooks:on("before_create", function(ctx, point, input)
+                table.insert(fired, point)
+            end)
+                :on("after_create", function(ctx, point, link)
                     table.insert(fired, point)
-                end,
-                after_create = function(ctx, point, link)
-                    table.insert(fired, point)
-                end,
-            })
+                end)
             svc:create({}, { code = "hooked", target = "https://x.com" })
             assert.are.same({ "before_create", "after_create" }, fired)
         end)
 
         it("hooks fire before and after resolve", function()
-            local svc = make_fixture()
+            local hooks = Hooks.new()
+            local svc = make_fixture({ hooks = hooks })
             local fired = {}
             svc:create({}, { code = "hooked", target = "https://x.com" })
-            svc:use({
-                before_resolve = function(ctx, point, identity)
+            hooks:on("before_resolve", function(ctx, point, identity)
+                table.insert(fired, point)
+            end)
+                :on("after_resolve", function(ctx, point, result)
                     table.insert(fired, point)
-                end,
-                after_resolve = function(ctx, point, result)
-                    table.insert(fired, point)
-                end,
-            })
+                end)
             svc:resolve({}, Identity.new("default", "hooked"))
             assert.are.same({ "before_resolve", "after_resolve" }, fired)
         end)
 
         it("hooks fire before and after update", function()
-            local svc = make_fixture()
+            local hooks = Hooks.new()
+            local svc = make_fixture({ hooks = hooks })
             local fired = {}
             svc:create({}, { code = "hooked", target = "https://x.com" })
-            svc:use({
-                before_update = function(ctx, point, identity, patch)
+            hooks:on("before_update", function(ctx, point, identity, patch)
+                table.insert(fired, point)
+            end)
+                :on("after_update", function(ctx, point, link)
                     table.insert(fired, point)
-                end,
-                after_update = function(ctx, point, link)
-                    table.insert(fired, point)
-                end,
-            })
+                end)
             svc:update({}, Identity.new("default", "hooked"), { target = "https://y.com" })
             assert.are.same({ "before_update", "after_update" }, fired)
         end)
 
         it("hooks fire before and after delete", function()
-            local svc = make_fixture()
+            local hooks = Hooks.new()
+            local svc = make_fixture({ hooks = hooks })
             local fired = {}
             svc:create({}, { code = "hooked", target = "https://x.com" })
-            svc:use({
-                before_delete = function(ctx, point, identity)
+            hooks:on("before_delete", function(ctx, point, identity)
+                table.insert(fired, point)
+            end)
+                :on("after_delete", function(ctx, point, ok, err)
                     table.insert(fired, point)
-                end,
-                after_delete = function(ctx, point, ok, err)
-                    table.insert(fired, point)
-                end,
-            })
+                end)
             svc:delete({}, Identity.new("default", "hooked"))
             assert.are.same({ "before_delete", "after_delete" }, fired)
         end)
@@ -116,21 +113,19 @@ describe("Conformance L3 — Extensions", function()
 
     describe("hook_error_isolation", function()
         it("hook failure does not break create operation", function()
-            local svc = make_fixture()
-            svc:use({
-                before_create = function() error("boom") end,
-            })
+            local hooks = Hooks.new()
+            local svc = make_fixture({ hooks = hooks })
+            hooks:on("before_create", function() error("boom") end)
             local link, err = svc:create({}, { code = "isolated", target = "https://x.com" })
             assert.is_nil(err)
             assert.is_truthy(link)
         end)
 
         it("hook failure does not break resolve operation", function()
-            local svc = make_fixture()
+            local hooks = Hooks.new()
+            local svc = make_fixture({ hooks = hooks })
             svc:create({}, { code = "isolated", target = "https://x.com" })
-            svc:use({
-                before_resolve = function() error("boom") end,
-            })
+            hooks:on("before_resolve", function() error("boom") end)
             local result = svc:resolve({}, Identity.new("default", "isolated"))
             assert.is_true(result.found)
         end)

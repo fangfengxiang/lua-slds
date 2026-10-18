@@ -16,7 +16,7 @@
 - interactor:resolve(ctx,identity) -> ResolutionResult | nil,err.
 - interactor:update(ctx,identity,patch) -> ShortLink | nil,err.
 - interactor:delete(ctx,identity) -> true | nil,err.
-- interactor:use({[HookPoint]=callback}) -> Interactor; hooks:on(point,fn) shares that registry.
+- hooks:on(point,fn) is the sole registration API; configure during startup. Interactor only dispatches. Same-point FIFO, fixed cross-point phases; no runtime registry mutation or priorities.
 - Root exports VERSION/new/Interactor/Identity/ShortLink/Lifecycle/Resolution/Errors/Hooks/HookPoint; no Service/flat aliases.
 
 ## Contracts

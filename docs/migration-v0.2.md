@@ -43,18 +43,22 @@ Create must omit status; explicit status returns INVALID. The Interactor creates
 
 ## Hooks
 
-Use hooks:on(HookPoint,fn) or interactor:use({[HookPoint]=fn}). The use convenience shares the same registry and retains no old callback signatures:
+The initial v0.2 merged in PR #7 included Interactor:use(hook). This cleanup removes that temporary public method without an alias. Move registration to Hooks:on(point,fn), before constructing the Interactor or serving operations:
 
 ```lua
-interactor:use({
-    [slds.HookPoint.AFTER_CREATE] = function(ctx, point, link, err)
-        if link then print(point, link.code) else print(point, err) end
-    end,
-    [slds.HookPoint.ON_ERROR] = function(ctx, failed_point, hook_err)
-        print(failed_point, hook_err)
-    end,
+local slds = require("slds")
+local hooks = slds.Hooks.new()
+hooks:on(slds.HookPoint.AFTER_CREATE, function(ctx, point, link, err)
+    if link then print(point, link.code) else print(point, err) end
+end):on(slds.HookPoint.ON_ERROR, function(ctx, failed_point, hook_err)
+    print(failed_point, hook_err)
+end)
+local interactor = slds.new({
+    repository = require("slds.adapters.inmemory.repository").new(), hooks = hooks,
 })
 ```
+
+No array-registration, priority or plugin lifecycle API is introduced. Register each function with on in the desired point-local order. Complete configuration at startup; changing the registry during operation dispatch is unsupported.
 
 Add point as the second callback argument; AFTER also receives err, and AFTER_DELETE receives ok,err. ON_ERROR receives failed_point,hook_err. BEFORE now covers generation and business validation after argument capture. Every normal success/failure reaches AFTER; handle nil values. Programming errors may still propagate without AFTER.
 

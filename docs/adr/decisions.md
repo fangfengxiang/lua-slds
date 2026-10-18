@@ -17,7 +17,8 @@ This document indexes architectural decisions. ADR-012 defines the current v0.2 
 | ADR-009 | Error Handling Three-Class System | Accepted | 2026-10-08 |
 | ADR-010 | Conformance Test Suite as Specification | Accepted | 2026-10-08 |
 | ADR-011 | Contract hardening and evidence boundaries | Partly superseded by ADR-012 | 2026-10-18 |
-| ADR-012 | v0.2 minimal API and authoritative writes | Accepted | 2026-10-18 |
+| ADR-012 | v0.2 minimal API and authoritative writes | Accepted; Hook registration superseded by ADR-013 | 2026-10-18 |
+| ADR-013 | Single startup Hook registration API | Accepted | 2026-10-18 |
 
 ---
 
@@ -243,6 +244,15 @@ Deriving EXPIRED at resolution time (`expires_at <= now` in v0.2) is O(1), requi
 - Normalize partial Lifecycle functions at construction through one small internal helper. Hard identity, known-status and terminal constraints remain protected.
 - Add ResolutionResult.resolvable and expire at expires_at <= now. Keep EXPIRED derived and outside Errors. Errors is exactly NOT_FOUND/CONFLICT/INVALID.
 - Reject unknown Patch fields, including metadata. Keep nil expiration unchanged; defer clearing instead of inventing a sentinel contrary to the latest supplement.
-- Use point-indexed ordered Hook callbacks with v0.2 signatures. Keep Interactor:use(hook) as a convenience into the same registry. BEFORE covers complete valid use cases and AFTER observes every normal outcome.
+- Use point-indexed ordered Hook callbacks with v0.2 signatures. The initial convenience registration was removed by ADR-013; only Hooks:on remains. BEFORE covers complete valid use cases and AFTER observes every normal outcome.
 
 **Consequences:** The upgrade is intentionally breaking and has explicit [migration notes](../migration-v0.2.md). No compatibility dispatcher, new runtime dependency, cache/CAS implementation or generic policy/pipeline framework is introduced. Existing table snapshots, pure Lua conventions and per-file coverage/evidence gates remain. [Validation](../validation.md) reports actual checks independently of this decision.
+
+
+## ADR-013: Single startup Hook registration API
+
+**Status:** Accepted; supersedes the initial ADR-012 convenience registration.
+
+**Decision:** Expose Hooks:on(point,fn) as the only registration method and remove Interactor:use. Interactor dispatches before/after only. Hosts assemble rules, Repository and Hooks explicitly, registering at startup before operations. Same-point FIFO uses the existing dense array; general/specific phases remain fixed. Runtime registry mutation is unsupported. Do not add priorities, sorting, bulk registration, freeze/lock or plugin lifecycle APIs.
+
+**Reason:** A second registration route adds no observation capability and confuses Interactor orchestration with registry configuration. pairs order never changed cross-point phases; removal simplifies the API rather than repairing a nonexistent phase-order bug. This is a breaking cleanup of the interface initially merged in PR #7; migration uses an explicitly injected Hooks object.

@@ -16,7 +16,7 @@
 - metadata 不解释业务键，不新增深合并语义；table 内容在存储/返回边界形成独立快照。
 - v0.2 不支持 metadata 更新或未知 Patch 字段，均返回 INVALID；nil expires_at 表示不修改，暂不引入清除哨兵。Errors 仅有 NOT_FOUND/CONFLICT/INVALID；解析状态归 Lifecycle/Resolution。
 - Lifecycle 支持部分函数覆盖，构造期补齐默认且不修改用户表；硬身份、三状态及终态约束不能被自定义函数放宽。can_update 只在权威 Repository 执行，完整字段校验先于谓词，拒绝返回 INVALID。
-- Interactor 的 update/delete 不预读；Repository 删除也复用完整实体/转换校验。Hooks 使用 HookPoint 与有序函数数组，正常成功/失败均触发 AFTER；use(hook) 仅为同一注册表的便利入口，回调统一使用 v0.2 签名。
+- Interactor 的 update/delete 不预读；Repository 删除也复用完整实体/转换校验。Hooks 使用 HookPoint 与有序函数数组，正常成功/失败均触发 AFTER；Hooks:on(point,fn) 是唯一注册入口，Interactor 不管理注册；启动期完成配置，执行操作期间不修改注册表，回调统一使用 v0.2 签名。
 - Hook 是同步观察者，领域 payload 按回调隔离；ctx 原样传递。pcall 只隔离异常，不承诺超时、非阻塞或持久事件交付。
 - 使用共享类元表、静态工厂点号和实例方法冒号。运行时失败返回 nil,err；编程错误抛 error(msg,2)；Hook 回调用 pcall 隔离。
 - 新内部模块必须登记 rockspec；不得为整理文件或行数而拆分 Interactor。规则解析只用小型内部函数，不引入容器或管理器。

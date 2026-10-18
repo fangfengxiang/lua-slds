@@ -29,7 +29,7 @@ There are no flat status/error aliases, `Service`, or adapter exports. Require a
 | `code_generator` | no | Table with generate(ctx,input); returns final Code |
 | `lifecycle` | no | Partial table of is_valid/can_transition/is_resolvable functions |
 | `clock` | no | Function returning a finite number; defaults to os.time |
-| `hooks` | no | Hooks-compatible table with on/before/after; defaults to empty Hooks |
+| `hooks` | no | Hooks-compatible table with before/after; defaults to empty Hooks |
 
 Construction checks method types and fills missing Lifecycle predicates with defaults without mutating the host's table. Supply the same effective Lifecycle functions to the authoritative Repository. ctx must be a table; Core passes the same reference through, without interpreting it.
 
@@ -59,18 +59,6 @@ Captures identity/patch and calls Repository.update directly, without a prelimin
 ### `interactor:delete(ctx,identity) -> true | nil,err`
 
 Calls Repository.delete without a preliminary get. Logical deletion validates the latest record, target state and transition, then retains the identity. Repeat deletion returns INVALID; missing identity returns NOT_FOUND.
-
-### `interactor:use(hook) -> Interactor`
-
-Convenience registration into the same Hooks registry. `hook` maps HookPoint values to functions; invalid keys/callbacks raise a programming error. It is chainable and uses only v0.2 signatures:
-
-```lua
-interactor:use({
-    [slds.HookPoint.AFTER_CREATE] = function(ctx, point, link, err)
-        if link then print(point, link.code) else print(point, err) end
-    end,
-})
-```
 
 ## Identity
 
@@ -126,9 +114,9 @@ Expected failures return `nil,err`, without added prefixes. Infrastructure error
 
 ## Hooks and HookPoint
 
-`Hooks.new()` creates an empty registry. `hooks:on(point,fn)` appends a callback and returns the registry. Points are BEFORE, AFTER, BEFORE_CREATE/AFTER_CREATE, BEFORE_RESOLVE/AFTER_RESOLVE, BEFORE_UPDATE/AFTER_UPDATE, BEFORE_DELETE/AFTER_DELETE and ON_ERROR. Their values are lower-case strings such as `"before_create"`.
+`Hooks.new()` creates an empty registry. `hooks:on(point,fn)` is the only registration API; Interactor only dispatches observers. Complete registration during application startup, before operations begin. Changing registrations while operations are running is unsupported; no freeze/lock API is provided. `hooks:on(point,fn)` appends a callback and returns the registry. Points are BEFORE, AFTER, BEFORE_CREATE/AFTER_CREATE, BEFORE_RESOLVE/AFTER_RESOLVE, BEFORE_UPDATE/AFTER_UPDATE, BEFORE_DELETE/AFTER_DELETE and ON_ERROR. Their values are lower-case strings such as `"before_create"`.
 
-Order: general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER. Each point preserves registration order. BEFORE follows argument-container/identity checks and input capture, preceding generation and business validation. Every normal return, including INVALID/CONFLICT and infrastructure errors, reaches AFTER.
+Same-point callbacks execute in FIFO registration order; no priorities or sorting are defined. Order: general BEFORE → specific BEFORE → operation → specific AFTER → general AFTER. Each point preserves registration order. BEFORE follows argument-container/identity checks and input capture, preceding generation and business validation. Every normal return, including INVALID/CONFLICT and infrastructure errors, reaches AFTER.
 
 | Point | Callback |
 | --- | --- |

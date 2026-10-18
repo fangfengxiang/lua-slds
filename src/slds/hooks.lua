@@ -55,7 +55,8 @@ function _M.new()
     return setmetatable({ handlers = {} }, _M)
 end
 
---- Append a callback to one documented point. Returns the registry for chaining.
+--- Register at application startup, before operations; runtime mutation is unsupported.
+-- Append a callback to one documented point. Returns the registry for chaining.
 function _M:on(point, fn)
     if not valid_points[point] then
         error("hooks: point must be a HookPoint value", 2)

@@ -11,8 +11,6 @@ local snapshot = require("slds.internal.snapshot")
 
 local _M = {}
 _M.__index = _M
-local valid_points = {}
-for _, point in pairs(Point) do valid_points[point] = true end
 
 local function require_methods(value, name, methods)
     if type(value) ~= "table" then error("slds: " .. name .. " must be a table", 3) end
@@ -62,7 +60,7 @@ function _M.new(opts)
     end
     local hooks = opts.hooks
     if hooks == nil then hooks = Hooks.new() end
-    require_methods(hooks, "hooks", { "on", "before", "after" })
+    require_methods(hooks, "hooks", { "before", "after" })
     return setmetatable({
         repository = opts.repository,
         code_generator = opts.code_generator,
@@ -143,18 +141,6 @@ function _M:delete(ctx, identity)
     check_response(ok, err, "repository:delete")
     if ok ~= nil and ok ~= true then error("slds: repository:delete must return true on success", 2) end
     return finish(self, Point.AFTER_DELETE, ctx, ok, err)
-end
-
--- This convenience entry shares the dispatcher and v0.2 callback signatures.
-function _M:use(hook)
-    if type(hook) ~= "table" then error("slds: hook must be a table", 2) end
-    for point, fn in pairs(hook) do
-        if not valid_points[point] or type(fn) ~= "function" then
-            error("slds: hook must map valid HookPoint values to functions", 2)
-        end
-    end
-    for point, fn in pairs(hook) do self.hooks:on(point, fn) end
-    return self
 end
 
 return _M

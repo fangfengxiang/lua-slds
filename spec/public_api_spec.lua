@@ -4,7 +4,9 @@ local slds = require("slds")
 describe("Public API and port contracts", function()
     it("exports working domain objects and a usable Interactor factory", function()
         local _, repo, gen = helpers.fixture()
-        local interactor = slds.new({ repository = repo, code_generator = gen })
+        local hooks, observed = slds.Hooks.new(), false
+        assert.equal(hooks, hooks:on(slds.HookPoint.AFTER_RESOLVE, function() observed = true end))
+        local interactor = slds.new({ repository = repo, code_generator = gen, hooks = hooks })
         local link = assert(interactor:create({}, { target = "https://example.com" }))
         local id = slds.Identity.new(link.namespace, link.code)
         local result = interactor:resolve({}, id)
@@ -17,9 +19,8 @@ describe("Public API and port contracts", function()
         for _, removed in ipairs({ "Service", "ACTIVE", "DISABLED", "DELETED", "NOT_FOUND", "CONFLICT", "INVALID" }) do
             assert.is_nil(slds[removed])
         end
-        local observed = false
         assert.is_table(slds.Hooks.new().handlers)
-        assert.equal(interactor, interactor:use({ after_resolve = function() observed = true end }))
+        assert.is_nil(interactor.use)
         interactor:resolve({}, id)
         assert.is_true(observed)
     end)

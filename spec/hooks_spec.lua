@@ -66,6 +66,19 @@ describe("Hooks", function()
         assert.same({ "first-enter", "first-exit", "second", "returned" }, order)
     end)
 
+    it("executes a long same-point registration sequence in FIFO order", function()
+        local hooks, expected, observed = Hooks.new(), {}, {}
+        for index = 1, 128 do
+            local ordinal = index
+            expected[index] = ordinal
+            hooks:on(HookPoint.BEFORE_CREATE, function()
+                observed[#observed + 1] = ordinal
+            end)
+        end
+        hooks:before({}, HookPoint.BEFORE_CREATE)
+        assert.same(expected, observed)
+    end)
+
     it("preserves context reference and actual point for every callback", function()
         local hooks, ctx, observed = Hooks.new(), {}, {}
         local function observe(received, point, value)

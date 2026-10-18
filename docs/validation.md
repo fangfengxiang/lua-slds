@@ -1,18 +1,18 @@
-# v0.2 实现与验证记录
+# v0.2 实现与收尾验证记录
 
 日期：2026-10-18。目标：[issue #6](https://github.com/fangfengxiang/lua-slds/issues/6)，现行契约见 [RFC-0002](rfc/RFC-0002.md)，兼容性变化见[迁移说明](migration-v0.2.md)。以下本地结果由本轮实际运行获得，远端结果须按具体提交单独确认。
 
-## 实现范围
+## PR #7 初始实现范围（历史）
 
 - 单一 Interactor 编排 create/resolve/update/delete；Core 只依赖 Repository 与可选 CodeGenerator，零新增运行时依赖。
 - Generator/Encoder 从 Core 端口移入 Adapter 组合；Composed 支持有序编码器、空数组、错误短路和最终 Code 校验。现有 Sequential/Base62 数值范围不变。
 - Lifecycle 支持构造期部分覆盖，硬身份、三状态和 DELETED 终态约束保留。Resolution 明确 found/resolvable，并在 expires_at <= now 派生 EXPIRED。
 - Repository 在最新记录上完成完整实体校验、可选 can_update 和原子提交；Interactor 更新/删除没有预读；删除也检查目标状态有效性。
 - Errors 收敛为 NOT_FOUND/CONFLICT/INVALID。未知补丁和 metadata 更新返回 INVALID；不增加过期时间清除哨兵。依赖 nil,nil 或同时返回结果/错误视为编程错误。
-- Hooks 使用 HookPoint 有序函数数组、统一 v0.2 签名与独立快照；所有正常返回都触发 AFTER。use(hook) 复用同一注册表。
+- Hooks 使用 HookPoint 有序函数数组、统一 v0.2 签名与独立快照；所有正常返回都触发 AFTER。初始实现曾保留 use(hook) 便利入口，本次收尾已删除。
 - 保留二层身份映射、metadata 原始图快照、真实适配器合规 fixture 和逐文件门禁。没有新增缓存、数据库、CAS 或通用规则/执行框架。
 
-## 本地测试矩阵
+## PR #7 本地测试矩阵（历史）
 
 v0.1 基线为 209 项测试、15 个生产文件。v0.2 完整套件为 **253 项测试、17 个生产文件**。每次运行都先清除旧统计，再独立测量，不合并解释器结果代替门槛。
 
@@ -25,7 +25,7 @@ v0.1 基线为 209 项测试、15 个生产文件。v0.2 完整套件为 **253 �
 
 Domain/Repository、HookPoint/Hooks、CodeGenerator 和 Interactor 的新行为均先建立失败测试，再完成实现。保留原有成功、失败、身份、快照、终态、错误传播和可控交错断言；仅按明确变更的契约迁移预期。
 
-## 逐文件覆盖率
+## 逐文件覆盖率（初始及本次收尾均为 100%）
 
 覆盖全部 src/ 与 adapters/ 下 Lua 生产模块，包含入口、端口和内部辅助函数；未加载模块也参与统计。下表是各解释器独立运行的结果，行计数可能因解释器不同而异。
 
@@ -51,7 +51,7 @@ Domain/Repository、HookPoint/Hooks、CodeGenerator 和 Interactor 的新行为�
 
 没有添加覆盖率忽略、排除生产文件、降低阈值或复用旧统计。门禁按原始 hit/miss 比例检查，不能用四舍五入后的 95.00% 掩盖不足 95% 的实际值。
 
-## 其他本地验证
+## PR #7 其他本地验证（历史）
 
 - luacheck 检查 44 个 Lua 文件，0 warnings / 0 errors。
 - 通过 rockspec 安装到独立临时树后，在仓库外执行完整 CRUD 与 Composed 生成流程，通过；新生产模块均登记打包。
@@ -72,7 +72,7 @@ openspec validate --all --strict --no-interactive
 
 scripts/test.sh 从脚本位置定位仓库，清除旧统计、执行 Busted、生成 LuaCov 报告，再逐文件检查 >=95%。多解释器环境可用 SLDS_LUA、SLDS_BUSTED 选择匹配的工具链。CI 工具由 Actions 安装并通过 PATH 解析；仓库配置没有写入开发者主目录、Homebrew 或本地验证路径。runner 临时文件使用 RUNNER_TEMP/mktemp。
 
-## 远端 CI 与交付
+## PR #7 远端 CI 与交付（历史）
 
 GitHub Actions 在 Lua 5.1、Lua 5.3、LuaJIT 上独立测试并上传同份 LuaCov 报告，逐文件 >=95% 且上传失败视为失败；Codecov project/patch 目标至少 95%、零容差。文档工作流在 PR 上严格构建，在 PR 中不部署站点。发布说明同步两个 Core 端口。
 
@@ -80,7 +80,22 @@ GitHub Actions 在 Lua 5.1、Lua 5.3、LuaJIT 上独立测试并上传同份 Lua
 
 [Codecov 对应提交](https://app.codecov.io/gh/fangfengxiang/lua-slds/commit/8bc015607850f3952aee438eb840f7204f368602) 的公开报告状态为 complete，包含三个上传会话；562/562 行覆盖、0 miss，17/17 文件逐文件 100%，差异覆盖率 100%。已核对报告文件集合与全部 src/adapters Lua 文件完全一致。
 
-交付为 [Draft PR #7](https://github.com/fangfengxiang/lua-slds/pull/7)，不合并 main。此处固定提交证据用于审计；后续文档证据提交的最新检查以 PR checks 为准，不能拿旧提交替代。
+[PR #7](https://github.com/fangfengxiang/lua-slds/pull/7) 已由用户合并到 main（2d0e47d）。此处固定提交证据用于审计；后续文档证据提交的最新检查以 PR checks 为准，不能拿旧提交替代。
+
+## 本次 API 收尾验证
+
+方案：[v0.2 API Cleanup & Composition Verification](design/v0.2-cleanup.md)。删除 Interactor:use 及专属校验，Hooks:on 为唯一启动期注册入口；构造时只要求 Interactor 实际调用的 before/after。没有修改 Domain、Repository、CodeGenerator、HookPoint、根导出或四个生产 Adapter 的行为。
+
+| 解释器 | 本次实际结果 | 每文件覆盖率 |
+| --- | --- | --- |
+| Lua 5.1.5 | 265 successes，0 failures/errors/pending | 17/17 文件 100% |
+| Lua 5.3.6 | 265 successes，0 failures/errors/pending | 17/17 文件 100% |
+| LuaJIT 2.1.1784360928 | 265 successes，0 failures/errors/pending | 17/17 文件 100% |
+| Lua 5.5.0（额外本地环境） | 265 successes，0 failures/errors/pending | 17/17 文件 100% |
+
+新增 API 断言在旧实现上先得到 1 failure、1 error：use 仍存在、构造器仍强制 hooks.on。删除后通过；原有 Hook 快照、异常、nil 参数和错误传播断言均保留，并迁移为 Hooks 注入。新增 128 回调 FIFO、实际四操作的通用/专属阶段顺序，以及真实适配器的三种组合、部分 Lifecycle 一致配置验证。三级存储组合仅在测试内，用两个读前层与一个权威层演示读取回填、失效、终态和故障区分，不是生产缓存或外部并发证据。
+
+luacheck 检查 45 个 Lua 文件，0 warnings/errors；rockspec lint、独立安装后的 CRUD、README/教程 Lua 示例和合规指南原样 fixture 的 50 项测试通过。版本来源检查和 actionlint 通过；实际暂存导出目录的联网 MkDocs 严格构建通过，未包含 report.md 或忽略的 openspec/。本次远端检查须按新 PR/提交另行确认；不能引用 PR #7 的旧成功代替。
 
 ## 证据边界
 

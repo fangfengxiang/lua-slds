@@ -1,3 +1,4 @@
+local Hooks = require("slds.hooks")
 local helpers = require("spec.helpers")
 local Interactor = require("slds.interactor")
 local Identity = require("slds.domain.identity")
@@ -15,7 +16,8 @@ describe("Interactor boundaries", function()
     end)
 
     it("validates operation containers and identity fields before accessing ports", function()
-        local svc = helpers.fixture()
+        local hooks = Hooks.new()
+        local svc = helpers.fixture({ hooks = hooks })
         assert.has_error(function() svc:create({}, false) end)
         local value, err = svc:create({}, { target = "https://x.com", code = false })
         assert.is_nil(value)
@@ -34,8 +36,9 @@ describe("Interactor boundaries", function()
 
     it("observes generation failures through AFTER callbacks", function()
         local after = false
-        local svc = helpers.fixture({ generator = { generate = function() return nil, "offline" end } })
-        svc:use({ after_create = function() after = true end })
+        local hooks = Hooks.new()
+        local svc = helpers.fixture({ hooks = hooks, generator = { generate = function() return nil, "offline" end } })
+        hooks:on("after_create", function() after = true end)
         local link, err = svc:create({}, { target = "https://x.com" })
         assert.is_nil(link)
         assert.equal("offline", err)
@@ -49,7 +52,8 @@ describe("Interactor boundaries", function()
             assert.is_nil(link)
             assert.equal(Errors.INVALID, err)
         end
-        local svc = helpers.fixture()
+        local hooks = Hooks.new()
+        local svc = helpers.fixture({ hooks = hooks })
         local value, err = svc:create({}, { target = "https://x.com", code = "" })
         assert.is_nil(value)
         assert.equal(Errors.INVALID, err)
@@ -69,9 +73,10 @@ describe("Interactor boundaries", function()
     end)
 
     it("observes domain and repository failures through AFTER callbacks", function()
-        local svc, repo = helpers.fixture()
+        local hooks = Hooks.new()
+        local svc, repo = helpers.fixture({ hooks = hooks })
         local fired = false
-        svc:use({ after_create = function() fired = true end })
+        hooks:on("after_create", function() fired = true end)
         local invalid, err = svc:create({}, { code = "invalid", target = "data:bad" })
         assert.is_nil(invalid)
         assert.matches("^INVALID", err)
@@ -83,14 +88,15 @@ describe("Interactor boundaries", function()
     end)
 
     it("does not persist invalid updates and propagates failed commits", function()
-        local svc, repo = helpers.fixture()
+        local hooks = Hooks.new()
+        local svc, repo = helpers.fixture({ hooks = hooks })
         svc:create({}, { code = "abc", target = "https://old.com" })
         local id = Identity.new("abc")
         local invalid, err = svc:update({}, id, { target = "file:bad" })
         assert.is_nil(invalid)
         assert.matches("^INVALID", err)
         local updated_after = false
-        svc:use({ after_update = function() updated_after = true end })
+        hooks:on("after_update", function() updated_after = true end)
         repo.update = function() return nil, "update failed" end
         local failed, update_err = svc:update({}, id, { target = "https://new.com" })
         assert.is_nil(failed)
@@ -100,10 +106,11 @@ describe("Interactor boundaries", function()
     end)
 
     it("observes deletion failures through AFTER callbacks", function()
-        local svc, repo = helpers.fixture()
+        local hooks = Hooks.new()
+        local svc, repo = helpers.fixture({ hooks = hooks })
         svc:create({}, { code = "abc", target = "https://x.com" })
         local deleted_after = false
-        svc:use({ after_delete = function() deleted_after = true end })
+        hooks:on("after_delete", function() deleted_after = true end)
         repo.delete = function() return nil, "delete failed" end
         local ok, err = svc:delete({}, Identity.new("abc"))
         assert.is_nil(ok)
@@ -113,7 +120,8 @@ describe("Interactor boundaries", function()
     end)
 
     it("rejects missing result/error pairs for update and delete", function()
-        local svc, repo = helpers.fixture()
+        local hooks = Hooks.new()
+        local svc, repo = helpers.fixture({ hooks = hooks })
         for _, operation in ipairs({ "update", "delete" }) do
             repo[operation] = function() return nil, nil end
             assert.has_error(function() svc[operation](svc, {}, Identity.new("missing"), {}) end)
@@ -140,10 +148,11 @@ describe("Interactor boundaries", function()
     end)
 
     it("calls after_resolve when the repository fails", function()
-        local svc, repo = helpers.fixture()
+        local hooks = Hooks.new()
+        local svc, repo = helpers.fixture({ hooks = hooks })
         repo.get = function() return nil, "offline" end
         local fired = false
-        svc:use({ after_resolve = function() fired = true end })
+        hooks:on("after_resolve", function() fired = true end)
         local result, err = svc:resolve({}, Identity.new("abc"))
         assert.is_nil(result)
         assert.equal("offline", err)
@@ -162,11 +171,17 @@ describe("Interactor dependency shapes", function()
         local _, repo = helpers.fixture()
         assert.has_error(function() Interactor.new({ repository = repo, code_generator = {} }) end)
         assert.has_error(function() Interactor.new({ repository = repo, hooks = {} }) end)
+        for _, method in ipairs({ "before", "after" }) do
+            local hooks = { before = function() end, after = function() end }
+            hooks[method] = false
+            assert.has_error(function() Interactor.new({ repository = repo, hooks = hooks }) end)
+        end
     end)
 
     it("rejects invalid record and deletion success responses", function()
         for _, operation in ipairs({ "create", "update", "resolve", "delete" }) do
-            local svc, repo = helpers.fixture()
+            local hooks = Hooks.new()
+        local svc, repo = helpers.fixture({ hooks = hooks })
             local method = operation == "resolve" and "get" or operation
             local function invoke()
                 if operation == "create" then

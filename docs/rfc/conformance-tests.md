@@ -64,12 +64,14 @@ L2 controlled interleavings wrap the public update method; supply a writable Lua
 | L2 delete interleavings | DELETED cannot be revived | Delete injected before update; terminal write returns INVALID unchanged |
 | L2 direct Repository uniqueness | RULE-005 | Sequential direct adapter conflict |
 | L3 metadata | Opaque data and ownership boundaries | Actual adapter plus graph/snapshot unit tests |
-| L3 Hooks | Ordering, exception isolation and snapshots | Observations asserted outside pcall-isolated callbacks |
+| L3 Hooks | Sole startup on registration, FIFO/phase order, exception isolation and snapshots | Observations asserted outside pcall-isolated callbacks |
 | L3 ctx/namespaces | Opaque propagation and tuple partitioning | No tenant authorization claim |
 | L3 repository visibility | Resolve sees committed reference changes | No cache installed or verified |
 | External concurrent create/update | Atomicity across actual clients | Not established by reference tests; adapter-specific integration required |
 | External CAS/cache/tenant extensions | Declared host/adapter contracts | Not bundled; separate applicable tests required |
 | Core dependencies | RULE-001/002/003 | Pure Lua source review and interpreter matrix |
+
+spec/composition_spec.lua additionally exercises Sequential→Base62, URL-derived Code, explicit shared Lifecycle and a test-only three-tier Repository using real InMemory instances. Its tiered checks cover cold/warm hits, independent snapshots, write invalidation, cached entity expiration, tombstones and failure passthrough. All writes route through one authority; no external cache consistency, distributed invalidation or database concurrency is established. Core and the four bundled adapters remain unchanged.
 
 Additional direct tests cover partial Lifecycle defaults, hard invariants, expires_at==now, unsupported patches, validation before can_update, rollback, full delete validation, no Interactor write pre-read, malformed dependency responses, CodeGenerator pipeline boundaries, full normal-error AFTER paths and nonrecursive ON_ERROR. Reference component numeric limits/exhaustion are tested without imposing their domain on Core.
 
