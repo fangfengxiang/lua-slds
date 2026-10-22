@@ -111,7 +111,7 @@ jobs:
           ref: ${{ needs.prepare.outputs.tag }}
 
       - name: Download rockspec
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: rockspec
 
@@ -134,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download rockspec
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: rockspec
 
